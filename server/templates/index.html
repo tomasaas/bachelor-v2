@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rubik's Cube Solver</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header>
+    <h1>Rubik's Cube Solver</h1>
+    <span id="state-badge" class="badge">IDLE</span>
+  </header>
+
+  <main>
+    <!-- Camera feeds -->
+    <section class="cameras">
+      <div class="cam-container">
+        <h3>Camera 0 (U / F / R)</h3>
+        <img id="cam0" src="/video/0" alt="Camera 0">
+      </div>
+      <div class="cam-container">
+        <h3>Camera 1 (D / B / L)</h3>
+        <img id="cam1" src="/video/1" alt="Camera 1">
+      </div>
+    </section>
+
+    <!-- Controls -->
+    <section class="controls">
+      <button id="btn-solve" class="btn btn-primary">Start Solve</button>
+      <button id="btn-abort" class="btn btn-danger" disabled>Abort</button>
+      <button id="btn-home"  class="btn">Home All</button>
+      <button id="btn-ping"  class="btn">Ping Servos</button>
+      <button id="btn-torque-on"  class="btn">Torque ON</button>
+      <button id="btn-torque-off" class="btn btn-danger">Torque OFF</button>
+    </section>
+
+    <!-- Manual cube string input (for testing without vision) -->
+    <section class="manual-input">
+      <label for="cube-string">Manual cube string (54 chars, leave empty to use cameras):</label>
+      <input id="cube-string" type="text" maxlength="54" placeholder="UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB">
+    </section>
+
+    <!-- Progress -->
+    <section class="progress-panel">
+      <h3>Progress</h3>
+      <div class="progress-bar-outer">
+        <div id="progress-bar" class="progress-bar-inner" style="width:0%"></div>
+      </div>
+      <p id="progress-text">Idle</p>
+      <pre id="log-output"></pre>
+    </section>
+  </main>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

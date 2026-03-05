@@ -1,0 +1,54 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: system-ui, sans-serif; background: #1a1a2e; color: #eee; padding: 1rem; }
+header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+h1 { font-size: 1.4rem; }
+
+.badge {
+  padding: 0.25rem 0.75rem; border-radius: 4px;
+  font-size: 0.85rem; font-weight: 600; text-transform: uppercase;
+  background: #444; color: #ccc;
+}
+.badge.running  { background: #e67e22; color: #fff; }
+.badge.done     { background: #27ae60; color: #fff; }
+.badge.error    { background: #e74c3c; color: #fff; }
+.badge.aborting { background: #c0392b; color: #fff; }
+
+.cameras { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem; }
+.cam-container { flex: 1; min-width: 300px; }
+.cam-container img { width: 100%; border: 2px solid #333; border-radius: 4px; }
+.cam-container h3 { margin-bottom: 0.3rem; font-size: 0.9rem; color: #aaa; }
+
+.controls { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+.btn {
+  padding: 0.5rem 1.2rem; border: none; border-radius: 4px;
+  font-size: 0.9rem; cursor: pointer; background: #2d2d44; color: #eee;
+}
+.btn:hover { background: #3d3d5c; }
+.btn:disabled { opacity: 0.4; cursor: default; }
+.btn-primary { background: #2980b9; }
+.btn-primary:hover { background: #3498db; }
+.btn-danger  { background: #c0392b; }
+.btn-danger:hover  { background: #e74c3c; }
+
+.manual-input { margin-bottom: 1rem; }
+.manual-input label { display: block; margin-bottom: 0.3rem; font-size: 0.85rem; color: #aaa; }
+.manual-input input {
+  width: 100%; max-width: 600px; padding: 0.4rem;
+  font-family: monospace; font-size: 0.95rem;
+  background: #2d2d44; color: #eee; border: 1px solid #555; border-radius: 4px;
+}
+
+.progress-panel { background: #16213e; padding: 1rem; border-radius: 6px; }
+.progress-panel h3 { margin-bottom: 0.5rem; font-size: 1rem; }
+.progress-bar-outer {
+  height: 20px; background: #0f3460; border-radius: 4px; overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+.progress-bar-inner {
+  height: 100%; background: #2980b9; transition: width 0.3s;
+}
+#progress-text { font-size: 0.9rem; color: #bbb; margin-bottom: 0.5rem; }
+#log-output {
+  max-height: 200px; overflow-y: auto; font-size: 0.8rem;
+  background: #0a0a1a; padding: 0.5rem; border-radius: 4px; color: #8f8;
+}

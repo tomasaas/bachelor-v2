@@ -1,0 +1,102 @@
+#!/usr/bin/env python3
+"""
+Rubik's Cube Solver – main entry point.
+
+Starts the Flask web server with camera streams and servo control.
+On the RPi5 this is launched automatically on boot (e.g. via systemd).
+
+Usage:
+    python run.py
+    python run.py --no-servos          # Start without servo connection (GUI-only dev)
+    python run.py --no-cameras         # Start without cameras (servo testing)
+    python run.py --port 5000          # Override Flask port
+    python run.py --serial /dev/ttyUSB1  # Override serial device
+"""
+
+from __future__ import annotations
+
+import argparse
+import logging
+import sys
+
+import config
+
+
+def setup_logging() -> None:
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+        handlers=[
+            logging.StreamHandler(sys.stdout),
+            logging.FileHandler("rubiks.log"),
+        ],
+    )
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Rubik's Cube Solver Server")
+    parser.add_argument("--no-servos", action="store_true",
+                        help="Skip servo initialisation")
+    parser.add_argument("--no-cameras", action="store_true",
+                        help="Skip camera initialisation")
+    parser.add_argument("--port", type=int, default=config.FLASK_PORT)
+    parser.add_argument("--host", default=config.FLASK_HOST)
+    parser.add_argument("--serial", default=config.SERIAL_PORT,
+                        help="Serial port for servo driver")
+    args = parser.parse_args()
+
+    setup_logging()
+    log = logging.getLogger("main")
+    log.info("=== Rubik's Cube Solver starting ===")
+
+    # ── cameras ──────────────────────────────────────────────────────────
+    dual_camera = None
+    if not args.no_cameras:
+        from vision.camera import DualCamera
+        dual_camera = DualCamera()
+        results = dual_camera.open_all()
+        for i, ok in enumerate(results):
+            log.info("Camera %d: %s", i, "opened" if ok else "FAILED")
+    else:
+        log.info("Cameras skipped (--no-cameras)")
+
+    # ── servos ───────────────────────────────────────────────────────────
+    servo_group = None
+    scheduler = None
+    if not args.no_servos:
+        from motion.sc09 import SC09Bus
+        from motion.servo_bus import ServoGroup
+        from motion.scheduler import Scheduler
+
+        try:
+            bus = SC09Bus(
+                port=args.serial,
+                baudrate=config.SERIAL_BAUD,
+                timeout=config.SERIAL_TIMEOUT,
+            )
+            servo_group = ServoGroup(bus)
+
+            # Quick connectivity check
+            results = servo_group.ping_all()
+            for sid, ok in results.items():
+                log.info("Servo %d: %s", sid, "OK" if ok else "NO RESPONSE")
+
+            scheduler = Scheduler(servo_group, check_feedback=True)
+        except Exception as exc:
+            log.error("Servo init failed: %s (continuing without servos)", exc)
+    else:
+        log.info("Servos skipped (--no-servos)")
+
+    # ── Flask ────────────────────────────────────────────────────────────
+    from server.app import create_app
+    from server.routes import init_hardware
+
+    init_hardware(dual_camera, servo_group, scheduler)
+    app = create_app()
+
+    log.info("Starting Flask on %s:%d", args.host, args.port)
+    app.run(host=args.host, port=args.port, threaded=True)
+
+
+if __name__ == "__main__":
+    main()
