@@ -65,7 +65,7 @@ FACE_SERVO = {
 # ---------------------------------------------------------------------------
 # Vision / cameras
 # ---------------------------------------------------------------------------
-CAMERA_INDICES = [0, 1]         # /dev/video0, /dev/video1
+CAMERA_INDICES = [0, 2]         # /dev/video0, /dev/video2
 CAMERA_WIDTH   = 640
 CAMERA_HEIGHT  = 480
 

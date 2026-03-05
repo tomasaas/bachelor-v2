@@ -23,6 +23,18 @@ _servo_group = None   # motion.servo_bus.ServoGroup
 _scheduler: Scheduler | None = None
 _solve_thread: threading.Thread | None = None
 
+# Lightweight progress tracker – works even without a scheduler.
+_progress = {
+    "state": "IDLE",
+    "error": "",
+    "solution": "",
+    "total_moves": 0,
+    "completed_moves": 0,
+    "total_actions": 0,
+    "completed_actions": 0,
+    "current_move": "",
+}
+
 
 def init_hardware(dual_camera, servo_group, scheduler):
     global _dual_camera, _servo_group, _scheduler
@@ -61,19 +73,27 @@ def solve():
     """
     global _solve_thread
 
-    if _scheduler and _scheduler.progress.state == SchedulerState.RUNNING:
+    if _progress["state"] == "RUNNING":
         return jsonify({"error": "Solve already in progress"}), 409
 
     body = request.get_json(silent=True) or {}
     cube_string = body.get("cube_string", "")
 
     def _run(cs: str):
+        global _progress
+        _progress = {
+            "state": "RUNNING", "error": "", "solution": "",
+            "total_moves": 0, "completed_moves": 0,
+            "total_actions": 0, "completed_actions": 0,
+            "current_move": "detecting" if not cs else "solving",
+        }
         try:
             # Step 1: get cube string (vision or supplied)
             if not cs:
                 cs = _detect_cube()
 
             log.info("Cube string: %s", cs)
+            _progress["current_move"] = "solving"
 
             # Step 2: solve
             from solve.solver import solve as kociemba_solve, SolveError
@@ -81,24 +101,34 @@ def solve():
                 solution = kociemba_solve(cs)
             except SolveError as exc:
                 log.error("Solve failed: %s", exc)
-                if _scheduler:
-                    _scheduler.progress.state = SchedulerState.ERROR
-                    _scheduler.progress.error = str(exc)
+                _progress["state"] = "ERROR"
+                _progress["error"] = str(exc)
                 return
+
+            _progress["solution"] = solution
+            log.info("Solution: %s", solution)
 
             # Step 3: convert to actions
             tokens = parse_solution(solution)
             action_groups = solution_to_actions(solution)
+            _progress["total_moves"] = len(tokens)
+            _progress["total_actions"] = sum(len(g) for g in action_groups)
 
             # Step 4: execute
             if _scheduler:
                 _scheduler.execute(action_groups, tokens)
+            else:
+                log.warning("No servos – solution computed but cannot execute: %s", solution)
+                _progress["completed_moves"] = len(tokens)
+                _progress["completed_actions"] = _progress["total_actions"]
+
+            _progress["state"] = "DONE"
+            _progress["current_move"] = ""
 
         except Exception as exc:
             log.exception("Solve pipeline error: %s", exc)
-            if _scheduler:
-                _scheduler.progress.state = SchedulerState.ERROR
-                _scheduler.progress.error = str(exc)
+            _progress["state"] = "ERROR"
+            _progress["error"] = str(exc)
 
     _solve_thread = threading.Thread(target=_run, args=(cube_string,), daemon=True)
     _solve_thread.start()
@@ -107,41 +137,68 @@ def solve():
 
 
 def _detect_cube() -> str:
-    """Capture from both cameras, classify ROIs, build cube string."""
+    """Capture from available cameras, classify ROIs, build cube string."""
     from vision.roi import get_rois
     from vision.color import classify_rois, build_cube_state
 
     if _dual_camera is None:
-        raise RuntimeError("Cameras not initialised")
+        raise RuntimeError("Cameras not initialised – start with cameras or supply a cube_string")
 
     frames = _dual_camera.grab_all()
-    results = []
+
+    cam0_colors: dict[str, str] = {}
+    cam1_colors: dict[str, str] = {}
+    available = []
     for i, frame in enumerate(frames):
         if frame is None:
-            raise RuntimeError(f"Camera {i} returned no frame")
+            log.warning("Camera %d returned no frame – skipping", i)
+            continue
         rois = get_rois(i)
-        results.append(classify_rois(frame, rois))
+        colors = classify_rois(frame, rois)
+        if i == 0:
+            cam0_colors = colors
+        else:
+            cam1_colors = colors
+        available.append(i)
 
-    return build_cube_state(results[0], results[1])
+    if not available:
+        raise RuntimeError("No cameras returned frames")
+
+    # Both cameras are needed to see all 6 faces
+    if len(available) < 2:
+        missing_faces = config.CAM1_FACES if 0 in available else config.CAM0_FACES
+        raise RuntimeError(
+            f"Only camera {available[0]} available – faces {missing_faces} cannot be detected. "
+            f"Connect camera {1 - available[0]} or supply a cube_string manually."
+        )
+
+    return build_cube_state(cam0_colors, cam1_colors)
 
 
 # ── status ───────────────────────────────────────────────────────────────────
 
 @bp.route("/status")
 def status():
-    if _scheduler is None:
-        return jsonify({"state": "NOT_INITIALISED"})
-    return jsonify(_scheduler.progress.as_dict())
+    if _scheduler is not None:
+        # Merge scheduler progress with local progress
+        d = _scheduler.progress.as_dict()
+        if _progress.get("solution"):
+            d["solution"] = _progress["solution"]
+        return jsonify(d)
+    return jsonify(_progress)
 
 
 # ── abort ────────────────────────────────────────────────────────────────────
 
 @bp.route("/abort", methods=["POST"])
 def abort():
+    global _progress
     if _scheduler:
         _scheduler.abort()
-        return jsonify({"status": "abort_requested"})
-    return jsonify({"error": "No scheduler"}), 500
+    _progress["state"] = "IDLE"
+    _progress["error"] = ""
+    _progress["current_move"] = ""
+    return jsonify({"status": "abort_requested"})
 
 
 # ── servo utilities (for manual testing via GUI) ─────────────────────────────

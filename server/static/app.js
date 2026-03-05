@@ -100,9 +100,9 @@ async function pollStatus() {
     stateBadge.textContent = d.state;
     stateBadge.className = "badge " + d.state.toLowerCase();
 
-    if (d.state === "DONE" || d.state === "ERROR" || d.state === "ABORTING") {
+    if (d.state === "DONE" || d.state === "ERROR" || d.state === "IDLE" || d.state === "ABORTING") {
       if (d.error) appendLog(`Error: ${d.error}`);
-      if (d.state === "DONE") appendLog("Solve complete!");
+      if (d.state === "DONE") appendLog("Solve complete!" + (d.solution ? ` (${d.solution})` : ""));
       stopPolling();
     }
   } catch (e) {

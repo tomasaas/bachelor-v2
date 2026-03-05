@@ -1,0 +1,224 @@
+2026-03-05 18:03:21,765 [INFO] main: === Rubik's Cube Solver starting ===
+2026-03-05 18:07:24,673 [INFO] main: === Rubik's Cube Solver starting ===
+2026-03-05 18:07:24,972 [INFO] vision.camera: Camera 0 opened
+2026-03-05 18:07:24,973 [ERROR] vision.camera: Camera 1 failed to open
+2026-03-05 18:07:24,973 [INFO] main: Camera 0: opened
+2026-03-05 18:07:24,973 [INFO] main: Camera 1: FAILED
+2026-03-05 18:07:24,985 [ERROR] main: Servo init failed: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0' (continuing without servos)
+2026-03-05 18:07:25,112 [INFO] server.app: Flask app created
+2026-03-05 18:07:25,112 [INFO] main: Starting Flask on 0.0.0.0:5000
+2026-03-05 18:07:25,116 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.245.30.59:5000
+2026-03-05 18:07:25,116 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2026-03-05 18:07:27,076 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:07:27] "GET / HTTP/1.1" 200 -
+2026-03-05 18:07:27,152 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:07:27] "GET /static/style.css HTTP/1.1" 200 -
+2026-03-05 18:07:27,227 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:07:27] "GET /static/app.js HTTP/1.1" 200 -
+2026-03-05 18:07:27,523 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:07:27] "GET /video/0 HTTP/1.1" 200 -
+2026-03-05 18:07:53,296 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:07:53] "POST /solve HTTP/1.1" 200 -
+2026-03-05 18:07:53,390 [INFO] vision.roi: Auto-generated 27 ROIs for camera 0
+2026-03-05 18:07:53,394 [ERROR] server.routes: Solve pipeline error: Camera 1 returned no frame
+Traceback (most recent call last):
+  File "/home/username/bachelor/server/routes.py", line 74, in _run
+    cs = _detect_cube()
+  File "/home/username/bachelor/server/routes.py", line 121, in _detect_cube
+    raise RuntimeError(f"Camera {i} returned no frame")
+RuntimeError: Camera 1 returned no frame
+2026-03-05 18:07:53,858 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:07:53] "GET /status HTTP/1.1" 200 -
+2026-03-05 18:07:54,407 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:07:54] "GET /status HTTP/1.1" 200 -
+2026-03-05 18:07:54,871 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:07:54] "GET /status HTTP/1.1" 200 -
+2026-03-05 18:07:55,385 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:07:55] "GET /status HTTP/1.1" 200 -
+2026-03-05 18:07:55,867 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:07:55] "GET /status HTTP/1.1" 200 -
+2026-03-05 18:07:56,365 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:07:56] "GET /status HTTP/1.1" 200 -
+2026-03-05 18:07:56,866 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:07:56] "GET /status HTTP/1.1" 200 -
+2026-03-05 18:07:57,369 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:07:57] "GET /status HTTP/1.1" 200 -
+2026-03-05 18:07:57,868 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:07:57] "GET /status HTTP/1.1" 200 -
+2026-03-05 18:07:58,366 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:07:58] "GET /status HTTP/1.1" 200 -
+2026-03-05 18:07:58,857 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:07:58] "GET /status HTTP/1.1" 200 -
+2026-03-05 18:07:59,363 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:07:59] "GET /status HTTP/1.1" 200 -
+2026-03-05 18:07:59,875 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:07:59] "GET /status HTTP/1.1" 200 -
+2026-03-05 18:08:00,371 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:08:00] "GET /status HTTP/1.1" 200 -
+2026-03-05 18:08:00,914 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:08:00] "GET /status HTTP/1.1" 200 -
+2026-03-05 18:08:01,368 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:08:01] "GET /status HTTP/1.1" 200 -
+2026-03-05 18:08:01,876 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:08:01] "GET /status HTTP/1.1" 200 -
+2026-03-05 18:08:02,214 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:08:02] "[35m[1mPOST /abort HTTP/1.1[0m" 500 -
+2026-03-05 18:08:02,367 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:08:02] "GET /status HTTP/1.1" 200 -
+2026-03-05 18:08:02,866 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:08:02] "GET /status HTTP/1.1" 200 -
+2026-03-05 18:08:03,407 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:08:03] "GET /status HTTP/1.1" 200 -
+2026-03-05 18:08:03,877 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:08:03] "GET /status HTTP/1.1" 200 -
+2026-03-05 18:08:04,375 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:08:04] "GET /status HTTP/1.1" 200 -
+2026-03-05 18:08:04,867 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:08:04] "GET /status HTTP/1.1" 200 -
+2026-03-05 18:08:05,414 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:08:05] "GET /status HTTP/1.1" 200 -
+2026-03-05 18:08:05,869 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:08:05] "GET /status HTTP/1.1" 200 -
+2026-03-05 18:08:06,365 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:08:06] "GET /status HTTP/1.1" 200 -
+2026-03-05 18:08:06,874 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:08:06] "GET /status HTTP/1.1" 200 -
+2026-03-05 18:08:07,360 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:08:07] "GET /status HTTP/1.1" 200 -
+2026-03-05 18:08:07,587 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:08:07] "[35m[1mPOST /servo/home HTTP/1.1[0m" 503 -
+2026-03-05 18:08:07,891 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:08:07] "GET /status HTTP/1.1" 200 -
+2026-03-05 18:08:08,362 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:08:08] "GET /status HTTP/1.1" 200 -
+2026-03-05 18:08:08,868 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:08:08] "GET /status HTTP/1.1" 200 -
+2026-03-05 18:08:09,362 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:08:09] "GET /status HTTP/1.1" 200 -
+2026-03-05 18:08:09,455 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:08:09] "[35m[1mGET /servo/ping HTTP/1.1[0m" 503 -
+2026-03-05 18:08:09,911 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:08:09] "GET /status HTTP/1.1" 200 -
+2026-03-05 18:08:10,357 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:08:10] "GET /status HTTP/1.1" 200 -
+2026-03-05 18:08:10,869 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:08:10] "GET /status HTTP/1.1" 200 -
+2026-03-05 18:08:11,374 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:08:11] "GET /status HTTP/1.1" 200 -
+2026-03-05 18:08:11,861 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:08:11] "GET /status HTTP/1.1" 200 -
+2026-03-05 18:08:12,367 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:08:12] "GET /status HTTP/1.1" 200 -
+2026-03-05 18:08:12,861 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:08:12] "GET /status HTTP/1.1" 200 -
+2026-03-05 18:08:13,366 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:08:13] "GET /status HTTP/1.1" 200 -
+2026-03-05 18:08:13,870 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:08:13] "GET /status HTTP/1.1" 200 -
+2026-03-05 18:08:14,377 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:08:14] "GET /status HTTP/1.1" 200 -
+2026-03-05 18:08:14,866 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:08:14] "GET /status HTTP/1.1" 200 -
+2026-03-05 18:08:15,381 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:08:15] "GET /status HTTP/1.1" 200 -
+2026-03-05 18:08:15,878 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:08:15] "GET /status HTTP/1.1" 200 -
+2026-03-05 18:08:17,042 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:08:17] "GET /status HTTP/1.1" 200 -
+2026-03-05 18:08:18,042 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:08:18] "GET /status HTTP/1.1" 200 -
+2026-03-05 18:08:19,048 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:08:19] "GET /status HTTP/1.1" 200 -
+2026-03-05 18:11:55,745 [INFO] main: === Rubik's Cube Solver starting ===
+2026-03-05 18:12:33,220 [INFO] main: === Rubik's Cube Solver starting ===
+2026-03-05 18:12:33,535 [INFO] vision.camera: Camera 0 opened
+2026-03-05 18:12:33,536 [ERROR] vision.camera: Camera 1 failed to open
+2026-03-05 18:12:33,536 [INFO] main: Camera 0: opened
+2026-03-05 18:12:33,536 [INFO] main: Camera 1: FAILED
+2026-03-05 18:12:33,542 [ERROR] main: Servo init failed: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0' (continuing without servos)
+2026-03-05 18:12:33,665 [INFO] server.app: Flask app created
+2026-03-05 18:12:33,665 [INFO] main: Starting Flask on 0.0.0.0:5000
+2026-03-05 18:12:33,669 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.245.30.59:5000
+2026-03-05 18:12:33,669 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2026-03-05 18:12:36,220 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:12:36] "GET /status HTTP/1.1" 200 -
+2026-03-05 18:12:49,584 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:12:49] "GET /status HTTP/1.1" 200 -
+2026-03-05 18:13:00,823 [INFO] server.routes: Cube string: UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB
+2026-03-05 18:13:00,824 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:13:00] "POST /solve HTTP/1.1" 200 -
+2026-03-05 18:13:00,828 [INFO] solve.solver: Solving cube: UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB
+2026-03-05 18:13:00,831 [INFO] solve.solver: Solution: R L U2 R L' B2 U2 R2 F2 L2 D2 L2 F2
+2026-03-05 18:13:00,831 [INFO] server.routes: Solution: R L U2 R L' B2 U2 R2 F2 L2 D2 L2 F2
+2026-03-05 18:13:00,831 [INFO] motion.moves: Solution has 13 moves, 26 total actions
+2026-03-05 18:13:00,831 [WARNING] server.routes: No servos – solution computed but cannot execute: R L U2 R L' B2 U2 R2 F2 L2 D2 L2 F2
+2026-03-05 18:13:02,876 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:13:02] "GET /status HTTP/1.1" 200 -
+2026-03-05 18:13:06,223 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:13:06] "GET / HTTP/1.1" 200 -
+2026-03-05 18:13:06,245 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:13:06] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-03-05 18:13:06,321 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:13:06] "GET /static/app.js HTTP/1.1" 200 -
+2026-03-05 18:13:06,887 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:13:06] "GET /video/0 HTTP/1.1" 200 -
+2026-03-05 18:13:12,096 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:13:12] "POST /solve HTTP/1.1" 200 -
+2026-03-05 18:13:12,182 [INFO] vision.roi: Auto-generated 27 ROIs for camera 0
+2026-03-05 18:13:12,184 [WARNING] server.routes: Camera 1 returned no frame – skipping
+2026-03-05 18:13:12,184 [ERROR] server.routes: Solve pipeline error: Only camera 0 available – faces ['D', 'B', 'L'] cannot be detected. Connect camera 1 or supply a cube_string manually.
+Traceback (most recent call last):
+  File "/home/username/bachelor/server/routes.py", line 93, in _run
+    cs = _detect_cube()
+  File "/home/username/bachelor/server/routes.py", line 170, in _detect_cube
+    raise RuntimeError(
+    ...<2 lines>...
+    )
+RuntimeError: Only camera 0 available – faces ['D', 'B', 'L'] cannot be detected. Connect camera 1 or supply a cube_string manually.
+2026-03-05 18:13:13,777 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:13:13] "GET / HTTP/1.1" 200 -
+2026-03-05 18:13:13,856 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:13:13] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-03-05 18:13:13,951 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:13:13] "GET /video/0 HTTP/1.1" 200 -
+2026-03-05 18:13:13,971 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:13:13] "[36mGET /static/app.js HTTP/1.1[0m" 304 -
+2026-03-05 18:13:14,149 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:13:14] "GET /status HTTP/1.1" 200 -
+2026-03-05 18:13:39,021 [INFO] main: === Rubik's Cube Solver starting ===
+2026-03-05 18:13:39,131 [ERROR] vision.camera: Camera 0 failed to open
+2026-03-05 18:13:39,131 [ERROR] vision.camera: Camera 1 failed to open
+2026-03-05 18:13:39,131 [INFO] main: Camera 0: FAILED
+2026-03-05 18:13:39,131 [INFO] main: Camera 1: FAILED
+2026-03-05 18:13:39,138 [ERROR] main: Servo init failed: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0' (continuing without servos)
+2026-03-05 18:13:39,301 [INFO] server.app: Flask app created
+2026-03-05 18:13:39,301 [INFO] main: Starting Flask on 0.0.0.0:5000
+2026-03-05 18:13:40,762 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:13:40] "GET / HTTP/1.1" 200 -
+2026-03-05 18:13:40,798 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:13:40] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-03-05 18:13:40,926 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:13:40] "[36mGET /static/app.js HTTP/1.1[0m" 304 -
+2026-03-05 18:13:41,008 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:13:41] "GET /video/0 HTTP/1.1" 200 -
+2026-03-05 18:13:42,994 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:13:42] "POST /solve HTTP/1.1" 200 -
+2026-03-05 18:13:43,255 [INFO] vision.roi: Auto-generated 27 ROIs for camera 0
+2026-03-05 18:13:43,258 [WARNING] server.routes: Camera 1 returned no frame – skipping
+2026-03-05 18:13:43,258 [ERROR] server.routes: Solve pipeline error: Only camera 0 available – faces ['D', 'B', 'L'] cannot be detected. Connect camera 1 or supply a cube_string manually.
+Traceback (most recent call last):
+  File "/home/username/bachelor/server/routes.py", line 93, in _run
+    cs = _detect_cube()
+  File "/home/username/bachelor/server/routes.py", line 170, in _detect_cube
+    raise RuntimeError(
+    ...<2 lines>...
+    )
+RuntimeError: Only camera 0 available – faces ['D', 'B', 'L'] cannot be detected. Connect camera 1 or supply a cube_string manually.
+2026-03-05 18:13:50,764 [INFO] main: Shutting down...
+2026-03-05 18:14:20,194 [INFO] main: === Rubik's Cube Solver starting ===
+2026-03-05 18:14:20,489 [INFO] vision.camera: Camera 0 opened
+2026-03-05 18:14:20,489 [ERROR] vision.camera: Camera 1 failed to open
+2026-03-05 18:14:20,490 [INFO] main: Camera 0: opened
+2026-03-05 18:14:20,490 [INFO] main: Camera 1: FAILED
+2026-03-05 18:14:20,496 [ERROR] main: Servo init failed: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0' (continuing without servos)
+2026-03-05 18:14:20,612 [INFO] server.app: Flask app created
+2026-03-05 18:14:20,612 [INFO] main: Starting Flask on 0.0.0.0:5000
+2026-03-05 18:14:20,616 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.245.30.59:5000
+2026-03-05 18:14:20,616 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2026-03-05 18:14:46,675 [INFO] werkzeug: 10.245.30.112 - - [05/Mar/2026 18:14:46] "GET / HTTP/1.1" 200 -
+2026-03-05 18:14:46,720 [INFO] werkzeug: 10.245.30.112 - - [05/Mar/2026 18:14:46] "GET /static/style.css HTTP/1.1" 200 -
+2026-03-05 18:14:47,361 [INFO] werkzeug: 10.245.30.112 - - [05/Mar/2026 18:14:47] "GET /video/0 HTTP/1.1" 200 -
+2026-03-05 18:14:47,673 [INFO] werkzeug: 10.245.30.112 - - [05/Mar/2026 18:14:47] "GET /static/app.js HTTP/1.1" 200 -
+2026-03-05 18:14:56,037 [INFO] main: Shutting down...
+2026-03-05 18:14:57,375 [INFO] main: === Rubik's Cube Solver starting ===
+2026-03-05 18:14:57,555 [INFO] vision.camera: Camera 0 opened
+2026-03-05 18:14:57,556 [ERROR] vision.camera: Camera 1 failed to open
+2026-03-05 18:14:57,556 [INFO] main: Camera 0: opened
+2026-03-05 18:14:57,556 [INFO] main: Camera 1: FAILED
+2026-03-05 18:14:57,562 [ERROR] main: Servo init failed: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0' (continuing without servos)
+2026-03-05 18:14:57,679 [INFO] server.app: Flask app created
+2026-03-05 18:14:57,679 [INFO] main: Starting Flask on 0.0.0.0:5000
+2026-03-05 18:14:57,683 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.245.30.59:5000
+2026-03-05 18:14:57,683 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2026-03-05 18:15:01,275 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:15:01] "GET / HTTP/1.1" 200 -
+2026-03-05 18:15:01,349 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:15:01] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-03-05 18:15:01,419 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:15:01] "[36mGET /static/app.js HTTP/1.1[0m" 304 -
+2026-03-05 18:15:01,881 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:15:01] "GET /video/0 HTTP/1.1" 200 -
+2026-03-05 18:15:32,909 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:15:32] "POST /solve HTTP/1.1" 200 -
+2026-03-05 18:15:32,952 [INFO] vision.roi: Auto-generated 27 ROIs for camera 0
+2026-03-05 18:15:32,956 [WARNING] server.routes: Camera 1 returned no frame – skipping
+2026-03-05 18:15:32,956 [ERROR] server.routes: Solve pipeline error: Only camera 0 available – faces ['D', 'B', 'L'] cannot be detected. Connect camera 1 or supply a cube_string manually.
+Traceback (most recent call last):
+  File "/home/username/bachelor/server/routes.py", line 93, in _run
+    cs = _detect_cube()
+  File "/home/username/bachelor/server/routes.py", line 170, in _detect_cube
+    raise RuntimeError(
+    ...<2 lines>...
+    )
+RuntimeError: Only camera 0 available – faces ['D', 'B', 'L'] cannot be detected. Connect camera 1 or supply a cube_string manually.
+2026-03-05 18:15:33,456 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:15:33] "GET /status HTTP/1.1" 200 -
+2026-03-05 18:15:46,403 [INFO] main: Shutting down...
+2026-03-05 18:23:07,488 [INFO] main: === Rubik's Cube Solver starting ===
+2026-03-05 18:23:07,780 [INFO] vision.camera: Camera 0 opened
+2026-03-05 18:23:07,937 [INFO] vision.camera: Camera 2 opened
+2026-03-05 18:23:07,937 [INFO] main: Camera 0: opened
+2026-03-05 18:23:07,937 [INFO] main: Camera 1: opened
+2026-03-05 18:23:07,943 [ERROR] main: Servo init failed: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0' (continuing without servos)
+2026-03-05 18:23:08,055 [INFO] server.app: Flask app created
+2026-03-05 18:23:08,055 [INFO] main: Starting Flask on 0.0.0.0:5000
+2026-03-05 18:23:08,064 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.245.30.59:5000
+2026-03-05 18:23:08,064 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2026-03-05 18:23:10,214 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:23:10] "GET / HTTP/1.1" 200 -
+2026-03-05 18:23:10,266 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:23:10] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-03-05 18:23:10,321 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:23:10] "[36mGET /static/app.js HTTP/1.1[0m" 304 -
+2026-03-05 18:23:10,612 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:23:10] "GET /video/1 HTTP/1.1" 200 -
+2026-03-05 18:23:10,699 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:23:10] "GET /video/0 HTTP/1.1" 200 -
+2026-03-05 18:23:18,389 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:23:18] "POST /solve HTTP/1.1" 200 -
+2026-03-05 18:23:18,477 [INFO] vision.roi: Auto-generated 27 ROIs for camera 0
+2026-03-05 18:23:18,480 [INFO] vision.roi: Auto-generated 27 ROIs for camera 1
+2026-03-05 18:23:18,482 [INFO] vision.color: Cube string: ?????????UUU?UU?????????UUU???R??R??UUUUUUUUUU?BU?BU??
+2026-03-05 18:23:18,483 [INFO] server.routes: Cube string: ?????????UUU?UU?????????UUU???R??R??UUUUUUUUUU?BU?BU??
+2026-03-05 18:23:18,485 [ERROR] server.routes: Solve failed: Invalid characters in cube string: {'?'}
+2026-03-05 18:23:19,007 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:23:19] "GET /status HTTP/1.1" 200 -
+2026-03-05 18:23:30,854 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:23:30] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-03-05 18:24:58,063 [INFO] main: Shutting down...

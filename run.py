@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import argparse
 import logging
+import signal
 import sys
 
 import config
@@ -93,6 +94,16 @@ def main() -> None:
 
     init_hardware(dual_camera, servo_group, scheduler)
     app = create_app()
+
+    # Clean shutdown on Ctrl+C (avoids OpenCV SIGABRT)
+    def _shutdown(sig, frame):
+        log.info("Shutting down...")
+        if dual_camera:
+            dual_camera.close_all()
+        sys.exit(0)
+
+    signal.signal(signal.SIGINT, _shutdown)
+    signal.signal(signal.SIGTERM, _shutdown)
 
     log.info("Starting Flask on %s:%d", args.host, args.port)
     app.run(host=args.host, port=args.port, threaded=True)
