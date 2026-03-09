@@ -6,7 +6,7 @@ Edit values here to tune hardware, vision, and motion parameters.
 # ---------------------------------------------------------------------------
 # Serial / Servo bus
 # ---------------------------------------------------------------------------
-SERIAL_PORT = "/dev/ttyUSB0"       # CP210x on Waveshare board (Serial Forwarding)
+SERIAL_PORT = "/dev/ttyAMA10"       # CP210x on Waveshare board (Serial Forwarding)
 SERIAL_BAUD = 1_000_000            # SC09 default bus baud rate
 SERIAL_TIMEOUT = 0.05              # seconds – read timeout per packet
 

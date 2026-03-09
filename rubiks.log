@@ -222,3 +222,295 @@ RuntimeError: Only camera 0 available – faces ['D', 'B', 'L'] cannot be detect
 2026-03-05 18:23:19,007 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:23:19] "GET /status HTTP/1.1" 200 -
 2026-03-05 18:23:30,854 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:23:30] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
 2026-03-05 18:24:58,063 [INFO] main: Shutting down...
+2026-03-05 18:27:56,694 [INFO] main: === Rubik's Cube Solver starting ===
+2026-03-05 18:27:56,996 [INFO] vision.camera: Camera 0 opened
+2026-03-05 18:27:57,153 [INFO] vision.camera: Camera 2 opened
+2026-03-05 18:27:57,153 [INFO] main: Camera 0: opened
+2026-03-05 18:27:57,153 [INFO] main: Camera 1: opened
+2026-03-05 18:27:57,160 [ERROR] main: Servo init failed: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0' (continuing without servos)
+2026-03-05 18:27:57,271 [INFO] server.app: Flask app created
+2026-03-05 18:27:57,271 [INFO] main: Starting Flask on 0.0.0.0:5000
+2026-03-05 18:27:57,281 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.245.30.59:5000
+2026-03-05 18:27:57,281 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2026-03-05 18:28:00,468 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:28:00] "GET / HTTP/1.1" 200 -
+2026-03-05 18:28:00,496 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:28:00] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-03-05 18:28:00,538 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:28:00] "[36mGET /static/app.js HTTP/1.1[0m" 304 -
+2026-03-05 18:28:00,893 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:28:00] "GET /video/1 HTTP/1.1" 200 -
+2026-03-05 18:28:00,964 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:28:00] "GET /video/0 HTTP/1.1" 200 -
+2026-03-05 18:33:08,779 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:33:08] "[35m[1mPOST /servo/home HTTP/1.1[0m" 503 -
+2026-03-05 18:33:09,411 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:33:09] "[35m[1mGET /servo/ping HTTP/1.1[0m" 503 -
+2026-03-05 18:34:27,381 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 18:34:27] "[35m[1mGET /servo/ping HTTP/1.1[0m" 503 -
+2026-03-05 19:13:54,682 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 19:13:54] "[35m[1mGET /servo/ping HTTP/1.1[0m" 503 -
+2026-03-05 19:14:14,569 [INFO] main: Shutting down...
+2026-03-05 19:16:33,726 [INFO] main: === Rubik's Cube Solver starting ===
+2026-03-05 19:16:34,439 [INFO] vision.camera: Camera 0 opened
+2026-03-05 19:16:34,598 [INFO] vision.camera: Camera 2 opened
+2026-03-05 19:16:34,598 [INFO] main: Camera 0: opened
+2026-03-05 19:16:34,598 [INFO] main: Camera 1: opened
+2026-03-05 19:16:34,610 [ERROR] main: Servo init failed: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0' (continuing without servos)
+2026-03-05 19:16:34,791 [INFO] server.app: Flask app created
+2026-03-05 19:16:34,791 [INFO] main: Starting Flask on 0.0.0.0:5000
+2026-03-05 19:16:34,796 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://127.0.0.1:5000
+2026-03-05 19:16:34,796 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2026-03-05 19:16:36,761 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 19:16:36] "GET / HTTP/1.1" 200 -
+2026-03-05 19:16:36,885 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 19:16:36] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-03-05 19:16:36,963 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 19:16:36] "[36mGET /static/app.js HTTP/1.1[0m" 304 -
+2026-03-05 19:16:37,271 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 19:16:37] "GET /video/1 HTTP/1.1" 200 -
+2026-03-05 19:16:37,271 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 19:16:37] "GET /video/0 HTTP/1.1" 200 -
+2026-03-05 19:16:37,405 [INFO] werkzeug: 127.0.0.1 - - [05/Mar/2026 19:16:37] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+                                                      2026-03-09 12:00:54,924 [INFO] main: === Rubik's Cube Solver starting ===
+2026-03-09 12:02:45,247 [INFO] main: === Rubik's Cube Solver starting ===
+2026-03-09 12:02:45,938 [INFO] vision.camera: Camera 0 opened
+2026-03-09 12:02:46,136 [INFO] vision.camera: Camera 2 opened
+2026-03-09 12:02:46,136 [INFO] main: Camera 0: opened
+2026-03-09 12:02:46,136 [INFO] main: Camera 1: opened
+2026-03-09 12:02:46,150 [INFO] motion.sc09: SC09Bus opened /dev/ttyAMA10 @ 1000000 baud
+2026-03-09 12:02:46,374 [WARNING] motion.sc09: No response from servo 1 after 2 attempts
+2026-03-09 12:02:46,374 [WARNING] motion.sc09: Ping servo 1: FAILED
+2026-03-09 12:02:46,598 [WARNING] motion.sc09: No response from servo 2 after 2 attempts
+2026-03-09 12:02:46,598 [WARNING] motion.sc09: Ping servo 2: FAILED
+2026-03-09 12:02:46,822 [WARNING] motion.sc09: No response from servo 3 after 2 attempts
+2026-03-09 12:02:46,822 [WARNING] motion.sc09: Ping servo 3: FAILED
+2026-03-09 12:02:47,046 [WARNING] motion.sc09: No response from servo 4 after 2 attempts
+2026-03-09 12:02:47,046 [WARNING] motion.sc09: Ping servo 4: FAILED
+2026-03-09 12:02:47,270 [WARNING] motion.sc09: No response from servo 5 after 2 attempts
+2026-03-09 12:02:47,270 [WARNING] motion.sc09: Ping servo 5: FAILED
+2026-03-09 12:02:47,494 [WARNING] motion.sc09: No response from servo 6 after 2 attempts
+2026-03-09 12:02:47,494 [WARNING] motion.sc09: Ping servo 6: FAILED
+2026-03-09 12:02:47,494 [INFO] main: Servo 1: NO RESPONSE
+2026-03-09 12:02:47,494 [INFO] main: Servo 2: NO RESPONSE
+2026-03-09 12:02:47,494 [INFO] main: Servo 3: NO RESPONSE
+2026-03-09 12:02:47,494 [INFO] main: Servo 4: NO RESPONSE
+2026-03-09 12:02:47,494 [INFO] main: Servo 5: NO RESPONSE
+2026-03-09 12:02:47,494 [INFO] main: Servo 6: NO RESPONSE
+2026-03-09 12:02:47,681 [INFO] server.app: Flask app created
+2026-03-09 12:02:47,682 [INFO] main: Starting Flask on 0.0.0.0:5000
+2026-03-09 12:02:47,686 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.10.130:5000
+2026-03-09 12:02:47,686 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2026-03-09 12:02:49,378 [INFO] werkzeug: 127.0.0.1 - - [09/Mar/2026 12:02:49] "GET / HTTP/1.1" 200 -
+2026-03-09 12:02:49,436 [INFO] werkzeug: 127.0.0.1 - - [09/Mar/2026 12:02:49] "GET /static/style.css HTTP/1.1" 200 -
+2026-03-09 12:02:49,485 [INFO] werkzeug: 127.0.0.1 - - [09/Mar/2026 12:02:49] "GET /static/app.js HTTP/1.1" 200 -
+2026-03-09 12:02:49,862 [INFO] werkzeug: 127.0.0.1 - - [09/Mar/2026 12:02:49] "GET /video/1 HTTP/1.1" 200 -
+2026-03-09 12:02:49,862 [INFO] werkzeug: 127.0.0.1 - - [09/Mar/2026 12:02:49] "GET /video/0 HTTP/1.1" 200 -
+2026-03-09 12:02:49,920 [INFO] werkzeug: 127.0.0.1 - - [09/Mar/2026 12:02:49] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-03-09 12:30:06,022 [WARNING] motion.sc09: No response from servo 1 after 2 attempts
+2026-03-09 12:30:06,022 [INFO] motion.servo_bus: Servo 1 torque OFF → FAIL
+2026-03-09 12:30:06,246 [WARNING] motion.sc09: No response from servo 2 after 2 attempts
+2026-03-09 12:30:06,246 [INFO] motion.servo_bus: Servo 2 torque OFF → FAIL
+2026-03-09 12:30:06,474 [WARNING] motion.sc09: No response from servo 3 after 2 attempts
+2026-03-09 12:30:06,474 [INFO] motion.servo_bus: Servo 3 torque OFF → FAIL
+2026-03-09 12:30:06,698 [WARNING] motion.sc09: No response from servo 4 after 2 attempts
+2026-03-09 12:30:06,698 [INFO] motion.servo_bus: Servo 4 torque OFF → FAIL
+2026-03-09 12:30:06,922 [WARNING] motion.sc09: No response from servo 5 after 2 attempts
+2026-03-09 12:30:06,922 [INFO] motion.servo_bus: Servo 5 torque OFF → FAIL
+2026-03-09 12:30:07,150 [WARNING] motion.sc09: No response from servo 6 after 2 attempts
+2026-03-09 12:30:07,150 [INFO] motion.servo_bus: Servo 6 torque OFF → FAIL
+2026-03-09 12:30:07,150 [INFO] werkzeug: 127.0.0.1 - - [09/Mar/2026 12:30:07] "POST /servo/torque HTTP/1.1" 200 -
+2026-03-09 12:30:07,378 [WARNING] motion.sc09: No response from servo 1 after 2 attempts
+2026-03-09 12:30:07,378 [WARNING] motion.sc09: Ping servo 1: FAILED
+2026-03-09 12:30:07,602 [WARNING] motion.sc09: No response from servo 2 after 2 attempts
+2026-03-09 12:30:07,602 [WARNING] motion.sc09: Ping servo 2: FAILED
+2026-03-09 12:30:07,826 [WARNING] motion.sc09: No response from servo 3 after 2 attempts
+2026-03-09 12:30:07,826 [WARNING] motion.sc09: Ping servo 3: FAILED
+2026-03-09 12:30:08,050 [WARNING] motion.sc09: No response from servo 4 after 2 attempts
+2026-03-09 12:30:08,050 [WARNING] motion.sc09: Ping servo 4: FAILED
+2026-03-09 12:30:08,274 [WARNING] motion.sc09: No response from servo 5 after 2 attempts
+2026-03-09 12:30:08,274 [WARNING] motion.sc09: Ping servo 5: FAILED
+2026-03-09 12:30:08,499 [WARNING] motion.sc09: No response from servo 6 after 2 attempts
+2026-03-09 12:30:08,500 [WARNING] motion.sc09: Ping servo 6: FAILED
+2026-03-09 12:30:08,500 [INFO] werkzeug: 127.0.0.1 - - [09/Mar/2026 12:30:08] "GET /servo/ping HTTP/1.1" 200 -
+2026-03-09 12:30:11,126 [WARNING] motion.sc09: No response from servo 1 after 2 attempts
+2026-03-09 12:30:11,126 [WARNING] motion.sc09: Ping servo 1: FAILED
+2026-03-09 12:30:11,350 [WARNING] motion.sc09: No response from servo 2 after 2 attempts
+2026-03-09 12:30:11,350 [WARNING] motion.sc09: Ping servo 2: FAILED
+2026-03-09 12:30:11,574 [WARNING] motion.sc09: No response from servo 3 after 2 attempts
+2026-03-09 12:30:11,574 [WARNING] motion.sc09: Ping servo 3: FAILED
+2026-03-09 12:30:11,798 [WARNING] motion.sc09: No response from servo 4 after 2 attempts
+2026-03-09 12:30:11,798 [WARNING] motion.sc09: Ping servo 4: FAILED
+2026-03-09 12:30:12,026 [WARNING] motion.sc09: No response from servo 5 after 2 attempts
+2026-03-09 12:30:12,026 [WARNING] motion.sc09: Ping servo 5: FAILED
+2026-03-09 12:30:12,250 [WARNING] motion.sc09: No response from servo 6 after 2 attempts
+2026-03-09 12:30:12,250 [WARNING] motion.sc09: Ping servo 6: FAILED
+2026-03-09 12:30:12,250 [INFO] werkzeug: 127.0.0.1 - - [09/Mar/2026 12:30:12] "GET /servo/ping HTTP/1.1" 200 -
+2026-03-09 12:30:12,514 [WARNING] motion.sc09: No response from servo 1 after 2 attempts
+2026-03-09 12:30:12,514 [WARNING] motion.sc09: Ping servo 1: FAILED
+2026-03-09 12:30:12,738 [WARNING] motion.sc09: No response from servo 2 after 2 attempts
+2026-03-09 12:30:12,738 [WARNING] motion.sc09: Ping servo 2: FAILED
+2026-03-09 12:30:12,962 [WARNING] motion.sc09: No response from servo 3 after 2 attempts
+2026-03-09 12:30:12,962 [WARNING] motion.sc09: Ping servo 3: FAILED
+2026-03-09 12:30:13,186 [WARNING] motion.sc09: No response from servo 4 after 2 attempts
+2026-03-09 12:30:13,186 [WARNING] motion.sc09: Ping servo 4: FAILED
+2026-03-09 12:30:13,410 [WARNING] motion.sc09: No response from servo 5 after 2 attempts
+2026-03-09 12:30:13,410 [WARNING] motion.sc09: Ping servo 5: FAILED
+2026-03-09 12:30:13,634 [WARNING] motion.sc09: No response from servo 6 after 2 attempts
+2026-03-09 12:30:13,635 [WARNING] motion.sc09: Ping servo 6: FAILED
+2026-03-09 12:30:13,635 [INFO] werkzeug: 127.0.0.1 - - [09/Mar/2026 12:30:13] "GET /servo/ping HTTP/1.1" 200 -
+2026-03-09 12:30:13,938 [WARNING] motion.sc09: No response from servo 1 after 2 attempts
+2026-03-09 12:30:13,938 [WARNING] motion.sc09: Ping servo 1: FAILED
+2026-03-09 12:30:14,162 [WARNING] motion.sc09: No response from servo 2 after 2 attempts
+2026-03-09 12:30:14,162 [WARNING] motion.sc09: Ping servo 2: FAILED
+2026-03-09 12:30:14,387 [WARNING] motion.sc09: No response from servo 3 after 2 attempts
+2026-03-09 12:30:14,387 [WARNING] motion.sc09: Ping servo 3: FAILED
+2026-03-09 12:30:14,610 [WARNING] motion.sc09: No response from servo 4 after 2 attempts
+2026-03-09 12:30:14,610 [WARNING] motion.sc09: Ping servo 4: FAILED
+2026-03-09 12:30:14,834 [WARNING] motion.sc09: No response from servo 5 after 2 attempts
+2026-03-09 12:30:14,834 [WARNING] motion.sc09: Ping servo 5: FAILED
+2026-03-09 12:30:15,058 [WARNING] motion.sc09: No response from servo 6 after 2 attempts
+2026-03-09 12:30:15,058 [WARNING] motion.sc09: Ping servo 6: FAILED
+2026-03-09 12:30:15,059 [INFO] werkzeug: 127.0.0.1 - - [09/Mar/2026 12:30:15] "GET /servo/ping HTTP/1.1" 200 -
+2026-03-09 12:30:15,390 [WARNING] motion.sc09: No response from servo 1 after 2 attempts
+2026-03-09 12:30:15,498 [WARNING] motion.sc09: No response from servo 1 after 2 attempts
+2026-03-09 12:30:15,498 [WARNING] motion.sc09: Ping servo 1: FAILED
+2026-03-09 12:30:15,822 [WARNING] motion.sc09: No response from servo 1 after 2 attempts
+2026-03-09 12:30:15,822 [INFO] motion.servo_bus: Servo 1 move_to pos=512 speed=300 → FAIL
+2026-03-09 12:30:15,930 [WARNING] motion.sc09: No response from servo 2 after 2 attempts
+2026-03-09 12:30:15,930 [WARNING] motion.sc09: Ping servo 2: FAILED
+2026-03-09 12:30:16,254 [WARNING] motion.sc09: No response from servo 2 after 2 attempts
+2026-03-09 12:30:16,362 [WARNING] motion.sc09: No response from servo 3 after 2 attempts
+2026-03-09 12:30:16,362 [WARNING] motion.sc09: Ping servo 3: FAILED
+2026-03-09 12:30:16,686 [WARNING] motion.sc09: No response from servo 2 after 2 attempts
+2026-03-09 12:30:16,686 [INFO] motion.servo_bus: Servo 2 move_to pos=512 speed=300 → FAIL
+2026-03-09 12:30:16,794 [WARNING] motion.sc09: No response from servo 4 after 2 attempts
+2026-03-09 12:30:16,794 [WARNING] motion.sc09: Ping servo 4: FAILED
+2026-03-09 12:30:17,118 [WARNING] motion.sc09: No response from servo 3 after 2 attempts
+2026-03-09 12:30:17,226 [WARNING] motion.sc09: No response from servo 5 after 2 attempts
+2026-03-09 12:30:17,226 [WARNING] motion.sc09: Ping servo 5: FAILED
+2026-03-09 12:30:17,550 [WARNING] motion.sc09: No response from servo 3 after 2 attempts
+2026-03-09 12:30:17,550 [INFO] motion.servo_bus: Servo 3 move_to pos=512 speed=300 → FAIL
+2026-03-09 12:30:17,658 [WARNING] motion.sc09: No response from servo 6 after 2 attempts
+2026-03-09 12:30:17,658 [WARNING] motion.sc09: Ping servo 6: FAILED
+2026-03-09 12:30:17,659 [INFO] werkzeug: 127.0.0.1 - - [09/Mar/2026 12:30:17] "GET /servo/ping HTTP/1.1" 200 -
+2026-03-09 12:30:17,878 [WARNING] motion.sc09: No response from servo 4 after 2 attempts
+2026-03-09 12:30:18,102 [WARNING] motion.sc09: No response from servo 4 after 2 attempts
+2026-03-09 12:30:18,102 [INFO] motion.servo_bus: Servo 4 move_to pos=512 speed=300 → FAIL
+2026-03-09 12:30:18,326 [WARNING] motion.sc09: No response from servo 5 after 2 attempts
+2026-03-09 12:30:18,550 [WARNING] motion.sc09: No response from servo 5 after 2 attempts
+2026-03-09 12:30:18,550 [INFO] motion.servo_bus: Servo 5 move_to pos=512 speed=300 → FAIL
+2026-03-09 12:30:18,776 [WARNING] motion.sc09: No response from servo 6 after 2 attempts
+2026-03-09 12:30:18,998 [WARNING] motion.sc09: No response from servo 6 after 2 attempts
+2026-03-09 12:30:18,998 [INFO] motion.servo_bus: Servo 6 move_to pos=512 speed=300 → FAIL
+2026-03-09 12:30:19,222 [WARNING] motion.sc09: No response from servo 1 after 2 attempts
+2026-03-09 12:30:19,494 [WARNING] motion.sc09: No response from servo 1 after 2 attempts
+2026-03-09 12:30:19,759 [WARNING] motion.sc09: No response from servo 1 after 2 attempts
+2026-03-09 12:30:20,034 [WARNING] motion.sc09: No response from servo 1 after 2 attempts
+2026-03-09 12:30:20,306 [WARNING] motion.sc09: No response from servo 1 after 2 attempts
+2026-03-09 12:30:20,578 [WARNING] motion.sc09: No response from servo 1 after 2 attempts
+2026-03-09 12:30:20,850 [WARNING] motion.sc09: No response from servo 1 after 2 attempts
+2026-03-09 12:30:21,122 [WARNING] motion.sc09: No response from servo 1 after 2 attempts
+2026-03-09 12:30:21,394 [WARNING] motion.sc09: No response from servo 1 after 2 attempts
+2026-03-09 12:30:21,670 [WARNING] motion.sc09: No response from servo 1 after 2 attempts
+2026-03-09 12:30:21,950 [WARNING] motion.sc09: No response from servo 1 after 2 attempts
+2026-03-09 12:30:22,000 [WARNING] motion.servo_bus: Servo 1: wait_until_stopped timed out
+2026-03-09 12:30:22,227 [WARNING] motion.sc09: No response from servo 2 after 2 attempts
+2026-03-09 12:30:22,502 [WARNING] motion.sc09: No response from servo 2 after 2 attempts
+2026-03-09 12:30:22,778 [WARNING] motion.sc09: No response from servo 2 after 2 attempts
+2026-03-09 12:30:23,051 [WARNING] motion.sc09: No response from servo 2 after 2 attempts
+2026-03-09 12:30:23,326 [WARNING] motion.sc09: No response from servo 2 after 2 attempts
+2026-03-09 12:30:23,602 [WARNING] motion.sc09: No response from servo 2 after 2 attempts
+2026-03-09 12:30:23,874 [WARNING] motion.sc09: No response from servo 2 after 2 attempts
+2026-03-09 12:30:24,146 [WARNING] motion.sc09: No response from servo 2 after 2 attempts
+2026-03-09 12:30:24,418 [WARNING] motion.sc09: No response from servo 2 after 2 attempts
+2026-03-09 12:30:24,690 [WARNING] motion.sc09: No response from servo 2 after 2 attempts
+2026-03-09 12:30:24,962 [WARNING] motion.sc09: No response from servo 2 after 2 attempts
+2026-03-09 12:30:25,012 [WARNING] motion.servo_bus: Servo 2: wait_until_stopped timed out
+2026-03-09 12:30:25,238 [WARNING] motion.sc09: No response from servo 3 after 2 attempts
+2026-03-09 12:30:25,510 [WARNING] motion.sc09: No response from servo 3 after 2 attempts
+2026-03-09 12:30:25,782 [WARNING] motion.sc09: No response from servo 3 after 2 attempts
+2026-03-09 12:30:26,054 [WARNING] motion.sc09: No response from servo 3 after 2 attempts
+2026-03-09 12:30:26,322 [WARNING] motion.sc09: No response from servo 3 after 2 attempts
+2026-03-09 12:30:26,599 [WARNING] motion.sc09: No response from servo 3 after 2 attempts
+2026-03-09 12:30:26,874 [WARNING] motion.sc09: No response from servo 3 after 2 attempts
+2026-03-09 12:30:27,146 [WARNING] motion.sc09: No response from servo 3 after 2 attempts
+2026-03-09 12:30:27,418 [WARNING] motion.sc09: No response from servo 3 after 2 attempts
+2026-03-09 12:30:27,694 [WARNING] motion.sc09: No response from servo 3 after 2 attempts
+2026-03-09 12:30:27,962 [WARNING] motion.sc09: No response from servo 3 after 2 attempts
+2026-03-09 12:30:28,234 [WARNING] motion.sc09: No response from servo 3 after 2 attempts
+2026-03-09 12:30:28,284 [WARNING] motion.servo_bus: Servo 3: wait_until_stopped timed out
+2026-03-09 12:30:28,510 [WARNING] motion.sc09: No response from servo 4 after 2 attempts
+2026-03-09 12:30:28,786 [WARNING] motion.sc09: No response from servo 4 after 2 attempts
+2026-03-09 12:30:29,051 [WARNING] motion.sc09: No response from servo 4 after 2 attempts
+2026-03-09 12:30:29,319 [WARNING] motion.sc09: No response from servo 4 after 2 attempts
+2026-03-09 12:30:29,594 [WARNING] motion.sc09: No response from servo 4 after 2 attempts
+2026-03-09 12:30:29,866 [WARNING] motion.sc09: No response from servo 4 after 2 attempts
+2026-03-09 12:30:30,142 [WARNING] motion.sc09: No response from servo 4 after 2 attempts
+2026-03-09 12:30:30,414 [WARNING] motion.sc09: No response from servo 4 after 2 attempts
+2026-03-09 12:30:30,686 [WARNING] motion.sc09: No response from servo 4 after 2 attempts
+2026-03-09 12:30:30,958 [WARNING] motion.sc09: No response from servo 4 after 2 attempts
+2026-03-09 12:30:31,230 [WARNING] motion.sc09: No response from servo 4 after 2 attempts
+2026-03-09 12:30:31,502 [WARNING] motion.sc09: No response from servo 4 after 2 attempts
+2026-03-09 12:30:31,552 [WARNING] motion.servo_bus: Servo 4: wait_until_stopped timed out
+2026-03-09 12:30:31,778 [WARNING] motion.sc09: No response from servo 5 after 2 attempts
+2026-03-09 12:30:32,050 [WARNING] motion.sc09: No response from servo 5 after 2 attempts
+2026-03-09 12:30:32,325 [WARNING] motion.sc09: No response from servo 5 after 2 attempts
+2026-03-09 12:30:32,598 [WARNING] motion.sc09: No response from servo 5 after 2 attempts
+2026-03-09 12:30:32,874 [WARNING] motion.sc09: No response from servo 5 after 2 attempts
+2026-03-09 12:30:33,151 [WARNING] motion.sc09: No response from servo 5 after 2 attempts
+2026-03-09 12:30:33,426 [WARNING] motion.sc09: No response from servo 5 after 2 attempts
+2026-03-09 12:30:33,702 [WARNING] motion.sc09: No response from servo 5 after 2 attempts
+2026-03-09 12:30:33,974 [WARNING] motion.sc09: No response from servo 5 after 2 attempts
+2026-03-09 12:30:34,246 [WARNING] motion.sc09: No response from servo 5 after 2 attempts
+2026-03-09 12:30:34,522 [WARNING] motion.sc09: No response from servo 5 after 2 attempts
+2026-03-09 12:30:34,572 [WARNING] motion.servo_bus: Servo 5: wait_until_stopped timed out
+2026-03-09 12:30:34,798 [WARNING] motion.sc09: No response from servo 6 after 2 attempts
+2026-03-09 12:30:35,074 [WARNING] motion.sc09: No response from servo 6 after 2 attempts
+2026-03-09 12:30:35,346 [WARNING] motion.sc09: No response from servo 6 after 2 attempts
+2026-03-09 12:30:35,618 [WARNING] motion.sc09: No response from servo 6 after 2 attempts
+2026-03-09 12:30:35,890 [WARNING] motion.sc09: No response from servo 6 after 2 attempts
+2026-03-09 12:30:36,162 [WARNING] motion.sc09: No response from servo 6 after 2 attempts
+2026-03-09 12:30:36,434 [WARNING] motion.sc09: No response from servo 6 after 2 attempts
+2026-03-09 12:30:36,706 [WARNING] motion.sc09: No response from servo 6 after 2 attempts
+2026-03-09 12:30:36,978 [WARNING] motion.sc09: No response from servo 6 after 2 attempts
+2026-03-09 12:30:37,254 [WARNING] motion.sc09: No response from servo 6 after 2 attempts
+2026-03-09 12:30:37,534 [WARNING] motion.sc09: No response from servo 6 after 2 attempts
+2026-03-09 12:30:37,584 [WARNING] motion.servo_bus: Servo 6: wait_until_stopped timed out
+2026-03-09 12:30:37,585 [INFO] werkzeug: 127.0.0.1 - - [09/Mar/2026 12:30:37] "POST /servo/home HTTP/1.1" 200 -
+2026-03-09 12:39:07,573 [INFO] main: Shutting down...
+2026-03-09 13:16:15,372 [INFO] main: === Rubik's Cube Solver starting ===
+2026-03-09 13:16:15,625 [INFO] vision.camera: Camera 0 opened
+2026-03-09 13:16:15,822 [INFO] vision.camera: Camera 2 opened
+2026-03-09 13:16:15,823 [INFO] main: Camera 0: opened
+2026-03-09 13:16:15,823 [INFO] main: Camera 1: opened
+2026-03-09 13:16:15,829 [INFO] motion.sc09: SC09Bus opened /dev/ttyAMA10 @ 1000000 baud
+2026-03-09 13:16:16,054 [WARNING] motion.sc09: No response from servo 1 after 2 attempts
+2026-03-09 13:16:16,054 [WARNING] motion.sc09: Ping servo 1: FAILED
+2026-03-09 13:16:16,278 [WARNING] motion.sc09: No response from servo 2 after 2 attempts
+2026-03-09 13:16:16,278 [WARNING] motion.sc09: Ping servo 2: FAILED
+2026-03-09 13:16:16,506 [WARNING] motion.sc09: No response from servo 3 after 2 attempts
+2026-03-09 13:16:16,506 [WARNING] motion.sc09: Ping servo 3: FAILED
+2026-03-09 13:16:16,730 [WARNING] motion.sc09: No response from servo 4 after 2 attempts
+2026-03-09 13:16:16,730 [WARNING] motion.sc09: Ping servo 4: FAILED
+2026-03-09 13:16:16,954 [WARNING] motion.sc09: No response from servo 5 after 2 attempts
+2026-03-09 13:16:16,954 [WARNING] motion.sc09: Ping servo 5: FAILED
+2026-03-09 13:16:17,178 [WARNING] motion.sc09: No response from servo 6 after 2 attempts
+2026-03-09 13:16:17,178 [WARNING] motion.sc09: Ping servo 6: FAILED
+2026-03-09 13:16:17,178 [INFO] main: Servo 1: NO RESPONSE
+2026-03-09 13:16:17,178 [INFO] main: Servo 2: NO RESPONSE
+2026-03-09 13:16:17,178 [INFO] main: Servo 3: NO RESPONSE
+2026-03-09 13:16:17,178 [INFO] main: Servo 4: NO RESPONSE
+2026-03-09 13:16:17,178 [INFO] main: Servo 5: NO RESPONSE
+2026-03-09 13:16:17,178 [INFO] main: Servo 6: NO RESPONSE
+2026-03-09 13:16:17,308 [INFO] server.app: Flask app created
+2026-03-09 13:16:17,308 [INFO] main: Starting Flask on 0.0.0.0:5000
+2026-03-09 13:16:17,311 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.10.130:5000
+2026-03-09 13:16:17,312 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2026-03-09 13:16:19,093 [INFO] werkzeug: 127.0.0.1 - - [09/Mar/2026 13:16:19] "GET / HTTP/1.1" 200 -
+2026-03-09 13:16:19,135 [INFO] werkzeug: 127.0.0.1 - - [09/Mar/2026 13:16:19] "GET /static/style.css HTTP/1.1" 200 -
+2026-03-09 13:16:19,232 [INFO] werkzeug: 127.0.0.1 - - [09/Mar/2026 13:16:19] "GET /static/app.js HTTP/1.1" 200 -
+2026-03-09 13:16:19,323 [INFO] vision.roi: Auto-generated 27 ROIs for camera 0
+2026-03-09 13:16:19,324 [INFO] vision.roi: Auto-generated 27 ROIs for camera 1
+2026-03-09 13:16:19,324 [INFO] werkzeug: 127.0.0.1 - - [09/Mar/2026 13:16:19] "GET /rois HTTP/1.1" 200 -
+2026-03-09 13:16:19,498 [INFO] werkzeug: 127.0.0.1 - - [09/Mar/2026 13:16:19] "GET /video/0 HTTP/1.1" 200 -
+2026-03-09 13:16:19,773 [INFO] werkzeug: 127.0.0.1 - - [09/Mar/2026 13:16:19] "GET /video/1 HTTP/1.1" 200 -
+2026-03-09 13:16:36,700 [INFO] main: Shutting down...
