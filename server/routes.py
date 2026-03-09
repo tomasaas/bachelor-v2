@@ -121,11 +121,24 @@ def camera_snapshot(cam_id: int):
 
 @bp.route("/camera/detect")
 def camera_detect():
-    """Run colour classification on the frozen snapshots."""
+    """Run colour classification on the frozen snapshots.
+
+    Query param ``center_colors`` (JSON object) supplies the manually-set
+    colour for each face's center facelet, e.g. {"U":"W","R":"R",...}.
+    These override vision detection for the 6 center ROIs.
+    """
+    import json as _json
     from vision.roi import ROI
     from vision.color import classify_rois, build_cube_state
 
     _ensure_rois()
+
+    # Parse manual center colours from query string
+    center_colors_raw = request.args.get("center_colors", "{}")
+    try:
+        center_colors: dict[str, str] = _json.loads(center_colors_raw)
+    except (ValueError, TypeError):
+        center_colors = {}
 
     cam0_colors: dict[str, str] = {}
     cam1_colors: dict[str, str] = {}
@@ -136,16 +149,31 @@ def camera_detect():
             log.warning("No frozen frame for camera %d", cam_id)
             continue
         roi_dicts = _runtime_rois[cam_id]
+        # Separate center ROIs (row=1, col=1) from the rest
+        non_center_rois = []
+        for r in roi_dicts:
+            if r["row"] == 1 and r["col"] == 1:
+                # Use manual center colour instead of vision
+                label = r["label"]
+                face = r["face"]
+                color = center_colors.get(face, "?")
+                if cam_id == 0:
+                    cam0_colors[label] = color
+                else:
+                    cam1_colors[label] = color
+            else:
+                non_center_rois.append(r)
+
         roi_objs = [
             ROI(face=r["face"], row=r["row"], col=r["col"],
                 x=r["x"], y=r["y"], w=r["w"], h=r["h"])
-            for r in roi_dicts
+            for r in non_center_rois
         ]
         colors = classify_rois(frame, roi_objs)
         if cam_id == 0:
-            cam0_colors = colors
+            cam0_colors.update(colors)
         else:
-            cam1_colors = colors
+            cam1_colors.update(colors)
 
     if not cam0_colors and not cam1_colors:
         return jsonify({"error": "No frames available for detection"})
