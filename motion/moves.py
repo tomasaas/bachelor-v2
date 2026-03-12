@@ -26,16 +26,18 @@ class ServoAction:
     servo_id: int
     position: int          # absolute target position (0-1023)
     speed: int = 400       # position-mode speed
+    time_ms: int = 0       # position-mode running time override
     settle_ms: int = 300   # wait after issuing this action (ms)
 
 
 # ── position profiles (calibrate per-mechanism) ─────────────────────────────
 
 HOME   = config.POS_HOME
-Q_CW   = config.POS_QUARTER_CW    # +90° from home  (≈ 307 steps)
+Q_CW   = config.POS_QUARTER_CW    # +90° from hom
 Q_CCW  = config.POS_QUARTER_CCW   # –90° from home
-HALF   = config.POS_HALF           # +180° from home (≈ 614 steps)
+HALF   = config.POS_HALF           # +180° from home
 SPEED  = config.MOVE_SPEED
+TIME_MS = config.MOVE_TIME_MS
 SETTLE = config.MOVE_SETTLE_MS
 
 
@@ -52,14 +54,26 @@ def _face_actions(face: str, delta: int) -> list[ServoAction]:
     sid = config.FACE_SERVO[face]
     target = _clamp_pos(HOME + delta)
     return [
-        ServoAction(servo_id=sid, position=target, speed=SPEED, settle_ms=SETTLE),
+        ServoAction(
+            servo_id=sid,
+            position=target,
+            speed=SPEED,
+            time_ms=TIME_MS,
+            settle_ms=SETTLE,
+        ),
     ]
 
 
 def _face_return_home(face: str) -> list[ServoAction]:
     sid = config.FACE_SERVO[face]
     return [
-        ServoAction(servo_id=sid, position=HOME, speed=SPEED, settle_ms=SETTLE),
+        ServoAction(
+            servo_id=sid,
+            position=HOME,
+            speed=SPEED,
+            time_ms=TIME_MS,
+            settle_ms=SETTLE,
+        ),
     ]
 
 
@@ -99,7 +113,17 @@ def manual_move_actions(token: str) -> list[ServoAction]:
     elif suffix == "'":
         return _face_actions(face, Q_CCW)
     else:  # "2"
-        return _face_actions(face, HALF)
+        first = _face_actions(face, Q_CW)
+        second = [
+            ServoAction(
+                servo_id=first[0].servo_id,
+                position=_clamp_pos(HOME + HALF),
+                speed=SPEED,
+                time_ms=TIME_MS,
+                settle_ms=SETTLE,
+            ),
+        ]
+        return first + second
 
 
 def move_to_actions(token: str) -> list[ServoAction]:
@@ -119,7 +143,11 @@ def move_to_actions(token: str) -> list[ServoAction]:
     elif suffix == "'":
         actions = _face_actions(face, Q_CCW)
     else:  # "2"
-        actions = _face_actions(face, HALF)
+        actions = (
+            _face_actions(face, Q_CW)
+            + _face_return_home(face)
+            + _face_actions(face, Q_CW)
+        )
 
     # Return to home after each independent move so the mechanism is ready
     # for the next move on any face.

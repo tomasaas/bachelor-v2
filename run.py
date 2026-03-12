@@ -33,6 +33,13 @@ def setup_logging() -> None:
         ],
     )
 
+    class _SuppressPositionsPoll(logging.Filter):
+        def filter(self, record: logging.LogRecord) -> bool:
+            message = record.getMessage()
+            return "GET /servo/positions" not in message and "GET /status" not in message
+
+    logging.getLogger("werkzeug").addFilter(_SuppressPositionsPoll())
+
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Rubik's Cube Solver Server")

@@ -152,6 +152,12 @@ body {
   grid-template-columns: 1fr 1fr;
   gap: 0.25rem;
 }
+.face-card {
+  padding: 0.3rem 0.35rem;
+  background: #10101a;
+  border: 1px solid #222534;
+  border-radius: 4px;
+}
 .face-row {
   display: flex;
   align-items: center;
@@ -171,6 +177,21 @@ body {
   font-family: 'Consolas', 'Monaco', monospace;
   color: #5a9;
   white-space: nowrap;
+}
+.face-metrics {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+  font-size: 0.68rem;
+  color: #7f95a8;
+  font-family: 'Consolas', 'Monaco', monospace;
+}
+.telemetry-summary {
+  margin-top: 0.45rem;
+  font-size: 0.75rem;
+  color: #9bc0d4;
+  font-family: 'Consolas', 'Monaco', monospace;
 }
 
 /* ── Progress bar ─────────────────────────────────────────── */

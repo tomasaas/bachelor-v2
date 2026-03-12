@@ -4,9 +4,11 @@ Flask routes – dashboard, camera streams, solve endpoint, status.
 
 from __future__ import annotations
 
+from collections import deque
 import logging
 import random
 import threading
+import time
 
 import cv2
 import numpy as np
@@ -44,6 +46,30 @@ _progress = {
     "completed_actions": 0,
     "current_move": "",
 }
+
+_face_telemetry_history = {
+    face: {
+        "torque_pct": deque(),
+        "current_pct": deque(),
+    }
+    for face in config.FACE_SERVO
+}
+_total_current_history = deque()
+
+
+def _prune_history(history: deque, window_s: float, now: float) -> None:
+    cutoff = now - window_s
+    while history and history[0][0] < cutoff:
+        history.popleft()
+
+
+def _record_history(history: deque, value: float | None, window_s: float, now: float) -> float | None:
+    _prune_history(history, window_s, now)
+    if value is not None:
+        history.append((now, value))
+    if not history:
+        return None
+    return round(max(sample for _, sample in history), 3)
 
 
 def _ensure_rois():
@@ -382,15 +408,58 @@ def servo_ping():
 
 @bp.route("/servo/positions")
 def servo_positions():
-    """Read current position of every face servo. Returns bits and degrees."""
+    """Read current servo telemetry for every face."""
     if _servo_group is None:
         return jsonify({"error": "Servos not initialised"}), 503
-    result = {}
+    now = time.monotonic()
+    faces = {}
+    total_current_a = 0.0
     for face, sid in config.FACE_SERVO.items():
-        bits = _servo_group[sid].read_position()
+        servo = _servo_group[sid]
+        bits = servo.read_position()
         degrees = round(bits / config.STEPS_PER_DEGREE, 1) if bits is not None else None
-        result[face] = {"bits": bits, "degrees": degrees}
-    return jsonify(result)
+        load_raw = servo.read_load()
+        current_raw = servo.read_current()
+        torque_pct = servo.load_raw_to_percent(load_raw)
+        current_a = servo.current_raw_to_amps(current_raw)
+        current_pct = servo.current_raw_to_percent(current_raw)
+
+        torque_pct_max_1s = _record_history(
+            _face_telemetry_history[face]["torque_pct"],
+            torque_pct,
+            config.FACE_TELEMETRY_WINDOW_S,
+            now,
+        )
+        current_pct_max_1s = _record_history(
+            _face_telemetry_history[face]["current_pct"],
+            current_pct,
+            config.FACE_TELEMETRY_WINDOW_S,
+            now,
+        )
+
+        if current_a is not None:
+            total_current_a += current_a
+
+        faces[face] = {
+            "bits": bits,
+            "degrees": degrees,
+            "torque_pct_max_1s": torque_pct_max_1s,
+            "current_pct_max_1s": current_pct_max_1s,
+            "current_a": current_a,
+        }
+
+    total_current_a_max_5s = _record_history(
+        _total_current_history,
+        round(total_current_a, 3),
+        config.TOTAL_CURRENT_WINDOW_S,
+        now,
+    )
+
+    return jsonify({
+        "faces": faces,
+        "total_current_a": round(total_current_a, 3),
+        "total_current_a_max_5s": total_current_a_max_5s,
+    })
 
 
 @bp.route("/servo/home", methods=["POST"])

@@ -25,6 +25,7 @@ const stateBadge   = $("#state-badge");
 const detectionPanel   = $("#detection-panel");
 const cubePreview      = $("#cube-preview");
 const cubeStringDisp   = $("#cube-string-display");
+const totalCurrentDisplay = $("#total-current-display");
 
 // Camera elements
 const cam0Img      = $("#cam0");
@@ -481,21 +482,39 @@ async function pollStatus() {
 // ── Window resize → redraw ──────────────────────────────────────────────────
 window.addEventListener("resize", drawAllROIs);
 
-// ── Servo position live view ────────────────────────────────────────────────
+// ── Servo live telemetry ────────────────────────────────────────────────────
 async function pollServoPositions() {
   try {
     const resp = await fetch("/servo/positions");
     if (!resp.ok) return;
     const data = await resp.json();
     if (data.error) return;
-    for (const [face, info] of Object.entries(data)) {
+    const faces = data.faces || {};
+    for (const [face, info] of Object.entries(faces)) {
       const el = document.querySelector(`[data-face-pos="${face}"]`);
+      const torqueEl = document.querySelector(`[data-face-torque="${face}"]`);
+      const currentEl = document.querySelector(`[data-face-current="${face}"]`);
       if (!el) continue;
       if (info.bits === null || info.bits === undefined) {
         el.textContent = "—";
       } else {
         el.textContent = `${info.bits} b / ${info.degrees}°`;
       }
+      if (torqueEl) {
+        torqueEl.textContent = info.torque_pct_max_1s === null || info.torque_pct_max_1s === undefined
+          ? "Torque 3s max: —"
+          : `Torque 3s max: ${info.torque_pct_max_1s}%`;
+      }
+      if (currentEl) {
+        currentEl.textContent = info.current_pct_max_1s === null || info.current_pct_max_1s === undefined
+          ? "Current 3s max: —"
+          : `Current 3s max: ${info.current_pct_max_1s}%`;
+      }
+    }
+    if (totalCurrentDisplay) {
+      totalCurrentDisplay.textContent = data.total_current_a_max_5s === null || data.total_current_a_max_5s === undefined
+        ? "Total current 3s max: —"
+        : `Total current 3s max: ${data.total_current_a_max_5s.toFixed(3)} A`;
     }
   } catch (_) {
     // silently ignore – servos may not be connected

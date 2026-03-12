@@ -42,28 +42,26 @@ class Reg:
 
 # ---------------------------------------------------------------------------
 # Position-mode tuning (units 0-1023)
-#
-# SC09 datasheet claims 300°/1024 but these servos empirically produce
-# ~0.586°/step (~600° over the full 0-1023 range).
-#
-# Robot home is at position 358 (~210° physical from 0).
-# This gives room for −90°, +90°, and +180° with wide margins:
-#
-#   home − 90°  = 204   (margin: 204 counts from 0)
-#   home + 90°  = 512
-#   home +180°  = 665   (margin: 358 counts from 1023)
-#
-# After going full CCW (−90°), three consecutive CW 90° turns fit:
-#   204 → 358 → 512 → 666  (all within 0-1023)
 # ---------------------------------------------------------------------------
-POS_HOME         = 358          # robot home / neutral
-POS_QUARTER_CW   = 154          # +90°  empirical
-POS_QUARTER_CCW  = -154         # −90°
-POS_HALF         = 307          # +180° empirical (2 × 154 ≈ 307)
-MOVE_SPEED       = 1500         # default speed for position moves (units/s)
-MOVE_SETTLE_MS   = 300          # extra settle time after move (ms)
+POS_HOME         = round((150 - 90) * (1024 / 300))  # robot home / neutral
+POS_QUARTER_CW   = round(90 * (1024 / 300))          # +90°
+POS_QUARTER_CCW  = -round(90 * (1024 / 300))         # -90°
+POS_HALF         = round(180 * (1024 / 300))         # +180°
+MOVE_SPEED       = 1000                              # kept for API compat / fallback
+MOVE_TIME_MS     = 500                               # position move duration target
+MOVE_SETTLE_MS   = 500                               # extra settle time after move (ms)
 
-STEPS_PER_DEGREE = 154.0 / 90.0  # ≈ 1.71 (empirically measured)
+STEPS_PER_DEGREE = 1024 / 300
+HARD_ANGLE_MIN_BITS = 0
+HARD_ANGLE_MAX_BITS = 1023
+
+SC09_MAX_TORQUE_KGCM = 2.3
+SC09_LOCKED_ROTOR_CURRENT_A = 1.0
+SC09_LOAD_RAW_FULL_SCALE = 1000
+SC09_CURRENT_RAW_TO_A = 0.001
+
+FACE_TELEMETRY_WINDOW_S = 3.0
+TOTAL_CURRENT_WINDOW_S = 3.0
  
 # ---------------------------------------------------------------------------
 # Face → servo ID mapping
@@ -103,13 +101,14 @@ CAMERA_HEIGHT  = 480
 ROI_CAM0 = []   # will be auto-generated if empty  (see vision/roi.py)
 ROI_CAM1 = []
 
+ROI_SIZE = 25  # pixel size of each ROI square
+
 # Faces visible to each camera (for auto-ROI generation)
 # Cam0 (top camera): U top-centre, L bottom-left, F bottom-right
 # Cam1 (bottom camera): R top-left, B top-right, D bottom-centre
 CAM0_FACES = ["U", "L", "F"]
 CAM1_FACES = ["R", "B", "D"]
 
-ROI_SIZE = 30  # pixel size of each ROI square
 
 # ---------------------------------------------------------------------------
 # Per-face orientation transform  (camera grid → Kociemba 3×3 order)
@@ -150,7 +149,7 @@ COLOR_RANGES = {
 FLASK_HOST = "0.0.0.0"
 FLASK_PORT = 5000
 
-ROI_SIZE = 30    # width=height of each ROI square (pixels)
+# ROI_SIZE = 20    # width=height of each ROI square (pixels)
 
 # HSV colour thresholds  {color_name: (H_low, S_low, V_low, H_high, S_high, V_high)}
 COLOR_RANGES = {

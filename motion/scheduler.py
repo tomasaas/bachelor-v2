@@ -127,11 +127,15 @@ class Scheduler:
         servo: Servo = self.group[action.servo_id]
 
         log.debug(
-            "  Action: servo=%d pos=%d speed=%d settle=%dms",
-            action.servo_id, action.position, action.speed, action.settle_ms,
+            "  Action: servo=%d pos=%d speed=%d time=%dms settle=%dms",
+            action.servo_id,
+            action.position,
+            action.speed,
+            action.time_ms,
+            action.settle_ms,
         )
 
-        servo.move_to(action.position, speed=action.speed)
+        servo.move_to(action.position, speed=action.speed, time_ms=action.time_ms)
 
         if self.check_feedback:
             servo.wait_until_stopped(timeout=2.0)

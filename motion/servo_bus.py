@@ -13,6 +13,7 @@ from __future__ import annotations
 import logging
 import time
 
+import config
 from motion.sc09 import SC09Bus
 
 log = logging.getLogger(__name__)
@@ -26,6 +27,7 @@ _MAX_ANGLE_L   = 11    # 2 bytes
 _PRESENT_VOLTAGE     = 62
 _PRESENT_TEMPERATURE = 63
 _PRESENT_LOAD_L      = 60
+_PRESENT_CURRENT_L   = 69
 _RUNNING_SPEED_L     = 46
 
 
@@ -83,7 +85,13 @@ class Servo:
 
     # ── position-mode moves ──────────────────────────────────────────────
 
-    def move_to(self, position: int, speed: int = 400, acceleration: int = 0) -> bool:
+    def move_to(
+        self,
+        position: int,
+        speed: int = 400,
+        acceleration: int = 0,
+        time_ms: int = 0,
+    ) -> bool:
         """
         Move to *position* (0-1023) at *speed*.
         Uses the vendor SDK WritePos (same as read_write.py example).
@@ -91,10 +99,11 @@ class Servo:
         """
         position = max(0, min(1023, position))
         speed = max(0, min(0xFFFF, speed))
-        ok = self.bus.write_pos(self.id, position, time=0, speed=speed)
+        time_ms = max(0, min(0xFFFF, int(time_ms)))
+        ok = self.bus.write_pos(self.id, position, time=time_ms, speed=speed)
         log.info(
-            "Servo %d move_to pos=%d speed=%d → %s",
-            self.id, position, speed, "OK" if ok else "FAIL",
+            "Servo %d move_to pos=%d speed=%d time=%dms → %s",
+            self.id, position, speed, time_ms, "OK" if ok else "FAIL",
         )
         return ok
 
@@ -140,6 +149,9 @@ class Servo:
     def read_load(self) -> int | None:
         return self.bus.read_u16(self.id, _PRESENT_LOAD_L)
 
+    def read_current(self) -> int | None:
+        return self.bus.read_u16(self.id, _PRESENT_CURRENT_L)
+
     def read_voltage(self) -> int | None:
         return self.bus.read_u8(self.id, _PRESENT_VOLTAGE)
 
@@ -153,9 +165,31 @@ class Servo:
             "position": self.read_position(),
             "speed": self.read_speed(),
             "load": self.read_load(),
+            "current": self.read_current(),
             "voltage": self.read_voltage(),
             "temperature": self.read_temperature(),
         }
+
+    @staticmethod
+    def load_raw_to_percent(raw: int | None) -> float | None:
+        if raw is None:
+            return None
+        magnitude = raw & 0x03FF
+        return min(100.0, round((magnitude / config.SC09_LOAD_RAW_FULL_SCALE) * 100.0, 1))
+
+    @staticmethod
+    def current_raw_to_amps(raw: int | None) -> float | None:
+        if raw is None:
+            return None
+        magnitude = raw & 0x7FFF
+        return round(magnitude * config.SC09_CURRENT_RAW_TO_A, 3)
+
+    @staticmethod
+    def current_raw_to_percent(raw: int | None) -> float | None:
+        amps = Servo.current_raw_to_amps(raw)
+        if amps is None:
+            return None
+        return min(100.0, round((amps / config.SC09_LOCKED_ROTOR_CURRENT_A) * 100.0, 1))
 
 
 class ServoGroup:
@@ -242,7 +276,7 @@ class ServoGroup:
     def all_home(self, home: int = 512, speed: int = 1500) -> None:
         """Move all servos to home position."""
         for s in self.servos.values():
-            s.move_to(home, speed)
+            s.move_to(home, speed, time_ms=config.MOVE_TIME_MS)
         # Wait for all to finish
         for s in self.servos.values():
             s.wait_until_stopped()
