@@ -313,7 +313,13 @@ def solve():
             _progress["total_actions"] = sum(len(g) for g in action_groups)
 
             if _scheduler:
-                _scheduler.execute(action_groups, tokens)
+                ok = _scheduler.execute(action_groups, tokens)
+                if not ok:
+                    sched_state = _scheduler.progress.state.name
+                    _progress["state"] = sched_state
+                    _progress["error"] = _scheduler.progress.error
+                    _progress["current_move"] = ""
+                    return
             else:
                 log.warning("No servos – solution computed but cannot execute: %s", solution)
                 _progress["completed_moves"] = len(tokens)
@@ -379,6 +385,14 @@ def status():
         d = _scheduler.progress.as_dict()
         if _progress.get("solution"):
             d["solution"] = _progress["solution"]
+
+        # If solve failed (or is still solving) before scheduler execution
+        # started, scheduler remains IDLE; expose pipeline progress instead.
+        if d.get("state") == "IDLE" and _progress.get("state") in {
+            "RUNNING", "ERROR", "DONE", "ABORTING"
+        }:
+            return jsonify(_progress)
+
         return jsonify(d)
     return jsonify(_progress)
 
