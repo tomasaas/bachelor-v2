@@ -380,6 +380,19 @@ def servo_ping():
     return jsonify({str(k): v for k, v in results.items()})
 
 
+@bp.route("/servo/positions")
+def servo_positions():
+    """Read current position of every face servo. Returns bits and degrees."""
+    if _servo_group is None:
+        return jsonify({"error": "Servos not initialised"}), 503
+    result = {}
+    for face, sid in config.FACE_SERVO.items():
+        bits = _servo_group[sid].read_position()
+        degrees = round(bits / config.STEPS_PER_DEGREE, 1) if bits is not None else None
+        result[face] = {"bits": bits, "degrees": degrees}
+    return jsonify(result)
+
+
 @bp.route("/servo/home", methods=["POST"])
 def servo_home():
     if _servo_group is None:

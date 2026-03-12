@@ -481,6 +481,29 @@ async function pollStatus() {
 // ── Window resize → redraw ──────────────────────────────────────────────────
 window.addEventListener("resize", drawAllROIs);
 
+// ── Servo position live view ────────────────────────────────────────────────
+async function pollServoPositions() {
+  try {
+    const resp = await fetch("/servo/positions");
+    if (!resp.ok) return;
+    const data = await resp.json();
+    if (data.error) return;
+    for (const [face, info] of Object.entries(data)) {
+      const el = document.querySelector(`[data-face-pos="${face}"]`);
+      if (!el) continue;
+      if (info.bits === null || info.bits === undefined) {
+        el.textContent = "—";
+      } else {
+        el.textContent = `${info.bits} b / ${info.degrees}°`;
+      }
+    }
+  } catch (_) {
+    // silently ignore – servos may not be connected
+  }
+}
+setInterval(pollServoPositions, 500);
+pollServoPositions();
+
 // ── Init ────────────────────────────────────────────────────────────────────
 setupROIDragging(0);
 setupROIDragging(1);

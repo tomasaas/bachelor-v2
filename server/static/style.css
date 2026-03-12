@@ -165,6 +165,13 @@ body {
   color: #aaa;
   text-align: center;
 }
+.face-pos {
+  margin-left: auto;
+  font-size: 0.7rem;
+  font-family: 'Consolas', 'Monaco', monospace;
+  color: #5a9;
+  white-space: nowrap;
+}
 
 /* ── Progress bar ─────────────────────────────────────────── */
 .progress-bar-outer {
