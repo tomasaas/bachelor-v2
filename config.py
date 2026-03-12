@@ -52,15 +52,29 @@ MOVE_SETTLE_MS   = 300         # extra settle time after move (ms)
 
 # ---------------------------------------------------------------------------
 # Face → servo ID mapping
+#
+# Physical rule:  servo 1 = bottom,  servo 6 = top,
+#                 servos 2-3-4-5 go clockwise when viewed from below.
 # ---------------------------------------------------------------------------
 FACE_SERVO = {
-    "U": 1,
-    "R": 2,
-    "F": 3,
-    "D": 4,
-    "L": 5,
-    "B": 6,
+    "U": 6,   # top
+    "D": 1,   # bottom
+    "F": 2,   # front
+    "R": 3,   # right
+    "B": 4,   # back
+    "L": 5,   # left
 }
+
+# Reverse lookup: servo ID → face letter
+SERVO_FACE = {v: k for k, v in FACE_SERVO.items()}
+
+# ---------------------------------------------------------------------------
+# Cube insertion rule
+# ---------------------------------------------------------------------------
+# The cube must always be inserted with the SAME two center references:
+#   • the same colour on U (servo 6 / top)
+#   • the same adjacent colour on F (servo 2 / front)
+# This fully fixes orientation for all 6 faces.
 
 # ---------------------------------------------------------------------------
 # Vision / cameras
@@ -69,16 +83,38 @@ CAMERA_INDICES = [0, 2]         # /dev/video0, /dev/video2
 CAMERA_WIDTH   = 640
 CAMERA_HEIGHT  = 480
 
-# ROI grid per camera: list of (face_label, row, col, x, y, w, h)
+# ROI grid per camera: list of (face_label, cam_row, cam_col, x, y, w, h)
 # These are placeholder rectangles – calibrate for your rig.
 ROI_CAM0 = []   # will be auto-generated if empty  (see vision/roi.py)
 ROI_CAM1 = []
 
 # Faces visible to each camera (for auto-ROI generation)
-CAM0_FACES = ["U", "F", "R"]
-CAM1_FACES = ["D", "B", "L"]
+# Cam0 (top camera): U top-centre, L bottom-left, F bottom-right
+# Cam1 (bottom camera): R top-left, B top-right, D bottom-centre
+CAM0_FACES = ["U", "L", "F"]
+CAM1_FACES = ["R", "B", "D"]
 
 ROI_SIZE = 30  # pixel size of each ROI square
+
+# ---------------------------------------------------------------------------
+# Per-face orientation transform  (camera grid → Kociemba 3×3 order)
+#
+# Each camera sees faces at a certain rotation relative to the standard
+# Kociemba reading order (top-left → top-right, row by row).
+# The value is the clockwise rotation IN DEGREES to apply to the camera's
+# 3×3 grid so that it aligns with Kociemba facelet order.
+#
+# Allowed values: 0, 90, 180, 270  (mirror only if absolutely necessary).
+# Calibrate these once and leave them fixed.
+# ---------------------------------------------------------------------------
+FACE_ORIENTATION = {
+    "U":   0,
+    "R":   0,
+    "F":   0,
+    "D":   0,
+    "L":   0,
+    "B":   0,
+}
 
 # ---------------------------------------------------------------------------
 # HSV colour classification ranges  {colour: (H_lo, S_lo, V_lo, H_hi, S_hi, V_hi)}

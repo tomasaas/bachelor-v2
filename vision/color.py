@@ -76,24 +76,27 @@ def build_cube_state(cam0_colors: dict[str, str], cam1_colors: dict[str, str]) -
     Fuse colour maps from both cameras into a 54-char Kociemba cube string.
 
     Kociemba order: U1-U9, R1-R9, F1-F9, D1-D9, L1-L9, B1-B9
-    where index = row*3 + col  (row-major, top-left = 0).
+    Each face is read top-left → top-right, row by row.
+
+    The orientation transform (camera grid → Kociemba order) is already
+    baked into the ROI ``label`` property, so *cam0_colors* / *cam1_colors*
+    keys are already Kociemba facelet labels like ``U1``, ``R5``, etc.
 
     Colour chars (W/R/G/Y/O/B) are mapped to face letters (U/R/F/D/L/B)
     based on FACE_COLORS.
     """
+    from vision.roi import all_facelet_labels
+
     # Invert FACE_COLORS: colour → face letter
     color_to_face = {v: k for k, v in FACE_COLORS.items()}
 
     merged = {**cam0_colors, **cam1_colors}
 
     chars: list[str] = []
-    for face in ["U", "R", "F", "D", "L", "B"]:
-        for r in range(3):
-            for c in range(3):
-                label = f"{face}[{r},{c}]"
-                color = merged.get(label, "?")
-                fc = color_to_face.get(color, "?")
-                chars.append(fc)
+    for label in all_facelet_labels():
+        color = merged.get(label, "?")
+        fc = color_to_face.get(color, "?")
+        chars.append(fc)
 
     cube_string = "".join(chars)
     log.info("Cube string: %s", cube_string)

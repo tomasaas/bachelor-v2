@@ -55,9 +55,9 @@ def _ensure_rois():
     for cam_id in (0, 1):
         roi_objs = get_rois(cam_id)
         _runtime_rois[cam_id] = [
-            {"face": r.face, "row": r.row, "col": r.col,
+            {"face": r.face, "cam_row": r.cam_row, "cam_col": r.cam_col,
              "x": r.x, "y": r.y, "w": r.w, "h": r.h,
-             "label": r.label}
+             "label": r.label, "facelet_index": r.facelet_index}
             for r in roi_objs
         ]
     _rois_initialized = True
@@ -151,7 +151,7 @@ def camera_detect():
             continue
         roi_dicts = _runtime_rois[cam_id]
         roi_objs = [
-            ROI(face=r["face"], row=r["row"], col=r["col"],
+            ROI(face=r["face"], cam_row=r["cam_row"], cam_col=r["cam_col"],
                 x=r["x"], y=r["y"], w=r["w"], h=r["h"])
             for r in roi_dicts
         ]
@@ -209,8 +209,37 @@ def update_rois():
             _runtime_rois[cam_id][i]["x"] = int(r.get("x", _runtime_rois[cam_id][i]["x"]))
             _runtime_rois[cam_id][i]["y"] = int(r.get("y", _runtime_rois[cam_id][i]["y"]))
 
+    # Persist to disk so positions survive server restarts
+    from vision.roi import save_rois
+    save_rois(_runtime_rois[0], _runtime_rois[1])
+
     log.info("ROIs updated for camera %d", cam_id)
     return jsonify({"status": "ok"})
+
+
+@bp.route("/rois/reset", methods=["POST"])
+def reset_rois():
+    """Reset ROI positions to auto-generated defaults and delete saved file."""
+    global _rois_initialized
+    from vision.roi import get_default_rois, delete_saved_rois
+
+    delete_saved_rois()
+
+    for cam_id in (0, 1):
+        roi_objs = get_default_rois(cam_id)
+        _runtime_rois[cam_id] = [
+            {"face": r.face, "cam_row": r.cam_row, "cam_col": r.cam_col,
+             "x": r.x, "y": r.y, "w": r.w, "h": r.h,
+             "label": r.label, "facelet_index": r.facelet_index}
+            for r in roi_objs
+        ]
+    _rois_initialized = True
+    log.info("ROIs reset to defaults")
+    return jsonify({
+        "status": "reset",
+        "cam0": _runtime_rois[0],
+        "cam1": _runtime_rois[1],
+    })
 
 
 # ── solve endpoint ───────────────────────────────────────────────────────────

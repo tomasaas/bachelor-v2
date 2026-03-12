@@ -15,6 +15,7 @@ const btnFreeze      = $("#btn-freeze");
 const btnUnfreeze    = $("#btn-unfreeze");
 const btnDetect    = $("#btn-detect");
 const btnRoiUnlock = $("#btn-roi-unlock");
+const btnRoiReset  = $("#btn-roi-reset");
 const btnSolve     = $("#btn-solve");
 const btnAbort     = $("#btn-abort");
 const progressBar  = $("#progress-bar");
@@ -309,7 +310,8 @@ function showCubePreview(cubeString, colorMap) {
     grid.className = "face-grid";
     for (let r = 0; r < 3; r++) {
       for (let c = 0; c < 3; c++) {
-        const label = `${face}[${r},${c}]`;
+        const idx = r * 3 + c + 1;
+        const label = `${face}${idx}`;
         const color = colorMap[label] || "X";
         const cell = document.createElement("div");
         cell.className = "facelet color-" + color;
@@ -331,7 +333,19 @@ btnRoiUnlock.addEventListener("click", () => {
   drawAllROIs();
   appendLog(roisUnlocked ? "ROIs unlocked – drag to reposition" : "ROIs locked");
 });
-
+// ── ROI Reset to defaults ───────────────────────────────────────────────────────
+btnRoiReset.addEventListener("click", async () => {
+  if (!confirm("Reset all ROI positions to defaults?")) return;
+  try {
+    const resp = await post("/rois/reset");
+    rois[0] = resp.cam0 || [];
+    rois[1] = resp.cam1 || [];
+    drawAllROIs();
+    appendLog("ROIs reset to default positions");
+  } catch (e) {
+    appendLog("ROI reset error: " + e);
+  }
+});
 // ── Manual face rotation ────────────────────────────────────────────────────
 $$("[data-move]").forEach((btn) => {
   btn.addEventListener("click", async () => {
