@@ -15,7 +15,7 @@ import numpy as np
 from flask import Blueprint, Response, jsonify, render_template, request
 
 import config
-from motion.moves import parse_solution, solution_to_actions, move_to_actions, manual_move_actions
+from motion.moves import parse_solution, solution_to_actions
 from motion.scheduler import Scheduler, SchedulerState
 
 log = logging.getLogger(__name__)
@@ -466,8 +466,8 @@ def servo_positions():
 def servo_home():
     if _servo_group is None:
         return jsonify({"error": "Servos not initialised"}), 503
-    _servo_group.all_home()
-    return jsonify({"status": "homed"})
+    _servo_group.all_home(home=config.POS_HOME, speed=config.MOVE_SPEED)
+    return jsonify({"status": "homed", "home_bits": config.POS_HOME})
 
 
 @bp.route("/servo/torque", methods=["POST"])
@@ -512,22 +512,45 @@ def servo_move():
     if face not in valid_faces:
         return jsonify({"error": f"Unknown face: {face}"}), 400
 
+    suffix = ""
+    if len(move) == 2:
+        suffix = move[1]
+    elif len(move) > 2:
+        return jsonify({"error": f"Unknown move token: {move}"}), 400
+    if suffix not in ("", "'", "2"):
+        return jsonify({"error": f"Unknown move suffix: {suffix}"}), 400
+
+    if suffix == "":
+        deltas = [config.POS_QUARTER_CW]
+    elif suffix == "'":
+        deltas = [config.POS_QUARTER_CCW]
+    else:  # "2"
+        deltas = [config.POS_QUARTER_CW, config.POS_QUARTER_CW]
+
+    sid = config.FACE_SERVO[face]
+
     def _run_move():
         global _progress
         _progress["state"] = "RUNNING"
         _progress["current_move"] = move
         _progress["total_moves"] = 1
-        _progress["total_actions"] = 0
+        _progress["total_actions"] = len(deltas)
         _progress["completed_moves"] = 0
         _progress["completed_actions"] = 0
         try:
-            actions = manual_move_actions(move)
-            _progress["total_actions"] = len(actions)
-            if _scheduler:
-                _scheduler.execute([actions], [move])
+            for delta in deltas:
+                _servo_group.step_servo(
+                    sid,
+                    delta,
+                    speed=config.MOVE_SPEED,
+                    time_ms=config.MOVE_TIME_MS,
+                    wait=True,
+                )
+                _progress["completed_actions"] += 1
+                if config.MOVE_SETTLE_MS > 0:
+                    time.sleep(config.MOVE_SETTLE_MS / 1000.0)
             _progress["state"] = "DONE"
             _progress["completed_moves"] = 1
-            _progress["completed_actions"] = len(actions)
         except Exception as exc:
             log.exception("Manual move error: %s", exc)
             _progress["state"] = "ERROR"

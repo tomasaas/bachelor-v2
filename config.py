@@ -43,10 +43,9 @@ class Reg:
 # ---------------------------------------------------------------------------
 # Position-mode tuning (units 0-1023)
 # ---------------------------------------------------------------------------
-POS_HOME         = round((150 - 90) * (1024 / 300))  # robot home / neutral
+POS_HOME         = round((0) * (1024 / 300))  # robot home / neutral
 POS_QUARTER_CW   = round(90 * (1024 / 300))          # +90°
 POS_QUARTER_CCW  = -round(90 * (1024 / 300))         # -90°
-POS_HALF         = round(180 * (1024 / 300))         # +180°
 MOVE_SPEED       = 1000                              # kept for API compat / fallback
 MOVE_TIME_MS     = 500                               # position move duration target
 MOVE_SETTLE_MS   = 500                               # extra settle time after move (ms)
@@ -61,7 +60,7 @@ SC09_LOAD_RAW_FULL_SCALE = 1000
 SC09_CURRENT_RAW_TO_A = 0.001
 
 FACE_TELEMETRY_WINDOW_S = 3.0
-TOTAL_CURRENT_WINDOW_S = 3.0
+TOTAL_CURRENT_WINDOW_S = 10.0
  
 # ---------------------------------------------------------------------------
 # Face → servo ID mapping

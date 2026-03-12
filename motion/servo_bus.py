@@ -200,6 +200,9 @@ class ServoGroup:
         self.bus = bus
         self.ids = ids or SERVO_IDS
         self.servos: dict[int, Servo] = {sid: Servo(bus, sid) for sid in self.ids}
+        self.commanded_positions: dict[int, int] = {
+            sid: config.POS_HOME for sid in self.ids
+        }
 
     def __getitem__(self, servo_id: int) -> Servo:
         return self.servos[servo_id]
@@ -210,7 +213,7 @@ class ServoGroup:
         1. Ping all servos (warn if serial forwarding appears inactive).
         2. Set servo (position) mode on every servo.
         3. Enable torque on every servo.
-        4. Home all servos to centre position (512).
+        4. Home all servos
         """
         import config
 
@@ -273,13 +276,54 @@ class ServoGroup:
         for s in self.servos.values():
             s.set_motor_mode()
 
-    def all_home(self, home: int = 512, speed: int = 1500) -> None:
-        """Move all servos to home position."""
+    def all_home(self, home: int = config.POS_HOME, speed: int = config.MOVE_SPEED) -> None:
+        """Move all servos to home position sequentially (one at a time)."""
         for s in self.servos.values():
             s.move_to(home, speed, time_ms=config.MOVE_TIME_MS)
-        # Wait for all to finish
-        for s in self.servos.values():
             s.wait_until_stopped()
+            self.commanded_positions[s.id] = max(
+                config.HARD_ANGLE_MIN_BITS,
+                min(config.HARD_ANGLE_MAX_BITS, int(home)),
+            )
+
+    def step_servo(
+        self,
+        servo_id: int,
+        delta_bits: int,
+        speed: int | None = None,
+        time_ms: int | None = None,
+        wait: bool = True,
+    ) -> int:
+        """Move one servo by a relative delta and return the clamped target bits."""
+        servo = self[servo_id]
+        actual = servo.read_position()
+        if actual is not None:
+            base = max(config.HARD_ANGLE_MIN_BITS, min(config.HARD_ANGLE_MAX_BITS, int(actual)))
+            self.commanded_positions[servo_id] = base
+        else:
+            base = self.commanded_positions.get(servo_id, config.POS_HOME)
+
+        target = base + int(delta_bits)
+        target = max(config.HARD_ANGLE_MIN_BITS, min(config.HARD_ANGLE_MAX_BITS, target))
+
+        if target == base:
+            log.warning(
+                "Servo %d step clipped at limit (%d bits, delta=%d)",
+                servo_id,
+                base,
+                delta_bits,
+            )
+
+        servo.move_to(
+            target,
+            speed=speed if speed is not None else config.MOVE_SPEED,
+            time_ms=time_ms if time_ms is not None else config.MOVE_TIME_MS,
+        )
+        if wait:
+            servo.wait_until_stopped()
+
+        self.commanded_positions[servo_id] = target
+        return target
 
     def emergency_stop(self) -> None:
         """Immediately disable torque on all servos."""
