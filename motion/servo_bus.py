@@ -20,8 +20,9 @@ log = logging.getLogger(__name__)
 # Register addresses used for direct register access
 # (these match the scscl SDK constants SCSCL_*)
 _TORQUE_ENABLE = 40
-_MODE          = 33
 _LOCK          = 48
+_MIN_ANGLE_L   = 9     # 2 bytes – for mode switching via angle limits
+_MAX_ANGLE_L   = 11    # 2 bytes
 _PRESENT_VOLTAGE     = 62
 _PRESENT_TEMPERATURE = 63
 _PRESENT_LOAD_L      = 60
@@ -50,30 +51,46 @@ class Servo:
     # ── mode ─────────────────────────────────────────────────────────────
 
     def set_position_mode(self) -> bool:
-        """Switch to position servo mode (mode=0). Requires EEPROM unlock."""
+        """Switch to position servo mode.
+
+        For SCSCL servos, mode is controlled through angle limits:
+          min < max  → position (servo) mode
+          min == max == 0  → wheel / motor mode
+        Register 33 does NOT exist in the SCSCL protocol.
+        """
         self.bus.unlock_eprom(self.id)
-        ok = self.bus.write_u8(self.id, _MODE, 0)
+        ok1 = self.bus.write_u16(self.id, _MIN_ANGLE_L, 0)
+        ok2 = self.bus.write_u16(self.id, _MAX_ANGLE_L, 1023)
         self.bus.lock_eprom(self.id)
-        log.info("Servo %d → position mode: %s", self.id, "OK" if ok else "FAIL")
+        ok = ok1 and ok2
+        log.info("Servo %d → position mode (angle limits 0-1023): %s",
+                 self.id, "OK" if ok else "FAIL")
         return ok
 
     def set_motor_mode(self) -> bool:
-        """Switch to continuous-rotation motor mode (mode=1)."""
+        """Switch to continuous-rotation motor mode.
+
+        Uses the vendor SDK’s PWMMode (sets min/max angle limits to 0).
+        """
         self.bus.unlock_eprom(self.id)
-        ok = self.bus.write_u8(self.id, _MODE, 1)
+        ok1 = self.bus.write_u16(self.id, _MIN_ANGLE_L, 0)
+        ok2 = self.bus.write_u16(self.id, _MAX_ANGLE_L, 0)
         self.bus.lock_eprom(self.id)
-        log.info("Servo %d → motor mode: %s", self.id, "OK" if ok else "FAIL")
+        ok = ok1 and ok2
+        log.info("Servo %d → motor mode (angle limits 0-0): %s",
+                 self.id, "OK" if ok else "FAIL")
         return ok
 
     # ── position-mode moves ──────────────────────────────────────────────
 
     def move_to(self, position: int, speed: int = 400, acceleration: int = 0) -> bool:
         """
-        Move to *position* (0-1023) at *speed* (units/sec).
+        Move to *position* (0-1023) at *speed*.
         Uses the vendor SDK WritePos (same as read_write.py example).
+        Note: speed is a 16-bit register (vendor examples use up to 2400).
         """
         position = max(0, min(1023, position))
-        speed = max(0, min(1023, speed))
+        speed = max(0, min(0xFFFF, speed))
         ok = self.bus.write_pos(self.id, position, time=0, speed=speed)
         log.info(
             "Servo %d move_to pos=%d speed=%d → %s",
@@ -153,6 +170,56 @@ class ServoGroup:
     def __getitem__(self, servo_id: int) -> Servo:
         return self.servos[servo_id]
 
+    def initialize(self) -> None:
+        """
+        Run the full startup sequence:
+        1. Ping all servos (warn if serial forwarding appears inactive).
+        2. Set servo (position) mode on every servo.
+        3. Enable torque on every servo.
+        4. Home all servos to centre position (512).
+        """
+        import config
+
+        # 1. Check connectivity / serial forwarding
+        ping_results = self.ping_all()
+        alive = [sid for sid, ok in ping_results.items() if ok]
+        dead  = [sid for sid, ok in ping_results.items() if not ok]
+
+        if not alive:
+            log.warning(
+                "ALL servo pings failed – is the Waveshare ESP32 driver "
+                "in Serial Forwarding mode?  No servos will respond until "
+                "forwarding is enabled on the driver board."
+            )
+        elif dead:
+            log.warning(
+                "Servos not responding: %s  (check wiring / IDs)", dead
+            )
+
+        # 2. Position (servo) mode
+        log.info("Setting all servos to position mode…")
+        self.all_to_position_mode()
+
+        # 3. Torque on
+        log.info("Enabling torque on all servos…")
+        self.all_torque_on()
+
+        # 4. Home all servos so they start at a known centre position
+        log.info("Homing all servos to position %d…", config.POS_HOME)
+        self.all_home(home=config.POS_HOME, speed=config.MOVE_SPEED)
+
+        log.info(
+            "Servo init complete: speed=%d, %d/%d servos alive",
+            config.MOVE_SPEED, len(alive), len(self.ids),
+        )
+
+    def shutdown(self) -> None:
+        """Release torque on all servos (safe state for power-off)."""
+        log.info("Releasing torque on all servos…")
+        self.all_torque_off()
+        self.bus.close()
+        log.info("Servo shutdown complete")
+
     def ping_all(self) -> dict[int, bool]:
         return {sid: self.bus.ping(sid) for sid in self.ids}
 
@@ -172,7 +239,7 @@ class ServoGroup:
         for s in self.servos.values():
             s.set_motor_mode()
 
-    def all_home(self, home: int = 512, speed: int = 300) -> None:
+    def all_home(self, home: int = 512, speed: int = 1500) -> None:
         """Move all servos to home position."""
         for s in self.servos.values():
             s.move_to(home, speed)

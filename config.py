@@ -41,15 +41,30 @@ class Reg:
     PRESENT_CURRENT_L   = 69  # 2 bytes
 
 # ---------------------------------------------------------------------------
-# Position-mode tuning (units 0-1023 ≈ 0-300°)
+# Position-mode tuning (units 0-1023)
+#
+# SC09 datasheet claims 300°/1024 but these servos empirically produce
+# ~0.586°/step (~600° over the full 0-1023 range).
+#
+# Robot home is at position 358 (~210° physical from 0).
+# This gives room for −90°, +90°, and +180° with wide margins:
+#
+#   home − 90°  = 204   (margin: 204 counts from 0)
+#   home + 90°  = 512
+#   home +180°  = 665   (margin: 358 counts from 1023)
+#
+# After going full CCW (−90°), three consecutive CW 90° turns fit:
+#   204 → 358 → 512 → 666  (all within 0-1023)
 # ---------------------------------------------------------------------------
-POS_HOME         = 512          # center
-POS_QUARTER_CW   = 307         # ~ 90° in position units
-POS_QUARTER_CCW  = -307
-POS_HALF         = 614         # ~ 180°
-MOVE_SPEED       = 400         # default speed for position moves (units/s)
-MOVE_SETTLE_MS   = 300         # extra settle time after move (ms)
+POS_HOME         = 358          # robot home / neutral
+POS_QUARTER_CW   = 154          # +90°  empirical
+POS_QUARTER_CCW  = -154         # −90°
+POS_HALF         = 307          # +180° empirical (2 × 154 ≈ 307)
+MOVE_SPEED       = 1500         # default speed for position moves (units/s)
+MOVE_SETTLE_MS   = 300          # extra settle time after move (ms)
 
+STEPS_PER_DEGREE = 154.0 / 90.0  # ≈ 1.71 (empirically measured)
+ 
 # ---------------------------------------------------------------------------
 # Face → servo ID mapping
 #

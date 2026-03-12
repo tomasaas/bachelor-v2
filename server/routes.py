@@ -13,7 +13,7 @@ import numpy as np
 from flask import Blueprint, Response, jsonify, render_template, request
 
 import config
-from motion.moves import parse_solution, solution_to_actions, move_to_actions
+from motion.moves import parse_solution, solution_to_actions, move_to_actions, manual_move_actions
 from motion.scheduler import Scheduler, SchedulerState
 
 log = logging.getLogger(__name__)
@@ -439,7 +439,7 @@ def servo_move():
         _progress["completed_moves"] = 0
         _progress["completed_actions"] = 0
         try:
-            actions = move_to_actions(move)
+            actions = manual_move_actions(move)
             _progress["total_actions"] = len(actions)
             if _scheduler:
                 _scheduler.execute([actions], [move])

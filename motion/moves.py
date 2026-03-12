@@ -31,22 +31,26 @@ class ServoAction:
 
 # ── position profiles (calibrate per-mechanism) ─────────────────────────────
 
-HOME  = config.POS_HOME
-Q_CW  = config.POS_QUARTER_CW    # +90° from home
-Q_CCW = config.POS_QUARTER_CCW   # –90° from home
-HALF  = config.POS_HALF           # +180° from home
-SPEED = config.MOVE_SPEED
+HOME   = config.POS_HOME
+Q_CW   = config.POS_QUARTER_CW    # +90° from home  (≈ 307 steps)
+Q_CCW  = config.POS_QUARTER_CCW   # –90° from home
+HALF   = config.POS_HALF           # +180° from home (≈ 614 steps)
+SPEED  = config.MOVE_SPEED
 SETTLE = config.MOVE_SETTLE_MS
+
+
+def _clamp_pos(value: int) -> int:
+    """Clamp to valid servo range 0-1023."""
+    return max(0, min(1023, value))
 
 
 def _face_actions(face: str, delta: int) -> list[ServoAction]:
     """
     Build action list for rotating *face* by *delta* position units from home.
     Returns: [move to target, (pause built-in via settle_ms)].
-    Caller is responsible for returning to home afterwards if needed.
     """
     sid = config.FACE_SERVO[face]
-    target = max(0, min(1023, HOME + delta))
+    target = _clamp_pos(HOME + delta)
     return [
         ServoAction(servo_id=sid, position=target, speed=SPEED, settle_ms=SETTLE),
     ]
@@ -66,33 +70,56 @@ def parse_solution(solution_string: str) -> list[str]:
     return solution_string.strip().split()
 
 
-def move_to_actions(token: str) -> list[ServoAction]:
-    """
-    Convert one Kociemba move token to a sequence of ServoActions.
-
-    Supported tokens: U U' U2  D D' D2  R R' R2  L L' L2  F F' F2  B B' B2
-    """
+def _parse_token(token: str) -> tuple[str, str]:
+    """Parse a Kociemba token into (face, suffix)."""
     if len(token) == 1:
         face, suffix = token, ""
     elif len(token) == 2:
         face, suffix = token[0], token[1]
     else:
         raise ValueError(f"Unknown move token: {token!r}")
-
     if face not in config.FACE_SERVO:
         raise ValueError(f"Unknown face: {face!r}")
+    if suffix not in ("", "'", "2"):
+        raise ValueError(f"Unknown move suffix: {suffix!r}")
+    return face, suffix
+
+
+def manual_move_actions(token: str) -> list[ServoAction]:
+    """
+    Convert one move token to ServoActions for **manual / GUI** control.
+
+    The servo moves to the target position and STAYS there (no return
+    to home).  This lets the user observe the result of the move.
+    """
+    face, suffix = _parse_token(token)
 
     if suffix == "":
-        # Clockwise 90°
+        return _face_actions(face, Q_CW)
+    elif suffix == "'":
+        return _face_actions(face, Q_CCW)
+    else:  # "2"
+        return _face_actions(face, HALF)
+
+
+def move_to_actions(token: str) -> list[ServoAction]:
+    """
+    Convert one Kociemba move token to a sequence of ServoActions for
+    **automated solution execution**.
+
+    The servo moves to the target, then returns to home so the mechanism
+    is ready for the next move on any face.
+
+    Supported tokens: U U' U2  D D' D2  R R' R2  L L' L2  F F' F2  B B' B2
+    """
+    face, suffix = _parse_token(token)
+
+    if suffix == "":
         actions = _face_actions(face, Q_CW)
     elif suffix == "'":
-        # Counter-clockwise 90°
         actions = _face_actions(face, Q_CCW)
-    elif suffix == "2":
-        # Half turn (180°)
+    else:  # "2"
         actions = _face_actions(face, HALF)
-    else:
-        raise ValueError(f"Unknown move suffix: {suffix!r}")
 
     # Return to home after each independent move so the mechanism is ready
     # for the next move on any face.

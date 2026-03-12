@@ -86,6 +86,7 @@ def main() -> None:
                     timeout=config.SERIAL_TIMEOUT,
                 )
                 servo_group = ServoGroup(bus)
+                servo_group.initialize()
                 scheduler = Scheduler(servo_group, check_feedback=True)
             except Exception as exc:
                 log.error("Servo init failed: %s (continuing without servos)", exc)
@@ -102,6 +103,8 @@ def main() -> None:
     # Clean shutdown on Ctrl+C (avoids OpenCV SIGABRT)
     def _shutdown(sig, frame):
         log.info("Shutting down...")
+        if servo_group:
+            servo_group.shutdown()
         if dual_camera:
             dual_camera.close_all()
         sys.exit(0)
