@@ -35,7 +35,6 @@ class ServoAction:
 HOME   = config.POS_HOME
 Q_CW   = config.POS_QUARTER_CW    # +90° from hom
 Q_CCW  = config.POS_QUARTER_CCW   # –90° from home
-HALF   = config.POS_HALF           # +180° from home
 SPEED  = config.MOVE_SPEED
 TIME_MS = config.MOVE_TIME_MS
 SETTLE = config.MOVE_SETTLE_MS
@@ -57,6 +56,29 @@ def _face_actions(face: str, delta: int) -> list[ServoAction]:
         ServoAction(
             servo_id=sid,
             position=target,
+            speed=SPEED,
+            time_ms=TIME_MS,
+            settle_ms=SETTLE,
+        ),
+    ]
+
+
+def _face_double_quarter_actions(face: str) -> list[ServoAction]:
+    """Build a 180° move as two sequential +90° commands."""
+    sid = config.FACE_SERVO[face]
+    first_target = _clamp_pos(HOME + Q_CW)
+    second_target = _clamp_pos(first_target + Q_CW)
+    return [
+        ServoAction(
+            servo_id=sid,
+            position=first_target,
+            speed=SPEED,
+            time_ms=TIME_MS,
+            settle_ms=SETTLE,
+        ),
+        ServoAction(
+            servo_id=sid,
+            position=second_target,
             speed=SPEED,
             time_ms=TIME_MS,
             settle_ms=SETTLE,
@@ -113,17 +135,7 @@ def manual_move_actions(token: str) -> list[ServoAction]:
     elif suffix == "'":
         return _face_actions(face, Q_CCW)
     else:  # "2"
-        first = _face_actions(face, Q_CW)
-        second = [
-            ServoAction(
-                servo_id=first[0].servo_id,
-                position=_clamp_pos(HOME + HALF),
-                speed=SPEED,
-                time_ms=TIME_MS,
-                settle_ms=SETTLE,
-            ),
-        ]
-        return first + second
+        return _face_double_quarter_actions(face)
 
 
 def move_to_actions(token: str) -> list[ServoAction]:
