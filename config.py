@@ -6,8 +6,8 @@ Edit values here to tune hardware, vision, and motion parameters.
 # ---------------------------------------------------------------------------
 # Serial / Servo bus
 # ---------------------------------------------------------------------------
-SERIAL_PORT = "/dev/ttyAMA10"       # CP210x on Waveshare board (Serial Forwarding)
-SERIAL_BAUD = 1_000_000            # SC09 default bus baud rate
+SERIAL_PORT = "/dev/ttyUSB0"        # CP210x on Waveshare board (Serial Forwarding)
+SERIAL_BAUD = 115200            # SC09 default bus baud rate
 SERIAL_TIMEOUT = 0.05              # seconds – read timeout per packet
 
 SERVO_IDS = list(range(1, 7))      # IDs 1–6
@@ -77,6 +77,27 @@ ROI_CAM1 = []
 # Faces visible to each camera (for auto-ROI generation)
 CAM0_FACES = ["U", "F", "R"]
 CAM1_FACES = ["D", "B", "L"]
+
+ROI_SIZE = 30  # pixel size of each ROI square
+
+# ---------------------------------------------------------------------------
+# HSV colour classification ranges  {colour: (H_lo, S_lo, V_lo, H_hi, S_hi, V_hi)}
+# Tuned for standard Rubik's cube under indoor lighting.  Adjust as needed.
+# ---------------------------------------------------------------------------
+COLOR_RANGES = {
+    "W": (0,   0, 160, 180,  60, 255),   # white  (low sat, high val)
+    "Y": (20,  80, 120,  40, 255, 255),   # yellow
+    "R": (160, 80,  80,  10, 255, 255),   # red  (wraps around 0/180)
+    "O": (10,  80, 100,  25, 255, 255),   # orange
+    "B": (95,  80,  60, 130, 255, 255),   # blue
+    "G": (40,  50,  50,  90, 255, 255),   # green
+}
+
+# ---------------------------------------------------------------------------
+# Flask server
+# ---------------------------------------------------------------------------
+FLASK_HOST = "0.0.0.0"
+FLASK_PORT = 5000
 
 ROI_SIZE = 30    # width=height of each ROI square (pixels)
 

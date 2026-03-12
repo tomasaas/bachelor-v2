@@ -514,3 +514,1129 @@ RuntimeError: Only camera 0 available – faces ['D', 'B', 'L'] cannot be detect
 2026-03-09 13:16:19,498 [INFO] werkzeug: 127.0.0.1 - - [09/Mar/2026 13:16:19] "GET /video/0 HTTP/1.1" 200 -
 2026-03-09 13:16:19,773 [INFO] werkzeug: 127.0.0.1 - - [09/Mar/2026 13:16:19] "GET /video/1 HTTP/1.1" 200 -
 2026-03-09 13:16:36,700 [INFO] main: Shutting down...
+2026-03-09 14:46:58,225 [INFO] main: === Rubik's Cube Solver starting ===
+2026-03-09 14:46:58,481 [INFO] vision.camera: Camera 0 opened
+2026-03-09 14:46:58,681 [INFO] vision.camera: Camera 2 opened
+2026-03-09 14:46:58,681 [INFO] main: Camera 0: opened
+2026-03-09 14:46:58,681 [INFO] main: Camera 1: opened
+2026-03-09 14:46:58,688 [INFO] motion.sc09: SC09Bus opened /dev/ttyAMA10 @ 1000000 baud
+2026-03-09 14:46:58,910 [WARNING] motion.sc09: No response from servo 1 after 2 attempts
+2026-03-09 14:46:58,910 [WARNING] motion.sc09: Ping servo 1: FAILED
+2026-03-09 14:46:59,134 [WARNING] motion.sc09: No response from servo 2 after 2 attempts
+2026-03-09 14:46:59,134 [WARNING] motion.sc09: Ping servo 2: FAILED
+2026-03-09 14:46:59,358 [WARNING] motion.sc09: No response from servo 3 after 2 attempts
+2026-03-09 14:46:59,358 [WARNING] motion.sc09: Ping servo 3: FAILED
+2026-03-09 14:46:59,582 [WARNING] motion.sc09: No response from servo 4 after 2 attempts
+2026-03-09 14:46:59,582 [WARNING] motion.sc09: Ping servo 4: FAILED
+2026-03-09 14:46:59,806 [WARNING] motion.sc09: No response from servo 5 after 2 attempts
+2026-03-09 14:46:59,806 [WARNING] motion.sc09: Ping servo 5: FAILED
+2026-03-09 14:47:00,030 [WARNING] motion.sc09: No response from servo 6 after 2 attempts
+2026-03-09 14:47:00,030 [WARNING] motion.sc09: Ping servo 6: FAILED
+2026-03-09 14:47:00,030 [INFO] main: Servo 1: NO RESPONSE
+2026-03-09 14:47:00,030 [INFO] main: Servo 2: NO RESPONSE
+2026-03-09 14:47:00,030 [INFO] main: Servo 3: NO RESPONSE
+2026-03-09 14:47:00,030 [INFO] main: Servo 4: NO RESPONSE
+2026-03-09 14:47:00,030 [INFO] main: Servo 5: NO RESPONSE
+2026-03-09 14:47:00,030 [INFO] main: Servo 6: NO RESPONSE
+2026-03-09 14:47:00,161 [INFO] server.app: Flask app created
+2026-03-09 14:47:00,161 [INFO] main: Starting Flask on 0.0.0.0:5000
+2026-03-09 14:47:00,165 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.10.130:5000
+2026-03-09 14:47:00,165 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2026-03-09 14:48:36,671 [INFO] main: Shutting down...
+2026-03-09 14:48:56,091 [INFO] main: === Rubik's Cube Solver starting ===
+2026-03-09 14:48:56,345 [INFO] vision.camera: Camera 0 opened
+2026-03-09 14:48:56,544 [INFO] vision.camera: Camera 2 opened
+2026-03-09 14:48:56,544 [INFO] main: Camera 0: opened
+2026-03-09 14:48:56,544 [INFO] main: Camera 1: opened
+2026-03-09 14:48:56,550 [INFO] motion.sc09: SC09Bus opened /dev/ttyAMA10 @ 1000000 baud
+2026-03-09 14:48:56,774 [WARNING] motion.sc09: No response from servo 1 after 2 attempts
+2026-03-09 14:48:56,774 [WARNING] motion.sc09: Ping servo 1: FAILED
+2026-03-09 14:48:56,998 [WARNING] motion.sc09: No response from servo 2 after 2 attempts
+2026-03-09 14:48:56,998 [WARNING] motion.sc09: Ping servo 2: FAILED
+2026-03-09 14:48:57,222 [WARNING] motion.sc09: No response from servo 3 after 2 attempts
+2026-03-09 14:48:57,222 [WARNING] motion.sc09: Ping servo 3: FAILED
+2026-03-09 14:48:57,446 [WARNING] motion.sc09: No response from servo 4 after 2 attempts
+2026-03-09 14:48:57,446 [WARNING] motion.sc09: Ping servo 4: FAILED
+2026-03-09 14:48:57,670 [WARNING] motion.sc09: No response from servo 5 after 2 attempts
+2026-03-09 14:48:57,670 [WARNING] motion.sc09: Ping servo 5: FAILED
+2026-03-09 14:48:57,894 [WARNING] motion.sc09: No response from servo 6 after 2 attempts
+2026-03-09 14:48:57,894 [WARNING] motion.sc09: Ping servo 6: FAILED
+2026-03-09 14:48:57,894 [INFO] main: Servo 1: NO RESPONSE
+2026-03-09 14:48:57,894 [INFO] main: Servo 2: NO RESPONSE
+2026-03-09 14:48:57,894 [INFO] main: Servo 3: NO RESPONSE
+2026-03-09 14:48:57,894 [INFO] main: Servo 4: NO RESPONSE
+2026-03-09 14:48:57,894 [INFO] main: Servo 5: NO RESPONSE
+2026-03-09 14:48:57,895 [INFO] main: Servo 6: NO RESPONSE
+2026-03-09 14:48:58,046 [INFO] server.app: Flask app created
+2026-03-09 14:48:58,047 [INFO] main: Starting Flask on 0.0.0.0:5000
+2026-03-09 14:48:58,050 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.10.130:5000
+2026-03-09 14:48:58,050 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2026-03-09 14:52:16,142 [INFO] main: Shutting down...
+2026-03-09 14:52:17,553 [INFO] main: === Rubik's Cube Solver starting ===
+2026-03-09 14:52:17,719 [INFO] vision.camera: Camera 0 opened
+2026-03-09 14:52:17,810 [INFO] vision.camera: Camera 2 opened
+2026-03-09 14:52:17,810 [INFO] main: Camera 0: opened
+2026-03-09 14:52:17,810 [INFO] main: Camera 1: opened
+2026-03-09 14:52:17,817 [INFO] motion.sc09: SC09Bus opened /dev/ttyAMA10 @ 1000000 baud
+2026-03-09 14:52:18,042 [WARNING] motion.sc09: No response from servo 1 after 2 attempts
+2026-03-09 14:52:18,042 [WARNING] motion.sc09: Ping servo 1: FAILED
+2026-03-09 14:52:18,266 [WARNING] motion.sc09: No response from servo 2 after 2 attempts
+2026-03-09 14:52:18,266 [WARNING] motion.sc09: Ping servo 2: FAILED
+2026-03-09 14:52:18,490 [WARNING] motion.sc09: No response from servo 3 after 2 attempts
+2026-03-09 14:52:18,490 [WARNING] motion.sc09: Ping servo 3: FAILED
+2026-03-09 14:52:18,714 [WARNING] motion.sc09: No response from servo 4 after 2 attempts
+2026-03-09 14:52:18,714 [WARNING] motion.sc09: Ping servo 4: FAILED
+2026-03-09 14:52:18,938 [WARNING] motion.sc09: No response from servo 5 after 2 attempts
+2026-03-09 14:52:18,938 [WARNING] motion.sc09: Ping servo 5: FAILED
+2026-03-09 14:52:19,162 [WARNING] motion.sc09: No response from servo 6 after 2 attempts
+2026-03-09 14:52:19,162 [WARNING] motion.sc09: Ping servo 6: FAILED
+2026-03-09 14:52:19,162 [INFO] main: Servo 1: NO RESPONSE
+2026-03-09 14:52:19,162 [INFO] main: Servo 2: NO RESPONSE
+2026-03-09 14:52:19,162 [INFO] main: Servo 3: NO RESPONSE
+2026-03-09 14:52:19,162 [INFO] main: Servo 4: NO RESPONSE
+2026-03-09 14:52:19,162 [INFO] main: Servo 5: NO RESPONSE
+2026-03-09 14:52:19,163 [INFO] main: Servo 6: NO RESPONSE
+2026-03-09 14:52:19,288 [INFO] server.app: Flask app created
+2026-03-09 14:52:19,288 [INFO] main: Starting Flask on 0.0.0.0:5000
+2026-03-09 14:52:19,292 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.10.130:5000
+2026-03-09 14:52:19,292 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2026-03-09 14:53:55,922 [INFO] main: Shutting down...
+2026-03-09 15:18:01,320 [INFO] main: === Rubik's Cube Solver starting ===
+2026-03-09 15:19:13,080 [INFO] main: === Rubik's Cube Solver starting ===
+2026-03-09 15:19:13,081 [INFO] main: Cameras skipped (--no-cameras)
+2026-03-09 15:19:13,081 [INFO] main: Servos skipped (--no-servos)
+2026-03-09 15:19:40,160 [INFO] main: === Rubik's Cube Solver starting ===
+2026-03-09 15:19:40,296 [ERROR] vision.camera: Camera 0 failed to open
+2026-03-09 15:19:40,297 [ERROR] vision.camera: Camera 2 failed to open
+2026-03-09 15:19:40,297 [INFO] main: Camera 0: FAILED
+2026-03-09 15:19:40,297 [INFO] main: Camera 1: FAILED
+2026-03-09 15:19:40,304 [INFO] motion.sc09: SC09Bus opened /dev/ttyAMA10 @ 115200 baud
+2026-03-09 15:19:40,530 [WARNING] motion.sc09: No response from servo 1 after 2 attempts
+2026-03-09 15:19:40,530 [WARNING] motion.sc09: Ping servo 1: FAILED
+2026-03-09 15:19:40,754 [WARNING] motion.sc09: No response from servo 2 after 2 attempts
+2026-03-09 15:19:40,754 [WARNING] motion.sc09: Ping servo 2: FAILED
+2026-03-09 15:19:40,982 [WARNING] motion.sc09: No response from servo 3 after 2 attempts
+2026-03-09 15:19:40,982 [WARNING] motion.sc09: Ping servo 3: FAILED
+2026-03-09 15:19:41,206 [WARNING] motion.sc09: No response from servo 4 after 2 attempts
+2026-03-09 15:19:41,206 [WARNING] motion.sc09: Ping servo 4: FAILED
+2026-03-09 15:19:41,430 [WARNING] motion.sc09: No response from servo 5 after 2 attempts
+2026-03-09 15:19:41,430 [WARNING] motion.sc09: Ping servo 5: FAILED
+2026-03-09 15:19:41,658 [WARNING] motion.sc09: No response from servo 6 after 2 attempts
+2026-03-09 15:19:41,658 [WARNING] motion.sc09: Ping servo 6: FAILED
+2026-03-09 15:19:41,658 [INFO] main: Servo 1: NO RESPONSE
+2026-03-09 15:19:41,658 [INFO] main: Servo 2: NO RESPONSE
+2026-03-09 15:19:41,658 [INFO] main: Servo 3: NO RESPONSE
+2026-03-09 15:19:41,658 [INFO] main: Servo 4: NO RESPONSE
+2026-03-09 15:19:41,658 [INFO] main: Servo 5: NO RESPONSE
+2026-03-09 15:19:41,658 [INFO] main: Servo 6: NO RESPONSE
+2026-03-09 15:19:41,786 [INFO] server.app: Flask app created
+2026-03-09 15:19:41,786 [INFO] main: Starting Flask on 0.0.0.0:5000
+2026-03-09 15:19:41,790 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.10.130:5000
+2026-03-09 15:19:41,790 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2026-03-09 15:19:55,514 [INFO] main: Shutting down...
+2026-03-09 15:20:21,044 [INFO] main: === Rubik's Cube Solver starting ===
+2026-03-09 15:20:21,148 [ERROR] vision.camera: Camera 0 failed to open
+2026-03-09 15:20:21,148 [ERROR] vision.camera: Camera 2 failed to open
+2026-03-09 15:20:21,148 [INFO] main: Camera 0: FAILED
+2026-03-09 15:20:21,148 [INFO] main: Camera 1: FAILED
+2026-03-09 15:20:21,155 [INFO] motion.sc09: SC09Bus opened /dev/ttyAMA10 @ 115200 baud
+2026-03-09 15:20:21,378 [WARNING] motion.sc09: No response from servo 1 after 2 attempts
+2026-03-09 15:20:21,378 [WARNING] motion.sc09: Ping servo 1: FAILED
+2026-03-09 15:20:21,602 [WARNING] motion.sc09: No response from servo 2 after 2 attempts
+2026-03-09 15:20:21,602 [WARNING] motion.sc09: Ping servo 2: FAILED
+2026-03-09 15:20:21,826 [WARNING] motion.sc09: No response from servo 3 after 2 attempts
+2026-03-09 15:20:21,826 [WARNING] motion.sc09: Ping servo 3: FAILED
+2026-03-09 15:20:22,050 [WARNING] motion.sc09: No response from servo 4 after 2 attempts
+2026-03-09 15:20:22,050 [WARNING] motion.sc09: Ping servo 4: FAILED
+2026-03-09 15:20:22,274 [WARNING] motion.sc09: No response from servo 5 after 2 attempts
+2026-03-09 15:20:22,274 [WARNING] motion.sc09: Ping servo 5: FAILED
+2026-03-09 15:20:22,498 [WARNING] motion.sc09: No response from servo 6 after 2 attempts
+2026-03-09 15:20:22,498 [WARNING] motion.sc09: Ping servo 6: FAILED
+2026-03-09 15:20:22,498 [INFO] main: Servo 1: NO RESPONSE
+2026-03-09 15:20:22,498 [INFO] main: Servo 2: NO RESPONSE
+2026-03-09 15:20:22,498 [INFO] main: Servo 3: NO RESPONSE
+2026-03-09 15:20:22,498 [INFO] main: Servo 4: NO RESPONSE
+2026-03-09 15:20:22,498 [INFO] main: Servo 5: NO RESPONSE
+2026-03-09 15:20:22,498 [INFO] main: Servo 6: NO RESPONSE
+2026-03-09 15:20:22,619 [INFO] server.app: Flask app created
+2026-03-09 15:20:22,619 [INFO] main: Starting Flask on 0.0.0.0:5000
+2026-03-09 15:20:22,623 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.10.130:5000
+2026-03-09 15:20:22,623 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2026-03-09 15:20:35,461 [INFO] main: Shutting down...
+2026-03-09 15:20:49,139 [INFO] main: === Rubik's Cube Solver starting ===
+2026-03-09 15:20:49,242 [ERROR] vision.camera: Camera 0 failed to open
+2026-03-09 15:20:49,242 [ERROR] vision.camera: Camera 2 failed to open
+2026-03-09 15:20:49,242 [INFO] main: Camera 0: FAILED
+2026-03-09 15:20:49,242 [INFO] main: Camera 1: FAILED
+2026-03-09 15:20:49,249 [INFO] motion.sc09: SC09Bus opened /dev/ttyAMA10 @ 115200 baud
+2026-03-09 15:20:49,474 [WARNING] motion.sc09: No response from servo 1 after 2 attempts
+2026-03-09 15:20:49,474 [WARNING] motion.sc09: Ping servo 1: FAILED
+2026-03-09 15:20:49,698 [WARNING] motion.sc09: No response from servo 2 after 2 attempts
+2026-03-09 15:20:49,698 [WARNING] motion.sc09: Ping servo 2: FAILED
+2026-03-09 15:20:49,922 [WARNING] motion.sc09: No response from servo 3 after 2 attempts
+2026-03-09 15:20:49,922 [WARNING] motion.sc09: Ping servo 3: FAILED
+2026-03-09 15:20:50,146 [WARNING] motion.sc09: No response from servo 4 after 2 attempts
+2026-03-09 15:20:50,146 [WARNING] motion.sc09: Ping servo 4: FAILED
+2026-03-09 15:20:50,370 [WARNING] motion.sc09: No response from servo 5 after 2 attempts
+2026-03-09 15:20:50,370 [WARNING] motion.sc09: Ping servo 5: FAILED
+2026-03-09 15:20:50,594 [WARNING] motion.sc09: No response from servo 6 after 2 attempts
+2026-03-09 15:20:50,594 [WARNING] motion.sc09: Ping servo 6: FAILED
+2026-03-09 15:20:50,594 [INFO] main: Servo 1: NO RESPONSE
+2026-03-09 15:20:50,594 [INFO] main: Servo 2: NO RESPONSE
+2026-03-09 15:20:50,595 [INFO] main: Servo 3: NO RESPONSE
+2026-03-09 15:20:50,595 [INFO] main: Servo 4: NO RESPONSE
+2026-03-09 15:20:50,595 [INFO] main: Servo 5: NO RESPONSE
+2026-03-09 15:20:50,595 [INFO] main: Servo 6: NO RESPONSE
+2026-03-09 15:20:50,717 [INFO] server.app: Flask app created
+2026-03-09 15:20:50,717 [INFO] main: Starting Flask on 0.0.0.0:5000
+2026-03-09 15:20:50,720 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.10.130:5000
+2026-03-09 15:20:50,720 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2026-03-09 15:20:54,059 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:20:54] "GET / HTTP/1.1" 200 -
+2026-03-09 15:20:54,097 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:20:54] "GET /static/style.css HTTP/1.1" 200 -
+2026-03-09 15:20:54,898 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:20:54] "GET /static/app.js HTTP/1.1" 200 -
+2026-03-09 15:20:54,918 [INFO] vision.roi: Auto-generated 27 ROIs for camera 0
+2026-03-09 15:20:54,918 [INFO] vision.roi: Auto-generated 27 ROIs for camera 1
+2026-03-09 15:20:54,919 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:20:54] "GET /rois HTTP/1.1" 200 -
+2026-03-09 15:21:14,224 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:21:14] "GET / HTTP/1.1" 200 -
+2026-03-09 15:21:14,240 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:21:14] "GET /static/style.css HTTP/1.1" 200 -
+2026-03-09 15:21:14,254 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:21:14] "GET /static/app.js HTTP/1.1" 200 -
+2026-03-09 15:21:14,294 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:21:14] "GET /rois HTTP/1.1" 200 -
+2026-03-09 15:21:19,462 [WARNING] motion.sc09: No response from servo 1 after 2 attempts
+2026-03-09 15:21:19,462 [INFO] motion.servo_bus: Servo 1 torque OFF → FAIL
+2026-03-09 15:21:19,686 [WARNING] motion.sc09: No response from servo 2 after 2 attempts
+2026-03-09 15:21:19,686 [INFO] motion.servo_bus: Servo 2 torque OFF → FAIL
+2026-03-09 15:21:19,910 [WARNING] motion.sc09: No response from servo 3 after 2 attempts
+2026-03-09 15:21:19,910 [INFO] motion.servo_bus: Servo 3 torque OFF → FAIL
+2026-03-09 15:21:20,134 [WARNING] motion.sc09: No response from servo 4 after 2 attempts
+2026-03-09 15:21:20,134 [INFO] motion.servo_bus: Servo 4 torque OFF → FAIL
+2026-03-09 15:21:20,358 [WARNING] motion.sc09: No response from servo 5 after 2 attempts
+2026-03-09 15:21:20,358 [INFO] motion.servo_bus: Servo 5 torque OFF → FAIL
+2026-03-09 15:21:20,582 [WARNING] motion.sc09: No response from servo 6 after 2 attempts
+2026-03-09 15:21:20,582 [INFO] motion.servo_bus: Servo 6 torque OFF → FAIL
+2026-03-09 15:21:20,582 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:21:20] "POST /servo/torque HTTP/1.1" 200 -
+2026-03-09 15:21:42,853 [INFO] main: Shutting down...
+2026-03-09 15:24:52,542 [INFO] main: === Rubik's Cube Solver starting ===
+2026-03-09 15:24:52,805 [INFO] vision.camera: Camera 0 opened
+2026-03-09 15:24:53,002 [INFO] vision.camera: Camera 2 opened
+2026-03-09 15:24:53,002 [INFO] main: Camera 0: opened
+2026-03-09 15:24:53,003 [INFO] main: Camera 1: opened
+2026-03-09 15:24:53,009 [INFO] motion.sc09: SC09Bus opened /dev/ttyAMA10 @ 115200 baud
+2026-03-09 15:24:53,234 [WARNING] motion.sc09: No response from servo 1 after 2 attempts
+2026-03-09 15:24:53,234 [WARNING] motion.sc09: Ping servo 1: FAILED
+2026-03-09 15:24:53,458 [WARNING] motion.sc09: No response from servo 2 after 2 attempts
+2026-03-09 15:24:53,458 [WARNING] motion.sc09: Ping servo 2: FAILED
+2026-03-09 15:24:53,682 [WARNING] motion.sc09: No response from servo 3 after 2 attempts
+2026-03-09 15:24:53,682 [WARNING] motion.sc09: Ping servo 3: FAILED
+2026-03-09 15:24:53,906 [WARNING] motion.sc09: No response from servo 4 after 2 attempts
+2026-03-09 15:24:53,906 [WARNING] motion.sc09: Ping servo 4: FAILED
+2026-03-09 15:24:54,130 [WARNING] motion.sc09: No response from servo 5 after 2 attempts
+2026-03-09 15:24:54,130 [WARNING] motion.sc09: Ping servo 5: FAILED
+2026-03-09 15:24:54,354 [WARNING] motion.sc09: No response from servo 6 after 2 attempts
+2026-03-09 15:24:54,354 [WARNING] motion.sc09: Ping servo 6: FAILED
+2026-03-09 15:24:54,354 [INFO] main: Servo 1: NO RESPONSE
+2026-03-09 15:24:54,354 [INFO] main: Servo 2: NO RESPONSE
+2026-03-09 15:24:54,354 [INFO] main: Servo 3: NO RESPONSE
+2026-03-09 15:24:54,354 [INFO] main: Servo 4: NO RESPONSE
+2026-03-09 15:24:54,354 [INFO] main: Servo 5: NO RESPONSE
+2026-03-09 15:24:54,354 [INFO] main: Servo 6: NO RESPONSE
+2026-03-09 15:24:54,475 [INFO] server.app: Flask app created
+2026-03-09 15:24:54,475 [INFO] main: Starting Flask on 0.0.0.0:5000
+2026-03-09 15:24:54,479 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.10.130:5000
+2026-03-09 15:24:54,479 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2026-03-09 15:24:59,722 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:24:59] "GET / HTTP/1.1" 200 -
+2026-03-09 15:24:59,749 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:24:59] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-03-09 15:24:59,751 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:24:59] "[36mGET /static/app.js HTTP/1.1[0m" 304 -
+2026-03-09 15:24:59,791 [INFO] vision.roi: Auto-generated 27 ROIs for camera 0
+2026-03-09 15:24:59,792 [INFO] vision.roi: Auto-generated 27 ROIs for camera 1
+2026-03-09 15:24:59,793 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:24:59] "GET /rois HTTP/1.1" 200 -
+2026-03-09 15:25:00,129 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:25:00] "GET /video/0 HTTP/1.1" 200 -
+2026-03-09 15:25:00,155 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:25:00] "GET /video/1 HTTP/1.1" 200 -
+2026-03-09 15:25:22,386 [INFO] server.routes: Camera feeds frozen
+2026-03-09 15:25:22,387 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:25:22] "POST /camera/freeze HTTP/1.1" 200 -
+2026-03-09 15:25:22,408 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:25:22] "GET /camera/snapshot/0?1773066322269 HTTP/1.1" 200 -
+2026-03-09 15:25:22,410 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:25:22] "GET /camera/snapshot/1?1773066322269 HTTP/1.1" 200 -
+2026-03-09 15:25:24,619 [INFO] vision.color: Cube string: ???????????????????????????????????????U?UU?U???B??BFF
+2026-03-09 15:25:24,620 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:25:24] "GET /camera/detect HTTP/1.1" 200 -
+2026-03-09 15:25:30,780 [INFO] server.routes: ROIs updated for camera 1
+2026-03-09 15:25:30,780 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:25:30] "POST /rois/update HTTP/1.1" 200 -
+2026-03-09 15:25:32,470 [INFO] server.routes: ROIs updated for camera 1
+2026-03-09 15:25:32,470 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:25:32] "POST /rois/update HTTP/1.1" 200 -
+2026-03-09 15:25:33,268 [INFO] server.routes: ROIs updated for camera 1
+2026-03-09 15:25:33,269 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:25:33] "POST /rois/update HTTP/1.1" 200 -
+2026-03-09 15:25:33,915 [INFO] server.routes: ROIs updated for camera 1
+2026-03-09 15:25:33,915 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:25:33] "POST /rois/update HTTP/1.1" 200 -
+2026-03-09 15:25:34,839 [INFO] server.routes: ROIs updated for camera 1
+2026-03-09 15:25:34,839 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:25:34] "POST /rois/update HTTP/1.1" 200 -
+2026-03-09 15:25:37,508 [INFO] server.routes: ROIs updated for camera 1
+2026-03-09 15:25:37,508 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:25:37] "POST /rois/update HTTP/1.1" 200 -
+2026-03-09 15:25:38,121 [INFO] server.routes: ROIs updated for camera 1
+2026-03-09 15:25:38,121 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:25:38] "POST /rois/update HTTP/1.1" 200 -
+2026-03-09 15:25:38,836 [INFO] server.routes: ROIs updated for camera 1
+2026-03-09 15:25:38,836 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:25:38] "POST /rois/update HTTP/1.1" 200 -
+2026-03-09 15:25:41,190 [INFO] server.routes: ROIs updated for camera 1
+2026-03-09 15:25:41,191 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:25:41] "POST /rois/update HTTP/1.1" 200 -
+2026-03-09 15:25:41,917 [INFO] server.routes: ROIs updated for camera 1
+2026-03-09 15:25:41,917 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:25:41] "POST /rois/update HTTP/1.1" 200 -
+2026-03-09 15:25:43,361 [INFO] server.routes: ROIs updated for camera 1
+2026-03-09 15:25:43,361 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:25:43] "POST /rois/update HTTP/1.1" 200 -
+2026-03-09 15:25:44,317 [INFO] server.routes: ROIs updated for camera 1
+2026-03-09 15:25:44,317 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:25:44] "POST /rois/update HTTP/1.1" 200 -
+2026-03-09 15:25:46,274 [INFO] server.routes: ROIs updated for camera 1
+2026-03-09 15:25:46,274 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:25:46] "POST /rois/update HTTP/1.1" 200 -
+2026-03-09 15:25:49,593 [INFO] vision.color: Cube string: ???????????????????????????????????R???U?UU?UR?FB??BFB
+2026-03-09 15:25:49,593 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:25:49] "GET /camera/detect HTTP/1.1" 200 -
+2026-03-09 15:25:51,360 [INFO] vision.color: Cube string: ???????????????????????????????????R???U?UU?UR?FB??BFB
+2026-03-09 15:25:51,361 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:25:51] "GET /camera/detect HTTP/1.1" 200 -
+2026-03-09 15:25:54,096 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:25:54] "GET /video/0 HTTP/1.1" 200 -
+2026-03-09 15:25:54,097 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:25:54] "GET /video/1 HTTP/1.1" 200 -
+2026-03-09 15:26:00,732 [INFO] server.routes: Camera feeds frozen
+2026-03-09 15:26:00,733 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:26:00] "POST /camera/freeze HTTP/1.1" 200 -
+2026-03-09 15:26:00,755 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:26:00] "GET /camera/snapshot/0?1773066360617 HTTP/1.1" 200 -
+2026-03-09 15:26:00,759 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:26:00] "GET /camera/snapshot/1?1773066360617 HTTP/1.1" 200 -
+2026-03-09 15:26:06,605 [INFO] server.routes: ROIs updated for camera 1
+2026-03-09 15:26:06,605 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:26:06] "POST /rois/update HTTP/1.1" 200 -
+2026-03-09 15:26:07,275 [INFO] server.routes: ROIs updated for camera 1
+2026-03-09 15:26:07,275 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:26:07] "POST /rois/update HTTP/1.1" 200 -
+2026-03-09 15:26:08,128 [INFO] server.routes: ROIs updated for camera 1
+2026-03-09 15:26:08,128 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:26:08] "POST /rois/update HTTP/1.1" 200 -
+2026-03-09 15:26:08,894 [INFO] server.routes: ROIs updated for camera 1
+2026-03-09 15:26:08,894 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:26:08] "POST /rois/update HTTP/1.1" 200 -
+2026-03-09 15:26:10,207 [INFO] server.routes: ROIs updated for camera 1
+2026-03-09 15:26:10,208 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:26:10] "POST /rois/update HTTP/1.1" 200 -
+2026-03-09 15:26:10,761 [INFO] server.routes: ROIs updated for camera 1
+2026-03-09 15:26:10,762 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:26:10] "POST /rois/update HTTP/1.1" 200 -
+2026-03-09 15:26:11,538 [INFO] server.routes: ROIs updated for camera 1
+2026-03-09 15:26:11,538 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:26:11] "POST /rois/update HTTP/1.1" 200 -
+2026-03-09 15:26:13,251 [INFO] server.routes: ROIs updated for camera 1
+2026-03-09 15:26:13,252 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:26:13] "POST /rois/update HTTP/1.1" 200 -
+2026-03-09 15:26:14,589 [INFO] server.routes: ROIs updated for camera 1
+2026-03-09 15:26:14,590 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:26:14] "POST /rois/update HTTP/1.1" 200 -
+2026-03-09 15:26:16,723 [INFO] server.routes: ROIs updated for camera 1
+2026-03-09 15:26:16,724 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:26:16] "POST /rois/update HTTP/1.1" 200 -
+2026-03-09 15:26:17,421 [INFO] server.routes: ROIs updated for camera 1
+2026-03-09 15:26:17,421 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:26:17] "POST /rois/update HTTP/1.1" 200 -
+2026-03-09 15:26:18,021 [INFO] server.routes: ROIs updated for camera 1
+2026-03-09 15:26:18,022 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:26:18] "POST /rois/update HTTP/1.1" 200 -
+2026-03-09 15:26:18,614 [INFO] server.routes: ROIs updated for camera 1
+2026-03-09 15:26:18,615 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:26:18] "POST /rois/update HTTP/1.1" 200 -
+2026-03-09 15:26:19,302 [INFO] server.routes: ROIs updated for camera 1
+2026-03-09 15:26:19,302 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:26:19] "POST /rois/update HTTP/1.1" 200 -
+2026-03-09 15:26:19,939 [INFO] server.routes: ROIs updated for camera 1
+2026-03-09 15:26:19,939 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:26:19] "POST /rois/update HTTP/1.1" 200 -
+2026-03-09 15:26:20,563 [INFO] server.routes: ROIs updated for camera 1
+2026-03-09 15:26:20,564 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:26:20] "POST /rois/update HTTP/1.1" 200 -
+2026-03-09 15:26:21,062 [INFO] server.routes: ROIs updated for camera 1
+2026-03-09 15:26:21,062 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:26:21] "POST /rois/update HTTP/1.1" 200 -
+2026-03-09 15:26:21,764 [INFO] server.routes: ROIs updated for camera 1
+2026-03-09 15:26:21,765 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:26:21] "POST /rois/update HTTP/1.1" 200 -
+2026-03-09 15:26:22,336 [INFO] server.routes: ROIs updated for camera 1
+2026-03-09 15:26:22,337 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:26:22] "POST /rois/update HTTP/1.1" 200 -
+2026-03-09 15:26:24,326 [INFO] server.routes: ROIs updated for camera 1
+2026-03-09 15:26:24,327 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:26:24] "POST /rois/update HTTP/1.1" 200 -
+2026-03-09 15:26:25,467 [INFO] vision.color: Cube string: ???????????????????????????B?FBBFBDDFFU??UUUUDDFB?????
+2026-03-09 15:26:25,467 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:26:25] "GET /camera/detect HTTP/1.1" 200 -
+2026-03-09 15:26:29,012 [INFO] server.routes: ROIs updated for camera 1
+2026-03-09 15:26:29,012 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:26:29] "POST /rois/update HTTP/1.1" 200 -
+2026-03-09 15:26:29,849 [INFO] server.routes: ROIs updated for camera 1
+2026-03-09 15:26:29,850 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:26:29] "POST /rois/update HTTP/1.1" 200 -
+2026-03-09 15:26:30,853 [INFO] vision.color: Cube string: ???????????????????????????B?FBBFBDDFFU??UUUUDDFB?????
+2026-03-09 15:26:30,853 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:26:30] "GET /camera/detect HTTP/1.1" 200 -
+2026-03-09 15:26:33,005 [INFO] server.routes: ROIs updated for camera 1
+2026-03-09 15:26:33,006 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:26:33] "POST /rois/update HTTP/1.1" 200 -
+2026-03-09 15:26:34,031 [INFO] server.routes: ROIs updated for camera 1
+2026-03-09 15:26:34,031 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:26:34] "POST /rois/update HTTP/1.1" 200 -
+2026-03-09 15:26:34,887 [INFO] vision.color: Cube string: ???????????????????????????B?FBBFBDDFFU??UUUUDDFB??B??
+2026-03-09 15:26:34,888 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:26:34] "GET /camera/detect HTTP/1.1" 200 -
+2026-03-09 15:26:37,444 [INFO] server.routes: ROIs updated for camera 1
+2026-03-09 15:26:37,444 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:26:37] "POST /rois/update HTTP/1.1" 200 -
+2026-03-09 15:26:38,255 [INFO] vision.color: Cube string: ???????????????????????????BBFBBFBDDFFU??UUUUDDFB??B??
+2026-03-09 15:26:38,256 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:26:38] "GET /camera/detect HTTP/1.1" 200 -
+2026-03-09 15:26:39,570 [INFO] vision.color: Cube string: ???????????????????????????BBFBBFBDDFFU??UUUUDDFB??B??
+2026-03-09 15:26:39,571 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:26:39] "GET /camera/detect HTTP/1.1" 200 -
+2026-03-09 15:26:45,191 [INFO] server.routes: ROIs updated for camera 1
+2026-03-09 15:26:45,192 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:26:45] "POST /rois/update HTTP/1.1" 200 -
+2026-03-09 15:26:46,143 [INFO] vision.color: Cube string: ???????????????????????????BBFBBFBDDFFU??UUUUDDFB??B??
+2026-03-09 15:26:46,144 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:26:46] "GET /camera/detect HTTP/1.1" 200 -
+2026-03-09 15:26:46,780 [INFO] vision.color: Cube string: ???????????????????????????BBFBBFBDDFFU??UUUUDDFB??B??
+2026-03-09 15:26:46,781 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:26:46] "GET /camera/detect HTTP/1.1" 200 -
+2026-03-09 15:26:47,322 [INFO] vision.color: Cube string: ???????????????????????????BBFBBFBDDFFU??UUUUDDFB??B??
+2026-03-09 15:26:47,322 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:26:47] "GET /camera/detect HTTP/1.1" 200 -
+2026-03-09 15:26:48,558 [INFO] server.routes: ROIs updated for camera 1
+2026-03-09 15:26:48,558 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:26:48] "POST /rois/update HTTP/1.1" 200 -
+2026-03-09 15:26:49,036 [INFO] server.routes: ROIs updated for camera 1
+2026-03-09 15:26:49,036 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:26:49] "POST /rois/update HTTP/1.1" 200 -
+2026-03-09 15:27:01,598 [INFO] motion.scheduler: Scheduler: executing 1 moves (2 actions)
+2026-03-09 15:27:01,599 [INFO] werkzeug: 192.168.10.125 - - [09/Mar/2026 15:27:01] "POST /servo/move HTTP/1.1" 200 -
+2026-03-09 15:27:01,599 [INFO] motion.scheduler: Move 1/1: U
+2026-03-09 15:27:01,822 [WARNING] motion.sc09: No response from servo 1 after 2 attempts
+2026-03-09 15:27:02,046 [WARNING] motion.sc09: No response from servo 1 after 2 attempts
+2026-03-09 15:27:02,046 [INFO] motion.servo_bus: Servo 1 move_to pos=819 speed=400 → FAIL
+2026-03-09 15:27:02,270 [WARNING] motion.sc09: No response from servo 1 after 2 attempts
+2026-03-09 15:27:02,542 [WARNING] motion.sc09: No response from servo 1 after 2 attempts
+2026-03-09 15:27:02,814 [WARNING] motion.sc09: No response from servo 1 after 2 attempts
+2026-03-09 15:27:03,086 [WARNING] motion.sc09: No response from servo 1 after 2 attempts
+2026-03-09 15:27:03,358 [WARNING] motion.sc09: No response from servo 1 after 2 attempts
+2026-03-09 15:27:03,630 [WARNING] motion.sc09: No response from servo 1 after 2 attempts
+2026-03-09 15:27:03,906 [WARNING] motion.sc09: No response from servo 1 after 2 attempts
+2026-03-09 15:27:04,178 [WARNING] motion.sc09: No response from servo 1 after 2 attempts
+2026-03-09 15:27:04,228 [WARNING] motion.servo_bus: Servo 1: wait_until_stopped timed out
+2026-03-09 15:27:04,754 [WARNING] motion.sc09: No response from servo 1 after 2 attempts
+2026-03-09 15:27:04,978 [WARNING] motion.sc09: No response from servo 1 after 2 attempts
+2026-03-09 15:27:04,978 [INFO] motion.servo_bus: Servo 1 move_to pos=512 speed=400 → FAIL
+2026-03-09 15:27:05,202 [WARNING] motion.sc09: No response from servo 1 after 2 attempts
+2026-03-09 15:27:05,474 [WARNING] motion.sc09: No response from servo 1 after 2 attempts
+2026-03-09 15:27:05,746 [WARNING] motion.sc09: No response from servo 1 after 2 attempts
+2026-03-09 15:27:06,018 [WARNING] motion.sc09: No response from servo 1 after 2 attempts
+2026-03-09 15:27:06,290 [WARNING] motion.sc09: No response from servo 1 after 2 attempts
+2026-03-09 15:27:06,562 [WARNING] motion.sc09: No response from servo 1 after 2 attempts
+2026-03-09 15:27:06,834 [WARNING] motion.sc09: No response from servo 1 after 2 attempts
+2026-03-09 15:27:07,106 [WARNING] motion.sc09: No response from servo 1 after 2 attempts
+2026-03-09 15:27:07,156 [WARNING] motion.servo_bus: Servo 1: wait_until_stopped timed out
+2026-03-09 15:27:07,456 [INFO] motion.scheduler: Scheduler: all moves complete
+2026-03-09 15:27:30,465 [INFO] main: Shutting down...
+2026-03-11 11:51:00,122 [INFO] main: === Rubik's Cube Solver starting ===
+2026-03-11 11:52:47,326 [INFO] main: === Rubik's Cube Solver starting ===
+2026-03-11 11:52:47,856 [ERROR] vision.camera: Camera 0 failed to open
+2026-03-11 11:52:47,856 [ERROR] vision.camera: Camera 2 failed to open
+2026-03-11 11:52:47,857 [INFO] main: Camera 0: FAILED
+2026-03-11 11:52:47,857 [INFO] main: Camera 1: FAILED
+2026-03-11 11:52:47,866 [INFO] motion.sc09: SC09Bus opened /dev/ttyAMA10 @ 115200 baud
+2026-03-11 11:52:48,090 [WARNING] motion.sc09: No response from servo 1 after 2 attempts
+2026-03-11 11:52:48,090 [WARNING] motion.sc09: Ping servo 1: FAILED
+2026-03-11 11:52:48,314 [WARNING] motion.sc09: No response from servo 2 after 2 attempts
+2026-03-11 11:52:48,314 [WARNING] motion.sc09: Ping servo 2: FAILED
+2026-03-11 11:52:48,538 [WARNING] motion.sc09: No response from servo 3 after 2 attempts
+2026-03-11 11:52:48,538 [WARNING] motion.sc09: Ping servo 3: FAILED
+2026-03-11 11:52:48,762 [WARNING] motion.sc09: No response from servo 4 after 2 attempts
+2026-03-11 11:52:48,762 [WARNING] motion.sc09: Ping servo 4: FAILED
+2026-03-11 11:52:48,986 [WARNING] motion.sc09: No response from servo 5 after 2 attempts
+2026-03-11 11:52:48,986 [WARNING] motion.sc09: Ping servo 5: FAILED
+2026-03-11 11:52:49,210 [WARNING] motion.sc09: No response from servo 6 after 2 attempts
+2026-03-11 11:52:49,210 [WARNING] motion.sc09: Ping servo 6: FAILED
+2026-03-11 11:52:49,210 [INFO] main: Servo 1: NO RESPONSE
+2026-03-11 11:52:49,210 [INFO] main: Servo 2: NO RESPONSE
+2026-03-11 11:52:49,210 [INFO] main: Servo 3: NO RESPONSE
+2026-03-11 11:52:49,210 [INFO] main: Servo 4: NO RESPONSE
+2026-03-11 11:52:49,210 [INFO] main: Servo 5: NO RESPONSE
+2026-03-11 11:52:49,210 [INFO] main: Servo 6: NO RESPONSE
+2026-03-11 11:52:49,395 [INFO] server.app: Flask app created
+2026-03-11 11:52:49,396 [INFO] main: Starting Flask on 0.0.0.0:5000
+2026-03-11 11:52:49,400 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.245.30.21:5000
+2026-03-11 11:52:49,400 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2026-03-11 11:54:01,142 [INFO] main: Shutting down...
+2026-03-11 11:54:01,842 [INFO] main: === Rubik's Cube Solver starting ===
+2026-03-11 11:54:01,936 [ERROR] vision.camera: Camera 0 failed to open
+2026-03-11 11:54:01,936 [ERROR] vision.camera: Camera 2 failed to open
+2026-03-11 11:54:01,936 [INFO] main: Camera 0: FAILED
+2026-03-11 11:54:01,937 [INFO] main: Camera 1: FAILED
+2026-03-11 11:54:01,948 [INFO] motion.sc09: SC09Bus opened /dev/ttyAMA10 @ 115200 baud
+2026-03-11 11:54:02,170 [WARNING] motion.sc09: No response from servo 1 after 2 attempts
+2026-03-11 11:54:02,170 [WARNING] motion.sc09: Ping servo 1: FAILED
+2026-03-11 11:54:02,394 [WARNING] motion.sc09: No response from servo 2 after 2 attempts
+2026-03-11 11:54:02,394 [WARNING] motion.sc09: Ping servo 2: FAILED
+2026-03-11 11:54:02,618 [WARNING] motion.sc09: No response from servo 3 after 2 attempts
+2026-03-11 11:54:02,618 [WARNING] motion.sc09: Ping servo 3: FAILED
+2026-03-11 11:54:02,842 [WARNING] motion.sc09: No response from servo 4 after 2 attempts
+2026-03-11 11:54:02,842 [WARNING] motion.sc09: Ping servo 4: FAILED
+2026-03-11 11:54:03,066 [WARNING] motion.sc09: No response from servo 5 after 2 attempts
+2026-03-11 11:54:03,066 [WARNING] motion.sc09: Ping servo 5: FAILED
+2026-03-11 11:54:03,290 [WARNING] motion.sc09: No response from servo 6 after 2 attempts
+2026-03-11 11:54:03,290 [WARNING] motion.sc09: Ping servo 6: FAILED
+2026-03-11 11:54:03,290 [INFO] main: Servo 1: NO RESPONSE
+2026-03-11 11:54:03,290 [INFO] main: Servo 2: NO RESPONSE
+2026-03-11 11:54:03,290 [INFO] main: Servo 3: NO RESPONSE
+2026-03-11 11:54:03,290 [INFO] main: Servo 4: NO RESPONSE
+2026-03-11 11:54:03,291 [INFO] main: Servo 5: NO RESPONSE
+2026-03-11 11:54:03,291 [INFO] main: Servo 6: NO RESPONSE
+2026-03-11 11:54:03,415 [INFO] server.app: Flask app created
+2026-03-11 11:54:03,415 [INFO] main: Starting Flask on 0.0.0.0:5000
+2026-03-11 11:54:03,419 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.245.30.21:5000
+2026-03-11 11:54:03,419 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2026-03-11 11:54:05,435 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 11:54:05] "GET / HTTP/1.1" 200 -
+2026-03-11 11:54:05,503 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 11:54:05] "GET /static/style.css HTTP/1.1" 200 -
+2026-03-11 11:54:05,565 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 11:54:05] "GET /static/app.js HTTP/1.1" 200 -
+2026-03-11 11:54:05,601 [INFO] vision.roi: Auto-generated 27 ROIs for camera 0
+2026-03-11 11:54:05,602 [INFO] vision.roi: Auto-generated 27 ROIs for camera 1
+2026-03-11 11:54:05,602 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 11:54:05] "GET /rois HTTP/1.1" 200 -
+2026-03-11 11:54:12,481 [INFO] main: Shutting down...
+2026-03-11 15:22:54,966 [INFO] main: === Rubik's Cube Solver starting ===
+2026-03-11 15:23:22,659 [INFO] main: === Rubik's Cube Solver starting ===
+2026-03-11 15:23:22,765 [ERROR] vision.camera: Camera 0 failed to open
+2026-03-11 15:23:22,765 [ERROR] vision.camera: Camera 2 failed to open
+2026-03-11 15:23:22,765 [INFO] main: Camera 0: FAILED
+2026-03-11 15:23:22,766 [INFO] main: Camera 1: FAILED
+2026-03-11 15:23:22,772 [INFO] motion.sc09: SC09Bus opened /dev/ttyAMA10 @ 115200 baud
+2026-03-11 15:23:22,998 [WARNING] motion.sc09: No response from servo 1 after 2 attempts
+2026-03-11 15:23:22,998 [WARNING] motion.sc09: Ping servo 1: FAILED
+2026-03-11 15:23:23,222 [WARNING] motion.sc09: No response from servo 2 after 2 attempts
+2026-03-11 15:23:23,222 [WARNING] motion.sc09: Ping servo 2: FAILED
+2026-03-11 15:23:23,446 [WARNING] motion.sc09: No response from servo 3 after 2 attempts
+2026-03-11 15:23:23,446 [WARNING] motion.sc09: Ping servo 3: FAILED
+2026-03-11 15:23:23,670 [WARNING] motion.sc09: No response from servo 4 after 2 attempts
+2026-03-11 15:23:23,670 [WARNING] motion.sc09: Ping servo 4: FAILED
+2026-03-11 15:23:23,898 [WARNING] motion.sc09: No response from servo 5 after 2 attempts
+2026-03-11 15:23:23,898 [WARNING] motion.sc09: Ping servo 5: FAILED
+2026-03-11 15:23:24,122 [WARNING] motion.sc09: No response from servo 6 after 2 attempts
+2026-03-11 15:23:24,122 [WARNING] motion.sc09: Ping servo 6: FAILED
+2026-03-11 15:23:24,122 [INFO] main: Servo 1: NO RESPONSE
+2026-03-11 15:23:24,122 [INFO] main: Servo 2: NO RESPONSE
+2026-03-11 15:23:24,122 [INFO] main: Servo 3: NO RESPONSE
+2026-03-11 15:23:24,122 [INFO] main: Servo 4: NO RESPONSE
+2026-03-11 15:23:24,123 [INFO] main: Servo 5: NO RESPONSE
+2026-03-11 15:23:24,123 [INFO] main: Servo 6: NO RESPONSE
+2026-03-11 15:23:24,242 [INFO] server.app: Flask app created
+2026-03-11 15:23:24,242 [INFO] main: Starting Flask on 0.0.0.0:5000
+2026-03-11 15:23:24,246 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.245.30.21:5000
+2026-03-11 15:23:24,246 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2026-03-11 15:23:25,952 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:23:25] "GET / HTTP/1.1" 200 -
+2026-03-11 15:23:26,027 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:23:26] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-03-11 15:23:26,108 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:23:26] "[36mGET /static/app.js HTTP/1.1[0m" 304 -
+2026-03-11 15:23:26,185 [INFO] vision.roi: Auto-generated 27 ROIs for camera 0
+2026-03-11 15:23:26,185 [INFO] vision.roi: Auto-generated 27 ROIs for camera 1
+2026-03-11 15:23:26,186 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:23:26] "GET /rois HTTP/1.1" 200 -
+2026-03-11 15:24:09,482 [INFO] main: Shutting down...
+2026-03-11 15:24:10,911 [INFO] main: === Rubik's Cube Solver starting ===
+2026-03-11 15:24:11,175 [INFO] vision.camera: Camera 0 opened
+2026-03-11 15:24:11,371 [INFO] vision.camera: Camera 2 opened
+2026-03-11 15:24:11,372 [INFO] main: Camera 0: opened
+2026-03-11 15:24:11,372 [INFO] main: Camera 1: opened
+2026-03-11 15:24:11,379 [INFO] motion.sc09: SC09Bus opened /dev/ttyAMA10 @ 115200 baud
+2026-03-11 15:24:11,602 [WARNING] motion.sc09: No response from servo 1 after 2 attempts
+2026-03-11 15:24:11,602 [WARNING] motion.sc09: Ping servo 1: FAILED
+2026-03-11 15:24:11,826 [WARNING] motion.sc09: No response from servo 2 after 2 attempts
+2026-03-11 15:24:11,826 [WARNING] motion.sc09: Ping servo 2: FAILED
+2026-03-11 15:24:12,050 [WARNING] motion.sc09: No response from servo 3 after 2 attempts
+2026-03-11 15:24:12,050 [WARNING] motion.sc09: Ping servo 3: FAILED
+2026-03-11 15:24:12,274 [WARNING] motion.sc09: No response from servo 4 after 2 attempts
+2026-03-11 15:24:12,274 [WARNING] motion.sc09: Ping servo 4: FAILED
+2026-03-11 15:24:12,502 [WARNING] motion.sc09: No response from servo 5 after 2 attempts
+2026-03-11 15:24:12,502 [WARNING] motion.sc09: Ping servo 5: FAILED
+2026-03-11 15:24:12,726 [WARNING] motion.sc09: No response from servo 6 after 2 attempts
+2026-03-11 15:24:12,726 [WARNING] motion.sc09: Ping servo 6: FAILED
+2026-03-11 15:24:12,726 [INFO] main: Servo 1: NO RESPONSE
+2026-03-11 15:24:12,726 [INFO] main: Servo 2: NO RESPONSE
+2026-03-11 15:24:12,726 [INFO] main: Servo 3: NO RESPONSE
+2026-03-11 15:24:12,726 [INFO] main: Servo 4: NO RESPONSE
+2026-03-11 15:24:12,726 [INFO] main: Servo 5: NO RESPONSE
+2026-03-11 15:24:12,726 [INFO] main: Servo 6: NO RESPONSE
+2026-03-11 15:24:12,847 [INFO] server.app: Flask app created
+2026-03-11 15:24:12,847 [INFO] main: Starting Flask on 0.0.0.0:5000
+2026-03-11 15:24:12,850 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.245.30.21:5000
+2026-03-11 15:24:12,850 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2026-03-11 15:24:14,498 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:24:14] "GET / HTTP/1.1" 200 -
+2026-03-11 15:24:14,583 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:24:14] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-03-11 15:24:14,604 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:24:14] "[36mGET /static/app.js HTTP/1.1[0m" 304 -
+2026-03-11 15:24:14,685 [INFO] vision.roi: Auto-generated 27 ROIs for camera 0
+2026-03-11 15:24:14,685 [INFO] vision.roi: Auto-generated 27 ROIs for camera 1
+2026-03-11 15:24:14,685 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:24:14] "GET /rois HTTP/1.1" 200 -
+2026-03-11 15:24:14,957 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:24:14] "GET /video/0 HTTP/1.1" 200 -
+2026-03-11 15:24:14,974 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:24:14] "GET /video/1 HTTP/1.1" 200 -
+2026-03-11 15:24:15,088 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:24:15] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-03-11 15:51:25,404 [INFO] server.routes: Camera feeds frozen
+2026-03-11 15:51:25,405 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:51:25] "POST /camera/freeze HTTP/1.1" 200 -
+2026-03-11 15:51:25,437 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:51:25] "GET /camera/snapshot/0?1773240683115 HTTP/1.1" 200 -
+2026-03-11 15:51:25,444 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:51:25] "GET /camera/snapshot/1?1773240683115 HTTP/1.1" 200 -
+2026-03-11 15:51:26,943 [INFO] vision.color: Cube string: ??????????????U?L???????B?UUUUUUUUUU???UU?UUU?UU??????
+2026-03-11 15:51:26,944 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:51:26] "GET /camera/detect HTTP/1.1" 200 -
+2026-03-11 15:51:29,260 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:51:29] "GET /video/1 HTTP/1.1" 200 -
+2026-03-11 15:51:29,289 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:51:29] "GET /video/0 HTTP/1.1" 200 -
+2026-03-11 15:51:30,949 [INFO] server.routes: Camera feeds frozen
+2026-03-11 15:51:30,949 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:51:30] "POST /camera/freeze HTTP/1.1" 200 -
+2026-03-11 15:51:30,980 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:51:30] "GET /camera/snapshot/1?1773240688660 HTTP/1.1" 200 -
+2026-03-11 15:51:30,984 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:51:30] "GET /camera/snapshot/0?1773240688660 HTTP/1.1" 200 -
+2026-03-11 15:51:31,352 [INFO] vision.color: Cube string: ?????????R????U?R???????B?UUUUUUUUUU???UU?UUU?UU??????
+2026-03-11 15:51:31,353 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:51:31] "GET /camera/detect HTTP/1.1" 200 -
+2026-03-11 15:51:33,096 [INFO] vision.color: Cube string: ?????????R????U?R???????B?UUUUUUUUUU???UU?UUU?UU??????
+2026-03-11 15:51:33,096 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:51:33] "GET /camera/detect HTTP/1.1" 200 -
+2026-03-11 15:51:33,860 [INFO] vision.color: Cube string: ?????????R????U?R???????B?UUUUUUUUUU???UU?UUU?UU??????
+2026-03-11 15:51:33,861 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:51:33] "GET /camera/detect HTTP/1.1" 200 -
+2026-03-11 15:51:42,904 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:51:42] "GET /video/1 HTTP/1.1" 200 -
+2026-03-11 15:51:43,003 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:51:43] "GET /video/0 HTTP/1.1" 200 -
+2026-03-11 15:52:50,745 [INFO] server.routes: Camera feeds frozen
+2026-03-11 15:52:50,746 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:52:50] "POST /camera/freeze HTTP/1.1" 200 -
+2026-03-11 15:52:50,774 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:52:50] "GET /camera/snapshot/1?1773240768459 HTTP/1.1" 200 -
+2026-03-11 15:52:50,776 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:52:50] "GET /camera/snapshot/0?1773240768459 HTTP/1.1" 200 -
+2026-03-11 15:52:53,431 [INFO] vision.color: Cube string: ???????????U????U?B?UBBUBBU???????U??UU?UU?UUFR?FR???L
+2026-03-11 15:52:53,431 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:52:53] "GET /camera/detect HTTP/1.1" 200 -
+2026-03-11 15:53:02,052 [INFO] server.routes: ROIs updated for camera 1
+2026-03-11 15:53:02,052 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:53:02] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:53:03,043 [INFO] server.routes: ROIs updated for camera 1
+2026-03-11 15:53:03,043 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:53:03] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:53:03,939 [INFO] server.routes: ROIs updated for camera 1
+2026-03-11 15:53:03,939 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:53:03] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:53:04,563 [INFO] server.routes: ROIs updated for camera 1
+2026-03-11 15:53:04,564 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:53:04] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:53:05,500 [INFO] server.routes: ROIs updated for camera 1
+2026-03-11 15:53:05,500 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:53:05] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:53:06,345 [INFO] server.routes: ROIs updated for camera 1
+2026-03-11 15:53:06,346 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:53:06] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:53:07,040 [INFO] server.routes: ROIs updated for camera 1
+2026-03-11 15:53:07,040 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:53:07] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:53:08,270 [INFO] server.routes: ROIs updated for camera 1
+2026-03-11 15:53:08,271 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:53:08] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:53:09,295 [INFO] server.routes: ROIs updated for camera 1
+2026-03-11 15:53:09,296 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:53:09] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:53:11,207 [INFO] server.routes: ROIs updated for camera 1
+2026-03-11 15:53:11,207 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:53:11] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:53:12,453 [INFO] server.routes: ROIs updated for camera 1
+2026-03-11 15:53:12,453 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:53:12] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:53:15,419 [INFO] server.routes: ROIs updated for camera 1
+2026-03-11 15:53:15,419 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:53:15] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:53:17,383 [INFO] server.routes: ROIs updated for camera 1
+2026-03-11 15:53:17,384 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:53:17] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:53:18,784 [INFO] server.routes: ROIs updated for camera 1
+2026-03-11 15:53:18,785 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:53:18] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:53:20,503 [INFO] server.routes: ROIs updated for camera 1
+2026-03-11 15:53:20,504 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:53:20] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:53:21,531 [INFO] server.routes: ROIs updated for camera 1
+2026-03-11 15:53:21,531 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:53:21] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:53:22,403 [INFO] server.routes: ROIs updated for camera 1
+2026-03-11 15:53:22,403 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:53:22] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:53:23,314 [INFO] server.routes: ROIs updated for camera 1
+2026-03-11 15:53:23,315 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:53:23] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:53:24,655 [INFO] server.routes: ROIs updated for camera 1
+2026-03-11 15:53:24,655 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:53:24] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:53:25,819 [INFO] server.routes: ROIs updated for camera 1
+2026-03-11 15:53:25,822 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:53:25] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:53:26,418 [INFO] server.routes: ROIs updated for camera 1
+2026-03-11 15:53:26,419 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:53:26] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:53:27,830 [INFO] server.routes: ROIs updated for camera 1
+2026-03-11 15:53:27,830 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:53:27] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:53:30,095 [INFO] server.routes: ROIs updated for camera 1
+2026-03-11 15:53:30,095 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:53:30] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:53:31,259 [INFO] server.routes: ROIs updated for camera 1
+2026-03-11 15:53:31,259 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:53:31] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:53:32,836 [INFO] server.routes: ROIs updated for camera 1
+2026-03-11 15:53:32,838 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:53:32] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:53:34,156 [INFO] server.routes: ROIs updated for camera 1
+2026-03-11 15:53:34,156 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:53:34] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:53:35,283 [INFO] server.routes: ROIs updated for camera 1
+2026-03-11 15:53:35,284 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:53:35] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:53:36,476 [INFO] server.routes: ROIs updated for camera 1
+2026-03-11 15:53:36,476 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:53:36] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:53:39,509 [INFO] server.routes: ROIs updated for camera 1
+2026-03-11 15:53:39,509 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:53:39] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:53:40,718 [INFO] server.routes: ROIs updated for camera 1
+2026-03-11 15:53:40,719 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:53:40] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:53:42,259 [INFO] server.routes: ROIs updated for camera 1
+2026-03-11 15:53:42,259 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:53:42] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:53:43,822 [INFO] server.routes: ROIs updated for camera 1
+2026-03-11 15:53:43,823 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:53:43] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:53:45,147 [INFO] server.routes: ROIs updated for camera 1
+2026-03-11 15:53:45,148 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:53:45] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:53:46,746 [INFO] server.routes: ROIs updated for camera 1
+2026-03-11 15:53:46,747 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:53:46] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:53:48,371 [INFO] server.routes: ROIs updated for camera 1
+2026-03-11 15:53:48,371 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:53:48] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:53:50,050 [INFO] server.routes: ROIs updated for camera 1
+2026-03-11 15:53:50,051 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:53:50] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:53:53,235 [INFO] server.routes: ROIs updated for camera 1
+2026-03-11 15:53:53,235 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:53:53] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:53:57,571 [INFO] vision.color: Cube string: ???????????U????U?B?UBBUBBU???U????F?B?D???F?UU?U?URRF
+2026-03-11 15:53:57,571 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:53:57] "GET /camera/detect HTTP/1.1" 200 -
+2026-03-11 15:54:09,893 [INFO] server.routes: ROIs updated for camera 0
+2026-03-11 15:54:09,893 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:54:09] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:54:11,342 [INFO] server.routes: ROIs updated for camera 0
+2026-03-11 15:54:11,343 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:54:11] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:54:12,328 [INFO] server.routes: ROIs updated for camera 0
+2026-03-11 15:54:12,329 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:54:12] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:54:13,127 [INFO] server.routes: ROIs updated for camera 0
+2026-03-11 15:54:13,127 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:54:13] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:54:13,899 [INFO] server.routes: ROIs updated for camera 0
+2026-03-11 15:54:13,899 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:54:13] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:54:15,123 [INFO] server.routes: ROIs updated for camera 0
+2026-03-11 15:54:15,123 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:54:15] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:54:15,889 [INFO] server.routes: ROIs updated for camera 0
+2026-03-11 15:54:15,890 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:54:15] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:54:16,519 [INFO] server.routes: ROIs updated for camera 0
+2026-03-11 15:54:16,519 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:54:16] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:54:17,283 [INFO] server.routes: ROIs updated for camera 0
+2026-03-11 15:54:17,283 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:54:17] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:54:19,351 [INFO] server.routes: ROIs updated for camera 0
+2026-03-11 15:54:19,351 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:54:19] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:54:21,508 [INFO] server.routes: ROIs updated for camera 0
+2026-03-11 15:54:21,509 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:54:21] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:54:22,635 [INFO] server.routes: ROIs updated for camera 0
+2026-03-11 15:54:22,635 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:54:22] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:54:24,155 [INFO] server.routes: ROIs updated for camera 0
+2026-03-11 15:54:24,155 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:54:24] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:54:25,815 [INFO] server.routes: ROIs updated for camera 0
+2026-03-11 15:54:25,816 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:54:25] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:54:28,684 [INFO] server.routes: ROIs updated for camera 0
+2026-03-11 15:54:28,685 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:54:28] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:54:31,803 [INFO] server.routes: ROIs updated for camera 0
+2026-03-11 15:54:31,803 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:54:31] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:54:33,848 [INFO] server.routes: ROIs updated for camera 0
+2026-03-11 15:54:33,849 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:54:33] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:54:34,675 [INFO] server.routes: ROIs updated for camera 0
+2026-03-11 15:54:34,676 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:54:34] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:54:35,983 [INFO] server.routes: ROIs updated for camera 0
+2026-03-11 15:54:35,983 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:54:35] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:54:37,607 [INFO] server.routes: ROIs updated for camera 0
+2026-03-11 15:54:37,608 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:54:37] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:54:38,969 [INFO] server.routes: ROIs updated for camera 0
+2026-03-11 15:54:38,969 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:54:38] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:54:40,332 [INFO] server.routes: ROIs updated for camera 0
+2026-03-11 15:54:40,332 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:54:40] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:54:41,217 [INFO] server.routes: ROIs updated for camera 0
+2026-03-11 15:54:41,218 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:54:41] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:54:42,678 [INFO] server.routes: ROIs updated for camera 0
+2026-03-11 15:54:42,678 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:54:42] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:54:43,712 [INFO] server.routes: ROIs updated for camera 0
+2026-03-11 15:54:43,712 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:54:43] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:54:44,746 [INFO] server.routes: ROIs updated for camera 0
+2026-03-11 15:54:44,746 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:54:44] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:54:46,031 [INFO] server.routes: ROIs updated for camera 0
+2026-03-11 15:54:46,031 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:54:46] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:54:47,294 [INFO] server.routes: ROIs updated for camera 0
+2026-03-11 15:54:47,294 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:54:47] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:54:48,860 [INFO] server.routes: ROIs updated for camera 0
+2026-03-11 15:54:48,860 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:54:48] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:54:50,343 [INFO] server.routes: ROIs updated for camera 0
+2026-03-11 15:54:50,343 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:54:50] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:54:51,622 [INFO] vision.color: Cube string: F?????????FBF?R??UUFFU????????U????F?B?D???F?UU?U?URRF
+2026-03-11 15:54:51,623 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:54:51] "GET /camera/detect HTTP/1.1" 200 -
+2026-03-11 15:54:54,394 [INFO] server.routes: ROIs updated for camera 0
+2026-03-11 15:54:54,395 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:54:54] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:54:55,309 [INFO] vision.color: Cube string: F?????????FBF?R??UUFFU????????U????F?B?D???F?UU?U?URRF
+2026-03-11 15:54:55,309 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:54:55] "GET /camera/detect HTTP/1.1" 200 -
+2026-03-11 15:54:56,657 [INFO] server.routes: ROIs updated for camera 0
+2026-03-11 15:54:56,658 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:54:56] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:54:58,364 [INFO] server.routes: ROIs updated for camera 0
+2026-03-11 15:54:58,365 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:54:58] "POST /rois/update HTTP/1.1" 200 -
+2026-03-11 15:55:00,251 [INFO] vision.color: Cube string: F?????????FBF?R??UUFFU????????U????F?B?D???F?UU?U?URRF
+2026-03-11 15:55:00,251 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:55:00] "GET /camera/detect HTTP/1.1" 200 -
+2026-03-11 15:55:02,571 [INFO] vision.color: Cube string: F?????????FBF?R??UUFFU????????U????F?B?D???F?UU?U?URRF
+2026-03-11 15:55:02,572 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:55:02] "GET /camera/detect HTTP/1.1" 200 -
+2026-03-11 15:55:05,127 [INFO] vision.color: Cube string: F?????????FBF?R??UUFFU????????U????F?B?D???F?UU?U?URRF
+2026-03-11 15:55:05,128 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 15:55:05] "GET /camera/detect HTTP/1.1" 200 -
+2026-03-11 16:05:20,871 [INFO] vision.color: Cube string: F?????????FBF?R??UUFFU????????U????F?B?D???F?UU?U?URRF
+2026-03-11 16:05:20,871 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 16:05:20] "GET /camera/detect HTTP/1.1" 200 -
+2026-03-11 16:05:21,741 [INFO] vision.color: Cube string: F?????????FBF?R??UUFFU????????U????F?B?D???F?UU?U?URRF
+2026-03-11 16:05:21,742 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 16:05:21] "GET /camera/detect HTTP/1.1" 200 -
+2026-03-11 16:15:17,024 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 16:15:17] "GET /video/0 HTTP/1.1" 200 -
+2026-03-11 16:15:37,546 [INFO] server.routes: Camera feeds frozen
+2026-03-11 16:15:37,547 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 16:15:37] "POST /camera/freeze HTTP/1.1" 200 -
+2026-03-11 16:15:37,572 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 16:15:37] "[33mGET /camera/snapshot/1?1773242135297 HTTP/1.1[0m" 404 -
+2026-03-11 16:15:37,573 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 16:15:37] "GET /camera/snapshot/0?1773242135297 HTTP/1.1" 200 -
+2026-03-11 16:15:38,385 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 16:15:38] "GET /video/0 HTTP/1.1" 200 -
+2026-03-11 16:15:39,686 [INFO] server.routes: Camera feeds frozen
+2026-03-11 16:15:39,687 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 16:15:39] "POST /camera/freeze HTTP/1.1" 200 -
+2026-03-11 16:15:39,711 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 16:15:39] "[33mGET /camera/snapshot/1?1773242137438 HTTP/1.1[0m" 404 -
+2026-03-11 16:15:39,717 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 16:15:39] "GET /camera/snapshot/0?1773242137438 HTTP/1.1" 200 -
+2026-03-11 16:15:40,526 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 16:15:40] "GET /video/0 HTTP/1.1" 200 -
+2026-03-11 16:15:42,090 [INFO] server.routes: Camera feeds frozen
+2026-03-11 16:15:42,091 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 16:15:42] "POST /camera/freeze HTTP/1.1" 200 -
+2026-03-11 16:15:42,116 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 16:15:42] "[33mGET /camera/snapshot/1?1773242139842 HTTP/1.1[0m" 404 -
+2026-03-11 16:15:42,117 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 16:15:42] "GET /camera/snapshot/0?1773242139842 HTTP/1.1" 200 -
+2026-03-11 16:15:42,877 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 16:15:42] "GET /video/0 HTTP/1.1" 200 -
+2026-03-11 16:15:44,022 [INFO] server.routes: Camera feeds frozen
+2026-03-11 16:15:44,023 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 16:15:44] "POST /camera/freeze HTTP/1.1" 200 -
+2026-03-11 16:15:44,053 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 16:15:44] "[33mGET /camera/snapshot/1?1773242141774 HTTP/1.1[0m" 404 -
+2026-03-11 16:15:44,054 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 16:15:44] "GET /camera/snapshot/0?1773242141774 HTTP/1.1" 200 -
+2026-03-11 16:15:44,965 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 16:15:44] "GET /video/0 HTTP/1.1" 200 -
+2026-03-11 16:15:57,720 [INFO] main: Shutting down...
+2026-03-11 16:16:00,579 [INFO] main: === Rubik's Cube Solver starting ===
+2026-03-11 16:16:00,724 [INFO] vision.camera: Camera 0 opened
+2026-03-11 16:16:00,725 [ERROR] vision.camera: Camera 2 failed to open
+2026-03-11 16:16:00,725 [INFO] main: Camera 0: opened
+2026-03-11 16:16:00,725 [INFO] main: Camera 1: FAILED
+2026-03-11 16:16:00,732 [INFO] motion.sc09: SC09Bus opened /dev/ttyAMA10 @ 115200 baud
+2026-03-11 16:16:00,954 [WARNING] motion.sc09: No response from servo 1 after 2 attempts
+2026-03-11 16:16:00,954 [WARNING] motion.sc09: Ping servo 1: FAILED
+2026-03-11 16:16:01,178 [WARNING] motion.sc09: No response from servo 2 after 2 attempts
+2026-03-11 16:16:01,178 [WARNING] motion.sc09: Ping servo 2: FAILED
+2026-03-11 16:16:01,402 [WARNING] motion.sc09: No response from servo 3 after 2 attempts
+2026-03-11 16:16:01,402 [WARNING] motion.sc09: Ping servo 3: FAILED
+2026-03-11 16:16:01,626 [WARNING] motion.sc09: No response from servo 4 after 2 attempts
+2026-03-11 16:16:01,626 [WARNING] motion.sc09: Ping servo 4: FAILED
+2026-03-11 16:16:01,850 [WARNING] motion.sc09: No response from servo 5 after 2 attempts
+2026-03-11 16:16:01,850 [WARNING] motion.sc09: Ping servo 5: FAILED
+2026-03-11 16:16:02,074 [WARNING] motion.sc09: No response from servo 6 after 2 attempts
+2026-03-11 16:16:02,074 [WARNING] motion.sc09: Ping servo 6: FAILED
+2026-03-11 16:16:02,074 [INFO] main: Servo 1: NO RESPONSE
+2026-03-11 16:16:02,074 [INFO] main: Servo 2: NO RESPONSE
+2026-03-11 16:16:02,074 [INFO] main: Servo 3: NO RESPONSE
+2026-03-11 16:16:02,074 [INFO] main: Servo 4: NO RESPONSE
+2026-03-11 16:16:02,074 [INFO] main: Servo 5: NO RESPONSE
+2026-03-11 16:16:02,074 [INFO] main: Servo 6: NO RESPONSE
+2026-03-11 16:16:02,199 [INFO] server.app: Flask app created
+2026-03-11 16:16:02,199 [INFO] main: Starting Flask on 0.0.0.0:5000
+2026-03-11 16:16:02,203 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.245.30.21:5000
+2026-03-11 16:16:02,203 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2026-03-11 16:16:03,380 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 16:16:03] "GET / HTTP/1.1" 200 -
+2026-03-11 16:16:03,439 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 16:16:03] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-03-11 16:16:03,486 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 16:16:03] "[36mGET /static/app.js HTTP/1.1[0m" 304 -
+2026-03-11 16:16:03,522 [INFO] vision.roi: Auto-generated 27 ROIs for camera 0
+2026-03-11 16:16:03,522 [INFO] vision.roi: Auto-generated 27 ROIs for camera 1
+2026-03-11 16:16:03,522 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 16:16:03] "GET /rois HTTP/1.1" 200 -
+2026-03-11 16:16:03,832 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 16:16:03] "GET /video/0 HTTP/1.1" 200 -
+2026-03-11 16:16:47,491 [INFO] main: Shutting down...
+2026-03-11 16:17:02,038 [INFO] main: === Rubik's Cube Solver starting ===
+2026-03-11 16:17:02,305 [INFO] vision.camera: Camera 0 opened
+2026-03-11 16:17:02,305 [ERROR] vision.camera: Camera 2 failed to open
+2026-03-11 16:17:02,306 [INFO] main: Camera 0: opened
+2026-03-11 16:17:02,306 [INFO] main: Camera 1: FAILED
+2026-03-11 16:17:02,312 [INFO] motion.sc09: SC09Bus opened /dev/ttyAMA10 @ 115200 baud
+2026-03-11 16:17:02,534 [WARNING] motion.sc09: No response from servo 1 after 2 attempts
+2026-03-11 16:17:02,534 [WARNING] motion.sc09: Ping servo 1: FAILED
+2026-03-11 16:17:02,758 [WARNING] motion.sc09: No response from servo 2 after 2 attempts
+2026-03-11 16:17:02,758 [WARNING] motion.sc09: Ping servo 2: FAILED
+2026-03-11 16:17:02,982 [WARNING] motion.sc09: No response from servo 3 after 2 attempts
+2026-03-11 16:17:02,982 [WARNING] motion.sc09: Ping servo 3: FAILED
+2026-03-11 16:17:03,206 [WARNING] motion.sc09: No response from servo 4 after 2 attempts
+2026-03-11 16:17:03,206 [WARNING] motion.sc09: Ping servo 4: FAILED
+2026-03-11 16:17:03,430 [WARNING] motion.sc09: No response from servo 5 after 2 attempts
+2026-03-11 16:17:03,430 [WARNING] motion.sc09: Ping servo 5: FAILED
+2026-03-11 16:17:03,654 [WARNING] motion.sc09: No response from servo 6 after 2 attempts
+2026-03-11 16:17:03,654 [WARNING] motion.sc09: Ping servo 6: FAILED
+2026-03-11 16:17:03,654 [INFO] main: Servo 1: NO RESPONSE
+2026-03-11 16:17:03,654 [INFO] main: Servo 2: NO RESPONSE
+2026-03-11 16:17:03,654 [INFO] main: Servo 3: NO RESPONSE
+2026-03-11 16:17:03,654 [INFO] main: Servo 4: NO RESPONSE
+2026-03-11 16:17:03,654 [INFO] main: Servo 5: NO RESPONSE
+2026-03-11 16:17:03,655 [INFO] main: Servo 6: NO RESPONSE
+2026-03-11 16:17:03,779 [INFO] server.app: Flask app created
+2026-03-11 16:17:03,780 [INFO] main: Starting Flask on 0.0.0.0:5000
+2026-03-11 16:17:03,783 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.245.30.21:5000
+2026-03-11 16:17:03,784 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2026-03-11 16:17:05,984 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 16:17:05] "GET / HTTP/1.1" 200 -
+2026-03-11 16:17:06,039 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 16:17:06] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-03-11 16:17:06,066 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 16:17:06] "[36mGET /static/app.js HTTP/1.1[0m" 304 -
+2026-03-11 16:17:06,143 [INFO] vision.roi: Auto-generated 27 ROIs for camera 0
+2026-03-11 16:17:06,144 [INFO] vision.roi: Auto-generated 27 ROIs for camera 1
+2026-03-11 16:17:06,144 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 16:17:06] "GET /rois HTTP/1.1" 200 -
+2026-03-11 16:17:06,388 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 16:17:06] "GET /video/0 HTTP/1.1" 200 -
+2026-03-11 16:17:25,671 [INFO] server.routes: Camera feeds frozen
+2026-03-11 16:17:25,671 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 16:17:25] "POST /camera/freeze HTTP/1.1" 200 -
+2026-03-11 16:17:25,696 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 16:17:25] "[33mGET /camera/snapshot/1?1773242243428 HTTP/1.1[0m" 404 -
+2026-03-11 16:17:25,697 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 16:17:25] "GET /camera/snapshot/0?1773242243428 HTTP/1.1" 200 -
+2026-03-11 16:17:30,799 [WARNING] server.routes: No frozen frame for camera 1
+2026-03-11 16:17:30,799 [INFO] vision.color: Cube string: ???????????UU?U?????????B?U???????????????????????????
+2026-03-11 16:17:30,800 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 16:17:30] "GET /camera/detect HTTP/1.1" 200 -
+2026-03-11 16:17:33,625 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 16:17:33] "GET /video/0 HTTP/1.1" 200 -
+2026-03-11 16:17:36,974 [WARNING] motion.sc09: No response from servo 1 after 2 attempts
+2026-03-11 16:17:36,974 [WARNING] motion.sc09: Ping servo 1: FAILED
+2026-03-11 16:17:37,199 [WARNING] motion.sc09: No response from servo 2 after 2 attempts
+2026-03-11 16:17:37,199 [WARNING] motion.sc09: Ping servo 2: FAILED
+2026-03-11 16:17:37,422 [WARNING] motion.sc09: No response from servo 3 after 2 attempts
+2026-03-11 16:17:37,422 [WARNING] motion.sc09: Ping servo 3: FAILED
+2026-03-11 16:17:37,646 [WARNING] motion.sc09: No response from servo 4 after 2 attempts
+2026-03-11 16:17:37,646 [WARNING] motion.sc09: Ping servo 4: FAILED
+2026-03-11 16:17:37,870 [WARNING] motion.sc09: No response from servo 5 after 2 attempts
+2026-03-11 16:17:37,870 [WARNING] motion.sc09: Ping servo 5: FAILED
+2026-03-11 16:17:38,094 [WARNING] motion.sc09: No response from servo 6 after 2 attempts
+2026-03-11 16:17:38,094 [WARNING] motion.sc09: Ping servo 6: FAILED
+2026-03-11 16:17:38,095 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 16:17:38] "GET /servo/ping HTTP/1.1" 200 -
+2026-03-11 16:17:46,271 [INFO] server.routes: Camera feeds frozen
+2026-03-11 16:17:46,272 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 16:17:46] "POST /camera/freeze HTTP/1.1" 200 -
+2026-03-11 16:17:46,295 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 16:17:46] "[33mGET /camera/snapshot/1?1773242264031 HTTP/1.1[0m" 404 -
+2026-03-11 16:17:46,295 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 16:17:46] "GET /camera/snapshot/0?1773242264031 HTTP/1.1" 200 -
+2026-03-11 16:17:47,935 [WARNING] server.routes: No frozen frame for camera 1
+2026-03-11 16:17:47,936 [INFO] vision.color: Cube string: ???????????UU?U?????????B?U???????????????????????????
+2026-03-11 16:17:47,936 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 16:17:47] "GET /camera/detect HTTP/1.1" 200 -
+2026-03-11 18:04:48,491 [INFO] main: Shutting down...
+2026-03-11 18:04:51,933 [INFO] main: === Rubik's Cube Solver starting ===
+2026-03-11 18:04:52,225 [INFO] vision.camera: Camera 0 opened
+2026-03-11 18:04:52,225 [ERROR] vision.camera: Camera 2 failed to open
+2026-03-11 18:04:52,226 [INFO] main: Camera 0: opened
+2026-03-11 18:04:52,226 [INFO] main: Camera 1: FAILED
+2026-03-11 18:04:52,232 [INFO] motion.sc09: SC09Bus opened /dev/ttyAMA10 @ 115200 baud
+2026-03-11 18:04:52,454 [WARNING] motion.sc09: No response from servo 1 after 2 attempts
+2026-03-11 18:04:52,454 [WARNING] motion.sc09: Ping servo 1: FAILED
+2026-03-11 18:04:52,678 [WARNING] motion.sc09: No response from servo 2 after 2 attempts
+2026-03-11 18:04:52,678 [WARNING] motion.sc09: Ping servo 2: FAILED
+2026-03-11 18:04:52,902 [WARNING] motion.sc09: No response from servo 3 after 2 attempts
+2026-03-11 18:04:52,902 [WARNING] motion.sc09: Ping servo 3: FAILED
+2026-03-11 18:04:53,130 [WARNING] motion.sc09: No response from servo 4 after 2 attempts
+2026-03-11 18:04:53,130 [WARNING] motion.sc09: Ping servo 4: FAILED
+2026-03-11 18:04:53,354 [WARNING] motion.sc09: No response from servo 5 after 2 attempts
+2026-03-11 18:04:53,354 [WARNING] motion.sc09: Ping servo 5: FAILED
+2026-03-11 18:04:53,578 [WARNING] motion.sc09: No response from servo 6 after 2 attempts
+2026-03-11 18:04:53,578 [WARNING] motion.sc09: Ping servo 6: FAILED
+2026-03-11 18:04:53,578 [INFO] main: Servo 1: NO RESPONSE
+2026-03-11 18:04:53,578 [INFO] main: Servo 2: NO RESPONSE
+2026-03-11 18:04:53,578 [INFO] main: Servo 3: NO RESPONSE
+2026-03-11 18:04:53,578 [INFO] main: Servo 4: NO RESPONSE
+2026-03-11 18:04:53,579 [INFO] main: Servo 5: NO RESPONSE
+2026-03-11 18:04:53,579 [INFO] main: Servo 6: NO RESPONSE
+2026-03-11 18:04:53,699 [INFO] server.app: Flask app created
+2026-03-11 18:04:53,699 [INFO] main: Starting Flask on 0.0.0.0:5000
+2026-03-11 18:04:53,702 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.245.30.21:5000
+2026-03-11 18:04:53,703 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2026-03-11 18:05:22,866 [INFO] werkzeug: 10.245.30.251 - - [11/Mar/2026 18:05:22] "GET / HTTP/1.1" 200 -
+2026-03-11 18:05:22,892 [INFO] werkzeug: 10.245.30.251 - - [11/Mar/2026 18:05:22] "GET /static/style.css HTTP/1.1" 200 -
+2026-03-11 18:05:23,265 [INFO] werkzeug: 10.245.30.251 - - [11/Mar/2026 18:05:23] "GET /video/0 HTTP/1.1" 200 -
+2026-03-11 18:05:23,873 [INFO] werkzeug: 10.245.30.251 - - [11/Mar/2026 18:05:23] "GET /static/app.js HTTP/1.1" 200 -
+2026-03-11 18:05:23,900 [INFO] vision.roi: Auto-generated 27 ROIs for camera 0
+2026-03-11 18:05:23,901 [INFO] vision.roi: Auto-generated 27 ROIs for camera 1
+2026-03-11 18:05:23,901 [INFO] werkzeug: 10.245.30.251 - - [11/Mar/2026 18:05:23] "GET /rois HTTP/1.1" 200 -
+2026-03-11 18:05:33,229 [INFO] main: Shutting down...
+2026-03-11 18:07:03,295 [INFO] main: === Rubik's Cube Solver starting ===
+2026-03-11 18:07:15,490 [INFO] main: === Rubik's Cube Solver starting ===
+2026-03-11 18:07:15,762 [INFO] vision.camera: Camera 0 opened
+2026-03-11 18:07:15,765 [ERROR] vision.camera: Camera 2 failed to open
+2026-03-11 18:07:15,765 [INFO] main: Camera 0: opened
+2026-03-11 18:07:15,765 [INFO] main: Camera 1: FAILED
+2026-03-11 18:07:15,782 [INFO] motion.sc09: SC09Bus opened /dev/ttyAMA10 @ 115200 baud
+2026-03-11 18:07:16,010 [WARNING] motion.sc09: No response from servo 1 after 2 attempts
+2026-03-11 18:07:16,010 [WARNING] motion.sc09: Ping servo 1: FAILED
+2026-03-11 18:07:16,234 [WARNING] motion.sc09: No response from servo 2 after 2 attempts
+2026-03-11 18:07:16,234 [WARNING] motion.sc09: Ping servo 2: FAILED
+2026-03-11 18:07:16,458 [WARNING] motion.sc09: No response from servo 3 after 2 attempts
+2026-03-11 18:07:16,458 [WARNING] motion.sc09: Ping servo 3: FAILED
+2026-03-11 18:07:16,686 [WARNING] motion.sc09: No response from servo 4 after 2 attempts
+2026-03-11 18:07:16,686 [WARNING] motion.sc09: Ping servo 4: FAILED
+2026-03-11 18:07:16,910 [WARNING] motion.sc09: No response from servo 5 after 2 attempts
+2026-03-11 18:07:16,910 [WARNING] motion.sc09: Ping servo 5: FAILED
+2026-03-11 18:07:17,134 [WARNING] motion.sc09: No response from servo 6 after 2 attempts
+2026-03-11 18:07:17,134 [WARNING] motion.sc09: Ping servo 6: FAILED
+2026-03-11 18:07:17,134 [INFO] main: Servo 1: NO RESPONSE
+2026-03-11 18:07:17,134 [INFO] main: Servo 2: NO RESPONSE
+2026-03-11 18:07:17,134 [INFO] main: Servo 3: NO RESPONSE
+2026-03-11 18:07:17,134 [INFO] main: Servo 4: NO RESPONSE
+2026-03-11 18:07:17,134 [INFO] main: Servo 5: NO RESPONSE
+2026-03-11 18:07:17,134 [INFO] main: Servo 6: NO RESPONSE
+2026-03-11 18:07:17,254 [INFO] server.app: Flask app created
+2026-03-11 18:07:17,254 [INFO] main: Starting Flask on 0.0.0.0:5000
+2026-03-11 18:07:17,257 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.245.30.21:5000
+2026-03-11 18:07:17,258 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2026-03-11 18:09:19,027 [INFO] werkzeug: 10.245.30.251 - - [11/Mar/2026 18:09:19] "GET / HTTP/1.1" 200 -
+2026-03-11 18:09:19,060 [INFO] werkzeug: 10.245.30.251 - - [11/Mar/2026 18:09:19] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-03-11 18:09:19,080 [INFO] werkzeug: 10.245.30.251 - - [11/Mar/2026 18:09:19] "[36mGET /static/app.js HTTP/1.1[0m" 304 -
+2026-03-11 18:09:19,139 [INFO] vision.roi: Auto-generated 27 ROIs for camera 0
+2026-03-11 18:09:19,139 [INFO] vision.roi: Auto-generated 27 ROIs for camera 1
+2026-03-11 18:09:19,139 [INFO] werkzeug: 10.245.30.251 - - [11/Mar/2026 18:09:19] "GET /rois HTTP/1.1" 200 -
+2026-03-11 18:09:19,427 [INFO] werkzeug: 10.245.30.251 - - [11/Mar/2026 18:09:19] "GET /video/0 HTTP/1.1" 200 -
+2026-03-11 18:09:27,266 [INFO] main: Shutting down...
+2026-03-11 18:09:46,162 [INFO] main: === Rubik's Cube Solver starting ===
+2026-03-11 18:09:46,413 [INFO] vision.camera: Camera 0 opened
+2026-03-11 18:09:46,413 [ERROR] vision.camera: Camera 2 failed to open
+2026-03-11 18:09:46,413 [INFO] main: Camera 0: opened
+2026-03-11 18:09:46,414 [INFO] main: Camera 1: FAILED
+2026-03-11 18:09:46,420 [INFO] motion.sc09: SC09Bus opened /dev/ttyAMA10 @ 115200 baud
+2026-03-11 18:09:46,642 [WARNING] motion.sc09: No response from servo 1 after 2 attempts
+2026-03-11 18:09:46,642 [WARNING] motion.sc09: Ping servo 1: FAILED
+2026-03-11 18:09:46,866 [WARNING] motion.sc09: No response from servo 2 after 2 attempts
+2026-03-11 18:09:46,866 [WARNING] motion.sc09: Ping servo 2: FAILED
+2026-03-11 18:09:47,090 [WARNING] motion.sc09: No response from servo 3 after 2 attempts
+2026-03-11 18:09:47,090 [WARNING] motion.sc09: Ping servo 3: FAILED
+2026-03-11 18:09:47,314 [WARNING] motion.sc09: No response from servo 4 after 2 attempts
+2026-03-11 18:09:47,314 [WARNING] motion.sc09: Ping servo 4: FAILED
+2026-03-11 18:09:47,540 [WARNING] motion.sc09: No response from servo 5 after 2 attempts
+2026-03-11 18:09:47,540 [WARNING] motion.sc09: Ping servo 5: FAILED
+2026-03-11 18:09:47,762 [WARNING] motion.sc09: No response from servo 6 after 2 attempts
+2026-03-11 18:09:47,762 [WARNING] motion.sc09: Ping servo 6: FAILED
+2026-03-11 18:09:47,762 [INFO] main: Servo 1: NO RESPONSE
+2026-03-11 18:09:47,762 [INFO] main: Servo 2: NO RESPONSE
+2026-03-11 18:09:47,762 [INFO] main: Servo 3: NO RESPONSE
+2026-03-11 18:09:47,762 [INFO] main: Servo 4: NO RESPONSE
+2026-03-11 18:09:47,762 [INFO] main: Servo 5: NO RESPONSE
+2026-03-11 18:09:47,762 [INFO] main: Servo 6: NO RESPONSE
+2026-03-11 18:09:47,911 [INFO] server.app: Flask app created
+2026-03-11 18:09:47,912 [INFO] main: Starting Flask on 0.0.0.0:5000
+2026-03-11 18:09:47,915 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.245.30.21:5000
+2026-03-11 18:09:47,915 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2026-03-11 18:10:05,909 [INFO] werkzeug: 10.245.30.251 - - [11/Mar/2026 18:10:05] "GET / HTTP/1.1" 200 -
+2026-03-11 18:10:05,954 [INFO] werkzeug: 10.245.30.251 - - [11/Mar/2026 18:10:05] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-03-11 18:10:05,971 [INFO] werkzeug: 10.245.30.251 - - [11/Mar/2026 18:10:05] "[36mGET /static/app.js HTTP/1.1[0m" 304 -
+2026-03-11 18:10:06,039 [INFO] vision.roi: Auto-generated 27 ROIs for camera 0
+2026-03-11 18:10:06,040 [INFO] vision.roi: Auto-generated 27 ROIs for camera 1
+2026-03-11 18:10:06,040 [INFO] werkzeug: 10.245.30.251 - - [11/Mar/2026 18:10:06] "GET /rois HTTP/1.1" 200 -
+2026-03-11 18:10:06,333 [INFO] werkzeug: 10.245.30.251 - - [11/Mar/2026 18:10:06] "GET /video/0 HTTP/1.1" 200 -
+2026-03-11 18:10:33,670 [INFO] main: Shutting down...
+2026-03-11 18:14:59,742 [INFO] main: === Rubik's Cube Solver starting ===
+2026-03-11 18:14:59,997 [INFO] vision.camera: Camera 0 opened
+2026-03-11 18:15:00,194 [INFO] vision.camera: Camera 2 opened
+2026-03-11 18:15:00,195 [INFO] main: Camera 0: opened
+2026-03-11 18:15:00,195 [INFO] main: Camera 1: opened
+2026-03-11 18:15:00,259 [INFO] motion.sc09: SC09Bus opened /dev/ttyUSB0 @ 115200 baud (vendor SDK)
+2026-03-11 18:15:00,289 [INFO] motion.sc09: Ping servo 1: OK (model 1284)
+2026-03-11 18:15:00,318 [INFO] motion.sc09: Ping servo 2: OK (model 1284)
+2026-03-11 18:15:00,347 [INFO] motion.sc09: Ping servo 3: OK (model 1284)
+2026-03-11 18:15:00,376 [INFO] motion.sc09: Ping servo 4: OK (model 1284)
+2026-03-11 18:15:00,406 [INFO] motion.sc09: Ping servo 5: OK (model 1284)
+2026-03-11 18:15:00,435 [INFO] motion.sc09: Ping servo 6: OK (model 1284)
+2026-03-11 18:15:00,435 [INFO] main: Servo 1: OK
+2026-03-11 18:15:00,435 [INFO] main: Servo 2: OK
+2026-03-11 18:15:00,435 [INFO] main: Servo 3: OK
+2026-03-11 18:15:00,435 [INFO] main: Servo 4: OK
+2026-03-11 18:15:00,435 [INFO] main: Servo 5: OK
+2026-03-11 18:15:00,435 [INFO] main: Servo 6: OK
+2026-03-11 18:15:00,555 [INFO] server.app: Flask app created
+2026-03-11 18:15:00,555 [INFO] main: Starting Flask on 0.0.0.0:5000
+2026-03-11 18:15:00,559 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.245.30.21:5000
+2026-03-11 18:15:00,559 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2026-03-11 18:16:35,814 [INFO] werkzeug: 10.245.30.251 - - [11/Mar/2026 18:16:35] "GET / HTTP/1.1" 200 -
+2026-03-11 18:16:35,856 [INFO] werkzeug: 10.245.30.251 - - [11/Mar/2026 18:16:35] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-03-11 18:16:35,873 [INFO] werkzeug: 10.245.30.251 - - [11/Mar/2026 18:16:35] "[36mGET /static/app.js HTTP/1.1[0m" 304 -
+2026-03-11 18:16:35,918 [INFO] vision.roi: Auto-generated 27 ROIs for camera 0
+2026-03-11 18:16:35,918 [INFO] vision.roi: Auto-generated 27 ROIs for camera 1
+2026-03-11 18:16:35,919 [INFO] werkzeug: 10.245.30.251 - - [11/Mar/2026 18:16:35] "GET /rois HTTP/1.1" 200 -
+2026-03-11 18:16:36,238 [INFO] werkzeug: 10.245.30.251 - - [11/Mar/2026 18:16:36] "GET /video/0 HTTP/1.1" 200 -
+2026-03-11 18:16:36,260 [INFO] werkzeug: 10.245.30.251 - - [11/Mar/2026 18:16:36] "GET /video/1 HTTP/1.1" 200 -
+2026-03-11 18:16:36,314 [INFO] werkzeug: 10.245.30.251 - - [11/Mar/2026 18:16:36] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-03-11 18:16:56,924 [INFO] main: === Rubik's Cube Solver starting ===
+2026-03-11 18:16:56,924 [INFO] main: Cameras skipped (--no-cameras)
+2026-03-11 18:16:56,925 [INFO] main: Servos skipped (--no-servos)
+2026-03-11 18:16:57,148 [INFO] server.app: Flask app created
+2026-03-11 18:16:57,149 [INFO] main: Starting Flask on 0.0.0.0:5000
+2026-03-11 18:17:05,845 [INFO] main: === Rubik's Cube Solver starting ===
+2026-03-11 18:17:05,845 [INFO] main: Cameras skipped (--no-cameras)
+2026-03-11 18:17:05,845 [INFO] main: Servos skipped (--no-servos)
+2026-03-11 18:17:06,062 [INFO] server.app: Flask app created
+2026-03-11 18:17:06,062 [INFO] main: Starting Flask on 0.0.0.0:5050
+2026-03-11 18:17:06,066 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5050
+ * Running on http://10.245.30.21:5050
+2026-03-11 18:17:06,066 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2026-03-11 18:17:06,937 [INFO] main: Shutting down...
+2026-03-11 18:17:10,812 [INFO] main: Shutting down...
+2026-03-11 18:18:40,904 [INFO] main: === Rubik's Cube Solver starting ===
+2026-03-11 18:18:41,157 [INFO] vision.camera: Camera 0 opened
+2026-03-11 18:18:41,355 [INFO] vision.camera: Camera 2 opened
+2026-03-11 18:18:41,355 [INFO] main: Camera 0: opened
+2026-03-11 18:18:41,355 [INFO] main: Camera 1: opened
+2026-03-11 18:18:41,416 [INFO] motion.sc09: SC09Bus opened /dev/ttyUSB0 @ 115200 baud (vendor SDK)
+2026-03-11 18:18:41,444 [INFO] motion.sc09: Ping servo 1: OK (model 1284)
+2026-03-11 18:18:41,473 [INFO] motion.sc09: Ping servo 2: OK (model 1284)
+2026-03-11 18:18:41,503 [INFO] motion.sc09: Ping servo 3: OK (model 1284)
+2026-03-11 18:18:41,533 [INFO] motion.sc09: Ping servo 4: OK (model 1284)
+2026-03-11 18:18:41,563 [INFO] motion.sc09: Ping servo 5: OK (model 1284)
+2026-03-11 18:18:41,592 [INFO] motion.sc09: Ping servo 6: OK (model 1284)
+2026-03-11 18:18:41,593 [INFO] main: Servo 1: OK
+2026-03-11 18:18:41,593 [INFO] main: Servo 2: OK
+2026-03-11 18:18:41,593 [INFO] main: Servo 3: OK
+2026-03-11 18:18:41,593 [INFO] main: Servo 4: OK
+2026-03-11 18:18:41,593 [INFO] main: Servo 5: OK
+2026-03-11 18:18:41,593 [INFO] main: Servo 6: OK
+2026-03-11 18:18:41,713 [INFO] server.app: Flask app created
+2026-03-11 18:18:41,713 [INFO] main: Starting Flask on 0.0.0.0:5000
+2026-03-11 18:18:41,716 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.245.30.21:5000
+2026-03-11 18:18:41,716 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2026-03-11 18:18:48,867 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 18:18:48] "GET / HTTP/1.1" 200 -
+2026-03-11 18:18:48,960 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 18:18:48] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-03-11 18:18:49,010 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 18:18:49] "[36mGET /static/app.js HTTP/1.1[0m" 304 -
+2026-03-11 18:18:49,111 [INFO] vision.roi: Auto-generated 27 ROIs for camera 0
+2026-03-11 18:18:49,111 [INFO] vision.roi: Auto-generated 27 ROIs for camera 1
+2026-03-11 18:18:49,111 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 18:18:49] "GET /rois HTTP/1.1" 200 -
+2026-03-11 18:18:49,314 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 18:18:49] "GET /video/0 HTTP/1.1" 200 -
+2026-03-11 18:18:49,405 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 18:18:49] "GET /video/1 HTTP/1.1" 200 -
+2026-03-11 18:19:11,375 [INFO] server.routes: Camera feeds frozen
+2026-03-11 18:19:11,376 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 18:19:11] "POST /camera/freeze HTTP/1.1" 200 -
+2026-03-11 18:19:11,408 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 18:19:11] "GET /camera/snapshot/0?1773249549293 HTTP/1.1" 200 -
+2026-03-11 18:19:11,411 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 18:19:11] "GET /camera/snapshot/1?1773249549293 HTTP/1.1" 200 -
+2026-03-11 18:19:19,657 [INFO] motion.scheduler: Scheduler: executing 1 moves (2 actions)
+2026-03-11 18:19:19,657 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 18:19:19] "POST /servo/move HTTP/1.1" 200 -
+2026-03-11 18:19:19,657 [INFO] motion.scheduler: Move 1/1: U
+2026-03-11 18:19:19,678 [INFO] motion.servo_bus: Servo 1 move_to pos=819 speed=400 → OK
+2026-03-11 18:19:20,608 [INFO] motion.servo_bus: Servo 1 move_to pos=512 speed=400 → OK
+2026-03-11 18:19:21,782 [INFO] motion.scheduler: Scheduler: all moves complete
+2026-03-11 18:19:27,136 [INFO] motion.scheduler: Scheduler: executing 1 moves (2 actions)
+2026-03-11 18:19:27,136 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 18:19:27] "POST /servo/move HTTP/1.1" 200 -
+2026-03-11 18:19:27,136 [INFO] motion.scheduler: Move 1/1: U'
+2026-03-11 18:19:27,156 [INFO] motion.servo_bus: Servo 1 move_to pos=205 speed=400 → OK
+2026-03-11 18:19:28,350 [INFO] motion.servo_bus: Servo 1 move_to pos=512 speed=400 → OK
+2026-03-11 18:19:29,524 [INFO] motion.scheduler: Scheduler: all moves complete
+2026-03-11 18:19:35,394 [INFO] motion.scheduler: Scheduler: executing 1 moves (2 actions)
+2026-03-11 18:19:35,394 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 18:19:35] "POST /servo/move HTTP/1.1" 200 -
+2026-03-11 18:19:35,394 [INFO] motion.scheduler: Move 1/1: U'
+2026-03-11 18:19:35,414 [INFO] motion.servo_bus: Servo 1 move_to pos=205 speed=400 → OK
+2026-03-11 18:19:36,606 [INFO] motion.servo_bus: Servo 1 move_to pos=512 speed=400 → OK
+2026-03-11 18:19:37,778 [INFO] motion.scheduler: Scheduler: all moves complete
+2026-03-11 18:19:38,807 [INFO] motion.scheduler: Scheduler: executing 1 moves (2 actions)
+2026-03-11 18:19:38,807 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 18:19:38] "POST /servo/move HTTP/1.1" 200 -
+2026-03-11 18:19:38,807 [INFO] motion.scheduler: Move 1/1: U
+2026-03-11 18:19:38,827 [INFO] motion.servo_bus: Servo 1 move_to pos=819 speed=400 → OK
+2026-03-11 18:19:40,021 [INFO] motion.servo_bus: Servo 1 move_to pos=512 speed=400 → OK
+2026-03-11 18:19:41,127 [INFO] motion.scheduler: Scheduler: all moves complete
+2026-03-11 18:19:45,500 [INFO] motion.scheduler: Scheduler: executing 1 moves (2 actions)
+2026-03-11 18:19:45,500 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 18:19:45] "POST /servo/move HTTP/1.1" 200 -
+2026-03-11 18:19:45,501 [INFO] motion.scheduler: Move 1/1: R
+2026-03-11 18:19:45,521 [INFO] motion.servo_bus: Servo 2 move_to pos=819 speed=400 → OK
+2026-03-11 18:19:45,857 [INFO] motion.servo_bus: Servo 2 move_to pos=512 speed=400 → OK
+2026-03-11 18:19:46,173 [INFO] motion.scheduler: Scheduler: all moves complete
+2026-03-11 18:19:47,816 [INFO] motion.scheduler: Scheduler: executing 1 moves (2 actions)
+2026-03-11 18:19:47,816 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 18:19:47] "POST /servo/move HTTP/1.1" 200 -
+2026-03-11 18:19:47,817 [INFO] motion.scheduler: Move 1/1: R
+2026-03-11 18:19:47,837 [INFO] motion.servo_bus: Servo 2 move_to pos=819 speed=400 → OK
+2026-03-11 18:19:48,173 [INFO] motion.servo_bus: Servo 2 move_to pos=512 speed=400 → OK
+2026-03-11 18:19:48,368 [INFO] werkzeug: 127.0.0.1 - - [11/Mar/2026 18:19:48] "[31m[1mPOST /servo/move HTTP/1.1[0m" 409 -
+2026-03-11 18:19:48,489 [INFO] motion.scheduler: Scheduler: all moves complete
+2026-03-11 18:20:26,612 [INFO] main: Shutting down...
+2026-03-12 10:30:33,496 [INFO] main: === Rubik's Cube Solver starting ===
+2026-03-12 10:30:34,207 [INFO] vision.camera: Camera 0 opened
+2026-03-12 10:30:34,216 [ERROR] vision.camera: Camera 2 failed to open
+2026-03-12 10:30:34,216 [INFO] main: Camera 0: opened
+2026-03-12 10:30:34,216 [INFO] main: Camera 1: FAILED
+2026-03-12 10:30:34,230 [ERROR] main: Servo init failed: [Errno 2] could not open port /dev/ttyUSB0: [Errno 2] No such file or directory: '/dev/ttyUSB0' (continuing without servos)
+2026-03-12 10:30:34,410 [INFO] server.app: Flask app created
+2026-03-12 10:30:34,410 [INFO] main: Starting Flask on 0.0.0.0:5000
+2026-03-12 10:30:34,415 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.245.30.21:5000
+2026-03-12 10:30:34,415 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2026-03-12 10:30:36,651 [INFO] werkzeug: 127.0.0.1 - - [12/Mar/2026 10:30:36] "GET / HTTP/1.1" 200 -
+2026-03-12 10:30:36,736 [INFO] werkzeug: 127.0.0.1 - - [12/Mar/2026 10:30:36] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+2026-03-12 10:30:36,876 [INFO] werkzeug: 127.0.0.1 - - [12/Mar/2026 10:30:36] "[36mGET /static/app.js HTTP/1.1[0m" 304 -
+2026-03-12 10:30:36,967 [INFO] vision.roi: Auto-generated 27 ROIs for camera 0
+2026-03-12 10:30:36,967 [INFO] vision.roi: Auto-generated 27 ROIs for camera 1
+2026-03-12 10:30:36,967 [INFO] werkzeug: 127.0.0.1 - - [12/Mar/2026 10:30:36] "GET /rois HTTP/1.1" 200 -
+2026-03-12 10:30:37,176 [INFO] werkzeug: 127.0.0.1 - - [12/Mar/2026 10:30:37] "GET /video/0 HTTP/1.1" 200 -
+2026-03-12 10:31:53,384 [INFO] main: Shutting down...

@@ -28,18 +28,19 @@ else:
         return ch
 
 sys.path.append("..")
-from scservo_sdk import *                 # Uses SC Servo SDK library
+from scservo_sdk import *                      # Uses SC Servo SDK library
 
 # Default setting
 SCS_ID                      = 1                 # SC Servo ID : 1
-BAUDRATE                    = 1000000           # SC Servo default baudrate : 1000000
-DEVICENAME                  = 'COM7'    # Check which port is being used on your controller
+BAUDRATE                    = 115200           # SC Servo default baudrate : 1000000
+DEVICENAME                  = '/dev/ttyUSB0'    # Check which port is being used on your controller
                                                 # ex) Windows: "COM1"   Linux: "/dev/ttyUSB0" Mac: "/dev/tty.usbserial-*"
-SCS_MOVING_SPEED0           = 500         # SC Servo moving speed
-SCS_MOVING_SPEED1           = -500        # SC Servo moving speed
+SCS_MINIMUM_POSITION_VALUE  = 10          # SC Servo will rotate between this value
+SCS_MAXIMUM_POSITION_VALUE  = 1000
+SCS_MOVING_SPEED            = 2400        # SC Servo moving speed
 
 index = 0
-scs_move_speed = [SCS_MOVING_SPEED0, 0, SCS_MOVING_SPEED1, 0]
+scs_goal_position = [SCS_MINIMUM_POSITION_VALUE, SCS_MAXIMUM_POSITION_VALUE]         # Goal position
 
 # Initialize PortHandler instance
 # Set the port path
@@ -68,26 +69,42 @@ else:
     getch()
     quit()
 
-scs_comm_result, scs_error = packetHandler.PWMMode(SCS_ID)
-if scs_comm_result != COMM_SUCCESS:
-    print("%s" % packetHandler.getTxRxResult(scs_comm_result))
-elif scs_error != 0:
-    print("%s" % packetHandler.getRxPacketError(scs_error))  
 while 1:
     print("Press any key to continue! (or press ESC to quit!)")
     if getch() == chr(0x1b):
         break
 
     # Write SC Servo goal position/moving speed/moving acc
-    scs_comm_result, scs_error = packetHandler.WritePWM(SCS_ID, scs_move_speed[index])
+    scs_comm_result, scs_error = packetHandler.WritePos(SCS_ID, scs_goal_position[index], 0, SCS_MOVING_SPEED)
     if scs_comm_result != COMM_SUCCESS:
         print("%s" % packetHandler.getTxRxResult(scs_comm_result))
-    if scs_error != 0:
+    elif scs_error != 0:
         print("%s" % packetHandler.getRxPacketError(scs_error))
 
-    # Change move speed
-    index += 1
-    if index == 4:
+    while 1:
+        # Read SC Servo present position
+        scs_present_position, scs_present_speed, scs_comm_result, scs_error = packetHandler.ReadPosSpeed(SCS_ID)
+        if scs_comm_result != COMM_SUCCESS:
+            print(packetHandler.getTxRxResult(scs_comm_result))
+        elif scs_error != 0:
+            print(packetHandler.getRxPacketError(scs_error))
+
+        # Read SC Servo moving status
+        moving, scs_comm_result, scs_error = packetHandler.ReadMoving(SCS_ID)
+        if scs_comm_result != COMM_SUCCESS:
+            print(packetHandler.getTxRxResult(scs_comm_result))
+        else:
+            print("[ID:%03d] GoalPos:%d PresPos:%d PresSpd:%d" % (SCS_ID, scs_goal_position[index], scs_present_position, scs_present_speed))
+        if scs_error != 0:
+            print(packetHandler.getRxPacketError(scs_error))
+
+        if moving==0:
+            break
+
+    # Change goal position
+    if index == 0:
+        index = 1
+    else:
         index = 0
 
 # Close port

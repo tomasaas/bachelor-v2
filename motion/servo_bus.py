@@ -1,20 +1,31 @@
 """
-High-level servo control built on top of SC09Bus.
+High-level servo control built on top of SC09Bus (vendor SDK wrapper).
 
 Provides named operations: torque, set mode, move to position, spin motor,
 read feedback — all with logging.
+
+Uses the vendor scscl SDK methods (WritePos, ReadPos, ReadMoving, etc.)
+which are proven working from the example scripts.
 """
 
 from __future__ import annotations
 
 import logging
-import struct
 import time
 
-from config import Reg
 from motion.sc09 import SC09Bus
 
 log = logging.getLogger(__name__)
+
+# Register addresses used for direct register access
+# (these match the scscl SDK constants SCSCL_*)
+_TORQUE_ENABLE = 40
+_MODE          = 33
+_LOCK          = 48
+_PRESENT_VOLTAGE     = 62
+_PRESENT_TEMPERATURE = 63
+_PRESENT_LOAD_L      = 60
+_RUNNING_SPEED_L     = 46
 
 
 class Servo:
@@ -27,14 +38,12 @@ class Servo:
     # ── torque ───────────────────────────────────────────────────────────
 
     def torque_on(self) -> bool:
-        resp = self.bus.write_u8(self.id, Reg.TORQUE_ENABLE, 1)
-        ok = resp is not None and resp.ok
+        ok = self.bus.write_u8(self.id, _TORQUE_ENABLE, 1)
         log.info("Servo %d torque ON → %s", self.id, "OK" if ok else "FAIL")
         return ok
 
     def torque_off(self) -> bool:
-        resp = self.bus.write_u8(self.id, Reg.TORQUE_ENABLE, 0)
-        ok = resp is not None and resp.ok
+        ok = self.bus.write_u8(self.id, _TORQUE_ENABLE, 0)
         log.info("Servo %d torque OFF → %s", self.id, "OK" if ok else "FAIL")
         return ok
 
@@ -42,19 +51,17 @@ class Servo:
 
     def set_position_mode(self) -> bool:
         """Switch to position servo mode (mode=0). Requires EEPROM unlock."""
-        self.bus.write_u8(self.id, Reg.LOCK, 0)       # unlock EEPROM
-        resp = self.bus.write_u8(self.id, Reg.MODE, 0)
-        self.bus.write_u8(self.id, Reg.LOCK, 1)       # re-lock
-        ok = resp is not None and resp.ok
+        self.bus.unlock_eprom(self.id)
+        ok = self.bus.write_u8(self.id, _MODE, 0)
+        self.bus.lock_eprom(self.id)
         log.info("Servo %d → position mode: %s", self.id, "OK" if ok else "FAIL")
         return ok
 
     def set_motor_mode(self) -> bool:
         """Switch to continuous-rotation motor mode (mode=1)."""
-        self.bus.write_u8(self.id, Reg.LOCK, 0)
-        resp = self.bus.write_u8(self.id, Reg.MODE, 1)
-        self.bus.write_u8(self.id, Reg.LOCK, 1)
-        ok = resp is not None and resp.ok
+        self.bus.unlock_eprom(self.id)
+        ok = self.bus.write_u8(self.id, _MODE, 1)
+        self.bus.lock_eprom(self.id)
         log.info("Servo %d → motor mode: %s", self.id, "OK" if ok else "FAIL")
         return ok
 
@@ -63,19 +70,11 @@ class Servo:
     def move_to(self, position: int, speed: int = 400, acceleration: int = 0) -> bool:
         """
         Move to *position* (0-1023) at *speed* (units/sec).
-        Servo must be in position mode with torque on.
+        Uses the vendor SDK WritePos (same as read_write.py example).
         """
         position = max(0, min(1023, position))
         speed = max(0, min(1023, speed))
-
-        if acceleration:
-            self.bus.write_u8(self.id, Reg.ACCELERATION, acceleration & 0xFF)
-
-        # Write goal position + speed together (4 bytes starting at GOAL_POSITION_L)
-        data = struct.pack("<HH", position, 0)  # position + running_time
-        self.bus.write_register(self.id, Reg.GOAL_POSITION_L, data)
-        resp = self.bus.write_u16(self.id, Reg.RUNNING_SPEED_L, speed)
-        ok = resp is not None and resp.ok
+        ok = self.bus.write_pos(self.id, position, time=0, speed=speed)
         log.info(
             "Servo %d move_to pos=%d speed=%d → %s",
             self.id, position, speed, "OK" if ok else "FAIL",
@@ -86,7 +85,7 @@ class Servo:
         """Poll MOVING register until servo stops or timeout."""
         deadline = time.monotonic() + timeout
         while time.monotonic() < deadline:
-            moving = self.bus.read_u8(self.id, Reg.MOVING)
+            moving = self.bus.read_moving(self.id)
             if moving is not None and moving == 0:
                 return True
             time.sleep(poll_interval)
@@ -105,9 +104,9 @@ class Servo:
             raw = min(speed, 1023)
         else:
             raw = min(abs(speed), 1023) | 0x0400   # bit 10 = CCW
-        resp = self.bus.write_u16(self.id, Reg.RUNNING_SPEED_L, raw)
-        ok = resp is not None and resp.ok
-        log.info("Servo %d motor speed=%d (raw=0x%04X) → %s", self.id, speed, raw, "OK" if ok else "FAIL")
+        ok = self.bus.write_u16(self.id, _RUNNING_SPEED_L, raw)
+        log.info("Servo %d motor speed=%d (raw=0x%04X) → %s",
+                 self.id, speed, raw, "OK" if ok else "FAIL")
         return ok
 
     def stop_motor(self) -> bool:
@@ -116,19 +115,19 @@ class Servo:
     # ── feedback / status ────────────────────────────────────────────────
 
     def read_position(self) -> int | None:
-        return self.bus.read_u16(self.id, Reg.PRESENT_POSITION_L)
+        return self.bus.read_pos(self.id)
 
     def read_speed(self) -> int | None:
-        return self.bus.read_u16(self.id, Reg.PRESENT_SPEED_L)
+        return self.bus.read_speed(self.id)
 
     def read_load(self) -> int | None:
-        return self.bus.read_u16(self.id, Reg.PRESENT_LOAD_L)
+        return self.bus.read_u16(self.id, _PRESENT_LOAD_L)
 
     def read_voltage(self) -> int | None:
-        return self.bus.read_u8(self.id, Reg.PRESENT_VOLTAGE)
+        return self.bus.read_u8(self.id, _PRESENT_VOLTAGE)
 
     def read_temperature(self) -> int | None:
-        return self.bus.read_u8(self.id, Reg.PRESENT_TEMPERATURE)
+        return self.bus.read_u8(self.id, _PRESENT_TEMPERATURE)
 
     def read_status(self) -> dict:
         """Read all feedback registers into a dict."""

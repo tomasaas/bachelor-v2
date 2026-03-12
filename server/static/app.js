@@ -41,10 +41,6 @@ let detectedCubeString = "";
 let polling = null;
 let dragging = null;                   // { camId, index, offsetX, offsetY }
 
-// Manual center colors – default standard scheme
-const CENTER_COLORS = { U: "W", R: "R", F: "G", D: "Y", L: "O", B: "B" };
-const ALL_COLORS = ["W", "Y", "R", "O", "B", "G"];
-
 // ── Helpers ─────────────────────────────────────────────────────────────────
 function appendLog(msg) {
   const ts = new Date().toLocaleTimeString();
@@ -126,35 +122,22 @@ function drawROIs(camId) {
     const rw = br.x - tl.x;
     const rh = br.y - tl.y;
 
-    const isCenter = roi.row === 1 && roi.col === 1;
     const colorKey = roiColors[camId][roi.label];
     if (colorKey && COLOR_MAP[colorKey]) {
       ctx.fillStyle = COLOR_MAP[colorKey];
       ctx.fillRect(tl.x, tl.y, rw, rh);
       ctx.strokeStyle = COLOR_STROKE[colorKey];
       ctx.lineWidth = 2;
-    } else if (isCenter) {
-      // Show manual center color even before detection
-      const mc = CENTER_COLORS[roi.face];
-      if (mc && COLOR_MAP[mc]) {
-        ctx.fillStyle = COLOR_MAP[mc];
-        ctx.fillRect(tl.x, tl.y, rw, rh);
-        ctx.strokeStyle = COLOR_STROKE[mc];
-        ctx.lineWidth = 2;
-      } else {
-        ctx.strokeStyle = "#ff0";
-        ctx.lineWidth = 2;
-      }
     } else {
       ctx.strokeStyle = roisUnlocked ? "#0f0" : "rgba(0,255,0,0.5)";
       ctx.lineWidth = roisUnlocked ? 2 : 1;
     }
     ctx.strokeRect(tl.x, tl.y, rw, rh);
 
-    // Label (center ROIs get a "C" marker)
+    // Label
     ctx.fillStyle = "#fff";
-    ctx.font = isCenter ? "bold 11px monospace" : "10px monospace";
-    ctx.fillText(isCenter ? roi.label + " C" : roi.label, tl.x + 2, tl.y + 10);
+    ctx.font = "10px monospace";
+    ctx.fillText(roi.label, tl.x + 2, tl.y + 10);
   }
 }
 
@@ -281,26 +264,11 @@ btnUnfreeze.addEventListener("click", () => {
   appendLog("Camera feeds unfrozen");
 });
 
-// ── Center color picker ──────────────────────────────────────────────────────
-$$(".swatch").forEach((sw) => {
-  sw.addEventListener("click", () => {
-    const face = sw.parentElement.dataset.face;
-    const cur = sw.dataset.color;
-    const idx = ALL_COLORS.indexOf(cur);
-    const next = ALL_COLORS[(idx + 1) % ALL_COLORS.length];
-    sw.dataset.color = next;
-    sw.className = "swatch color-" + next;
-    CENTER_COLORS[face] = next;
-    appendLog(`Center ${face} set to ${next}`);
-  });
-});
-
 // ── Detect Colors ───────────────────────────────────────────────────────────
 btnDetect.addEventListener("click", async () => {
   appendLog("Detecting colors from frozen snapshots...");
   try {
-    const qs = new URLSearchParams({ center_colors: JSON.stringify(CENTER_COLORS) });
-    const resp = await fetch("/camera/detect?" + qs.toString());
+    const resp = await fetch("/camera/detect");
     const data = await resp.json();
     if (data.error) {
       appendLog("Detection error: " + data.error);

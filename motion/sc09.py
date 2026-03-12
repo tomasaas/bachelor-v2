@@ -1,272 +1,183 @@
 """
-Low-level SC09 / SCS serial-bus servo protocol.
+SC09 / SCS serial-bus servo interface.
 
-Packet format (instruction):
-  [0xFF][0xFF][ID][Length][Instruction][Param …][Checksum]
+Wraps the vendor scservo_sdk (proven working with the example scripts)
+to provide a clean, thread-safe API for the rest of the application.
 
-Packet format (status response):
-  [0xFF][0xFF][ID][Length][Error][Param …][Checksum]
-
-Length = count(params) + 2   (includes instruction/error + checksum)
-Checksum = ~(ID + Length + Instruction/Error + Σparams) & 0xFF
-
-The Waveshare ESP32 Servo Driver in **Serial Forwarding** mode acts as a
-transparent USB-serial ↔ servo-bus bridge, so we send/receive raw packets
-via /dev/ttyUSB0 (or similar).
+The Waveshare ESP32 Servo Driver must be in **Serial Forwarding** mode.
 """
 
 from __future__ import annotations
 
 import logging
-import struct
+import os
+import sys
 import threading
-import time
-from dataclasses import dataclass
 
-import serial
+# ── vendor SDK import (same pattern as the working example scripts) ──────────
+_SDK_DIR = os.path.join(os.path.dirname(__file__), "..", "stservo-env")
+if _SDK_DIR not in sys.path:
+    sys.path.insert(0, _SDK_DIR)
+
+from scservo_sdk import *  # noqa: E402,F403 – PortHandler, scscl, COMM_SUCCESS, etc.
 
 log = logging.getLogger(__name__)
 
-# ── constants ────────────────────────────────────────────────────────────────
-
-HEADER = b"\xff\xff"
-
-INST_PING       = 0x01
-INST_READ       = 0x02
-INST_WRITE      = 0x03
-INST_REG_WRITE  = 0x04
-INST_ACTION     = 0x05
-INST_SYNC_WRITE = 0x83
-
-BROADCAST_ID    = 0xFE
-
-# Error bit masks in the status packet
-ERR_VOLTAGE     = 1 << 0
-ERR_ANGLE       = 1 << 1
-ERR_OVERHEAT    = 1 << 2
-ERR_RANGE       = 1 << 3
-ERR_CHECKSUM    = 1 << 4
-ERR_OVERLOAD    = 1 << 5
-ERR_INSTRUCTION = 1 << 6
-
-# ── helpers ──────────────────────────────────────────────────────────────────
-
-def _checksum(servo_id: int, length: int, payload: bytes) -> int:
-    """Compute SCS-protocol checksum."""
-    return (~(servo_id + length + sum(payload))) & 0xFF
-
-
-def _build_packet(servo_id: int, instruction: int, params: bytes = b"") -> bytes:
-    length = len(params) + 2
-    payload = bytes([instruction]) + params
-    chk = _checksum(servo_id, length, payload)
-    return HEADER + bytes([servo_id, length]) + payload + bytes([chk])
-
-
-# ── data classes ─────────────────────────────────────────────────────────────
-
-@dataclass
-class StatusPacket:
-    servo_id: int
-    error: int
-    data: bytes
-
-    @property
-    def ok(self) -> bool:
-        return self.error == 0
-
-    def error_flags(self) -> list[str]:
-        names = []
-        for bit, name in [
-            (ERR_VOLTAGE, "VOLTAGE"), (ERR_ANGLE, "ANGLE"),
-            (ERR_OVERHEAT, "OVERHEAT"), (ERR_RANGE, "RANGE"),
-            (ERR_CHECKSUM, "CHECKSUM"), (ERR_OVERLOAD, "OVERLOAD"),
-            (ERR_INSTRUCTION, "INSTRUCTION"),
-        ]:
-            if self.error & bit:
-                names.append(name)
-        return names
-
-    def u8(self, offset: int = 0) -> int:
-        return self.data[offset]
-
-    def u16(self, offset: int = 0) -> int:
-        return struct.unpack_from("<H", self.data, offset)[0]
-
-
-# ── SC09 bus class ───────────────────────────────────────────────────────────
 
 class SC09Bus:
     """
-    Thread-safe, low-level interface to SCS/SC09 serial-bus servos.
+    Thread-safe interface to SCS/SC09 serial-bus servos.
 
-    Assumes the Waveshare ESP32 board is in Serial Forwarding mode,
-    acting as a transparent USB↔servo-bus bridge.
+    Uses the vendor scservo_sdk ``scscl`` packet handler internally –
+    the same code path proven in the working example scripts.
     """
 
     def __init__(
         self,
         port: str = "/dev/ttyUSB0",
-        baudrate: int = 1_000_000,
-        timeout: float = 0.05,
+        baudrate: int = 115200,
+        timeout: float = 0.05,   # kept for API compat; vendor SDK handles timing
         retries: int = 2,
     ):
         self._lock = threading.Lock()
         self._retries = retries
-        self._ser = serial.Serial(
-            port=port,
-            baudrate=baudrate,
-            timeout=timeout,
-            bytesize=serial.EIGHTBITS,
-            parity=serial.PARITY_NONE,
-            stopbits=serial.STOPBITS_ONE,
-        )
-        log.info("SC09Bus opened %s @ %d baud", port, baudrate)
 
-    # ── low-level transact ───────────────────────────────────────────────
+        # Initialise exactly like the vendor example scripts
+        self.port_handler = PortHandler(port)
+        self.packet_handler = scscl(self.port_handler)
 
-    def _flush(self) -> None:
-        self._ser.reset_input_buffer()
+        if not self.port_handler.openPort():
+            raise RuntimeError(f"Failed to open serial port {port}")
+        if not self.port_handler.setBaudRate(baudrate):
+            raise RuntimeError(f"Failed to set baudrate {baudrate}")
 
-    def _send(self, pkt: bytes) -> None:
-        self._ser.write(pkt)
-        self._ser.flush()
+        log.info("SC09Bus opened %s @ %d baud (vendor SDK)", port, baudrate)
 
-    def _recv(self, servo_id: int) -> StatusPacket | None:
-        """
-        Read one status/response packet.  Returns None on timeout or
-        checksum mismatch.
-        """
-        # Read header bytes – scan for 0xFF 0xFF
-        hdr = self._ser.read(2)
-        if len(hdr) < 2 or hdr != HEADER:
-            # Try to realign: read one more byte at a time
-            buf = hdr
-            for _ in range(10):
-                b = self._ser.read(1)
-                if not b:
-                    return None
-                buf += b
-                idx = buf.find(HEADER)
-                if idx >= 0:
-                    buf = buf[idx:]
-                    break
-            else:
-                return None
-            if len(buf) < 2:
-                return None
-
-        # Read ID + Length
-        meta = self._ser.read(2)
-        if len(meta) < 2:
-            return None
-        rid, length = meta[0], meta[1]
-
-        if length < 2 or length > 64:
-            log.warning("Bad length %d from servo %d", length, rid)
-            return None
-
-        # Read remaining bytes (error + params + checksum)
-        remaining = self._ser.read(length)
-        if len(remaining) < length:
-            log.warning("Short read: expected %d, got %d", length, len(remaining))
-            return None
-
-        error = remaining[0]
-        params = remaining[1:-1]
-        chk_recv = remaining[-1]
-        chk_calc = _checksum(rid, length, remaining[:-1])
-
-        if chk_recv != chk_calc:
-            log.warning(
-                "Checksum mismatch from servo %d: recv=0x%02X calc=0x%02X",
-                rid, chk_recv, chk_calc,
-            )
-            return None
-
-        return StatusPacket(servo_id=rid, error=error, data=params)
-
-    def transact(
-        self, servo_id: int, instruction: int, params: bytes = b""
-    ) -> StatusPacket | None:
-        """Send instruction packet, read status response (with retries)."""
-        pkt = _build_packet(servo_id, instruction, params)
-        for attempt in range(1, self._retries + 1):
-            with self._lock:
-                self._flush()
-                self._send(pkt)
-                if servo_id == BROADCAST_ID:
-                    return StatusPacket(servo_id=BROADCAST_ID, error=0, data=b"")
-                resp = self._recv(servo_id)
-            if resp is not None:
-                return resp
-            log.debug("Retry %d/%d for servo %d", attempt, self._retries, servo_id)
-            time.sleep(0.005)
-        log.warning("No response from servo %d after %d attempts", servo_id, self._retries)
-        return None
-
-    def write_only(
-        self, servo_id: int, instruction: int, params: bytes = b""
-    ) -> None:
-        """Send a packet without waiting for response (broadcast-like)."""
-        pkt = _build_packet(servo_id, instruction, params)
-        with self._lock:
-            self._flush()
-            self._send(pkt)
-
-    # ── convenience methods ──────────────────────────────────────────────
+    # ── ping ─────────────────────────────────────────────────────────────
 
     def ping(self, servo_id: int) -> bool:
-        resp = self.transact(servo_id, INST_PING)
-        if resp and resp.ok:
-            log.info("Ping servo %d: OK", servo_id)
-            return True
-        log.warning("Ping servo %d: FAILED", servo_id)
-        return False
+        with self._lock:
+            model, result, error = self.packet_handler.ping(servo_id)
+        ok = result == COMM_SUCCESS
+        if ok:
+            log.info("Ping servo %d: OK (model %d)", servo_id, model)
+        else:
+            log.warning("Ping servo %d: FAILED", servo_id)
+        return ok
 
-    def read_register(self, servo_id: int, addr: int, length: int) -> StatusPacket | None:
-        return self.transact(servo_id, INST_READ, bytes([addr, length]))
+    # ── position moves (proven SDK methods) ──────────────────────────────
 
-    def write_register(self, servo_id: int, addr: int, data: bytes) -> StatusPacket | None:
-        return self.transact(servo_id, INST_WRITE, bytes([addr]) + data)
+    def write_pos(self, servo_id: int, position: int,
+                  time: int = 0, speed: int = 400) -> bool:
+        """Move servo to position. Mirrors scscl.WritePos() from examples."""
+        with self._lock:
+            result, error = self.packet_handler.WritePos(
+                servo_id, position, time, speed,
+            )
+        ok = result == COMM_SUCCESS
+        if not ok:
+            log.warning("WritePos servo %d failed: %s",
+                        servo_id, self.packet_handler.getTxRxResult(result))
+        return ok
 
-    def write_u8(self, servo_id: int, addr: int, value: int) -> StatusPacket | None:
-        return self.write_register(servo_id, addr, bytes([value & 0xFF]))
+    def reg_write_pos(self, servo_id: int, position: int,
+                      time: int = 0, speed: int = 400) -> bool:
+        """Buffered position write. Call reg_action() to trigger."""
+        with self._lock:
+            result, error = self.packet_handler.RegWritePos(
+                servo_id, position, time, speed,
+            )
+        return result == COMM_SUCCESS
 
-    def write_u16(self, servo_id: int, addr: int, value: int) -> StatusPacket | None:
-        return self.write_register(servo_id, addr, struct.pack("<H", value & 0xFFFF))
+    def reg_action(self) -> None:
+        """Trigger all buffered reg-writes simultaneously."""
+        with self._lock:
+            self.packet_handler.RegAction()
+
+    def sync_write_pos(self, data: list[tuple[int, int, int, int]]) -> bool:
+        """
+        Synchronised position write to multiple servos.
+        data: list of (servo_id, position, time, speed).
+        """
+        with self._lock:
+            for sid, pos, t, spd in data:
+                self.packet_handler.SyncWritePos(sid, pos, t, spd)
+            result = self.packet_handler.groupSyncWrite.txPacket()
+            self.packet_handler.groupSyncWrite.clearParam()
+        return result == COMM_SUCCESS
+
+    # ── feedback reads ───────────────────────────────────────────────────
+
+    def read_pos(self, servo_id: int) -> int | None:
+        with self._lock:
+            pos, result, error = self.packet_handler.ReadPos(servo_id)
+        if result == COMM_SUCCESS:
+            return pos
+        return None
+
+    def read_speed(self, servo_id: int) -> int | None:
+        with self._lock:
+            spd, result, error = self.packet_handler.ReadSpeed(servo_id)
+        if result == COMM_SUCCESS:
+            return spd
+        return None
+
+    def read_pos_speed(self, servo_id: int) -> tuple[int | None, int | None]:
+        with self._lock:
+            pos, spd, result, error = self.packet_handler.ReadPosSpeed(servo_id)
+        if result == COMM_SUCCESS:
+            return pos, spd
+        return None, None
+
+    def read_moving(self, servo_id: int) -> int | None:
+        with self._lock:
+            moving, result, error = self.packet_handler.ReadMoving(servo_id)
+        if result == COMM_SUCCESS:
+            return moving
+        return None
+
+    # ── low-level register access ────────────────────────────────────────
+
+    def write_u8(self, servo_id: int, addr: int, value: int) -> bool:
+        with self._lock:
+            result, error = self.packet_handler.write1ByteTxRx(
+                servo_id, addr, value & 0xFF,
+            )
+        return result == COMM_SUCCESS
+
+    def write_u16(self, servo_id: int, addr: int, value: int) -> bool:
+        with self._lock:
+            result, error = self.packet_handler.write2ByteTxRx(
+                servo_id, addr, value & 0xFFFF,
+            )
+        return result == COMM_SUCCESS
 
     def read_u8(self, servo_id: int, addr: int) -> int | None:
-        resp = self.read_register(servo_id, addr, 1)
-        if resp and resp.ok and len(resp.data) >= 1:
-            return resp.u8()
+        with self._lock:
+            val, result, error = self.packet_handler.read1ByteTxRx(servo_id, addr)
+        if result == COMM_SUCCESS:
+            return val
         return None
 
     def read_u16(self, servo_id: int, addr: int) -> int | None:
-        resp = self.read_register(servo_id, addr, 2)
-        if resp and resp.ok and len(resp.data) >= 2:
-            return resp.u16()
+        with self._lock:
+            val, result, error = self.packet_handler.read2ByteTxRx(servo_id, addr)
+        if result == COMM_SUCCESS:
+            return val
         return None
 
-    def reg_write(self, servo_id: int, addr: int, data: bytes) -> None:
-        """Buffered write – executes on ACTION command."""
-        self.write_only(servo_id, INST_REG_WRITE, bytes([addr]) + data)
+    # ── EEPROM lock/unlock (mirrors vendor examples) ─────────────────────
 
-    def action(self) -> None:
-        """Trigger all buffered reg-writes simultaneously."""
-        self.write_only(BROADCAST_ID, INST_ACTION)
+    def lock_eprom(self, servo_id: int) -> None:
+        with self._lock:
+            self.packet_handler.LockEprom(servo_id)
 
-    def sync_write(self, addr: int, length: int, id_data: list[tuple[int, bytes]]) -> None:
-        """
-        Sync-write to multiple servos at once.
-        id_data: list of (servo_id, data_bytes) – each data_bytes must be ``length`` long.
-        """
-        params = bytes([addr, length])
-        for sid, data in id_data:
-            params += bytes([sid]) + data
-        self.write_only(BROADCAST_ID, INST_SYNC_WRITE, params)
+    def unlock_eprom(self, servo_id: int) -> None:
+        with self._lock:
+            self.packet_handler.unLockEprom(servo_id)
+
+    # ── close ────────────────────────────────────────────────────────────
 
     def close(self) -> None:
-        if self._ser.is_open:
-            self._ser.close()
-            log.info("SC09Bus closed")
+        self.port_handler.closePort()
+        log.info("SC09Bus closed")
