@@ -69,16 +69,26 @@ def main() -> None:
         from motion.servo_bus import ServoGroup
         from motion.scheduler import Scheduler
 
-        try:
-            bus = SC09Bus(
-                port=args.serial,
-                baudrate=config.SERIAL_BAUD,
-                timeout=config.SERIAL_TIMEOUT,
-            )
-            servo_group = ServoGroup(bus)
-            scheduler = Scheduler(servo_group, check_feedback=True)
-        except Exception as exc:
-            log.error("Servo init failed: %s (continuing without servos)", exc)
+        serial_port = args.serial
+        if serial_port == "auto":
+            from detect import find_servo_port
+            serial_port = find_servo_port()
+            if serial_port:
+                log.info("Auto-detected servo port: %s", serial_port)
+            else:
+                log.error("No servo driver detected (is USB cable plugged in?)")
+
+        if serial_port:
+            try:
+                bus = SC09Bus(
+                    port=serial_port,
+                    baudrate=config.SERIAL_BAUD,
+                    timeout=config.SERIAL_TIMEOUT,
+                )
+                servo_group = ServoGroup(bus)
+                scheduler = Scheduler(servo_group, check_feedback=True)
+            except Exception as exc:
+                log.error("Servo init failed: %s (continuing without servos)", exc)
     else:
         log.info("Servos skipped (--no-servos)")
 

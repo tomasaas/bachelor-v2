@@ -6,7 +6,7 @@ Edit values here to tune hardware, vision, and motion parameters.
 # ---------------------------------------------------------------------------
 # Serial / Servo bus
 # ---------------------------------------------------------------------------
-SERIAL_PORT = "/dev/ttyUSB0"        # CP210x on Waveshare board (Serial Forwarding)
+SERIAL_PORT = "auto"                 # "auto" = detect CP2102 at startup; or e.g. "/dev/ttyUSB0"
 SERIAL_BAUD = 115200            # SC09 default bus baud rate
 SERIAL_TIMEOUT = 0.05              # seconds – read timeout per packet
 
@@ -79,7 +79,7 @@ SERVO_FACE = {v: k for k, v in FACE_SERVO.items()}
 # ---------------------------------------------------------------------------
 # Vision / cameras
 # ---------------------------------------------------------------------------
-CAMERA_INDICES = [0, 2]         # /dev/video0, /dev/video2
+CAMERA_INDICES = "auto"         # "auto" = detect USB cameras; or e.g. [0, 2]
 CAMERA_WIDTH   = 640
 CAMERA_HEIGHT  = 480
 

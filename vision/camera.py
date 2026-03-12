@@ -60,8 +60,14 @@ class Camera:
 class DualCamera:
     """Manages both cameras, provides capture and MJPEG generators."""
 
-    def __init__(self):
-        self.cams = [Camera(i) for i in config.CAMERA_INDICES]
+    def __init__(self, indices: list[int] | None = None):
+        if indices is None:
+            indices = config.CAMERA_INDICES
+        if indices == "auto":
+            from detect import find_camera_indices
+            indices = find_camera_indices(expected=2)
+            log.info("Auto-detected camera indices: %s", indices)
+        self.cams = [Camera(i) for i in indices]
 
     def open_all(self) -> list[bool]:
         return [cam.open() for cam in self.cams]
