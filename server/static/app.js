@@ -5,13 +5,14 @@ const $ = (sel) => document.querySelector(sel);
 const $$ = (sel) => document.querySelectorAll(sel);
 
 // ── DOM refs ────────────────────────────────────────────────────────────────
-const btnPing      = $("#btn-ping");
-const btnTorqueOn  = $("#btn-torque-on");
-const btnTorqueOff = $("#btn-torque-off");
-const btnScramble  = $("#btn-scramble");
-const btnHome      = $("#btn-home");
-const btnFreeze    = $("#btn-freeze");
-const btnUnfreeze  = $("#btn-unfreeze");
+const btnPing        = $("#btn-ping");
+const btnTorqueOn    = $("#btn-torque-on");
+const btnTorqueOff   = $("#btn-torque-off");
+const btnScramble    = $("#btn-scramble");
+const btnHome        = $("#btn-home");
+const btnRefreshCams = $("#btn-refresh-cams");
+const btnFreeze      = $("#btn-freeze");
+const btnUnfreeze    = $("#btn-unfreeze");
 const btnDetect    = $("#btn-detect");
 const btnRoiUnlock = $("#btn-roi-unlock");
 const btnSolve     = $("#btn-solve");
@@ -366,6 +367,26 @@ btnPing.addEventListener("click", async () => {
   const resp = await fetch("/servo/ping");
   const data = await resp.json();
   appendLog("Ping: " + JSON.stringify(data));
+});
+
+// ── Refresh Cameras ─────────────────────────────────────────────────────────
+btnRefreshCams.addEventListener("click", async () => {
+  appendLog("Refreshing cameras...");
+  btnRefreshCams.disabled = true;
+  try {
+    const res = await post("/camera/refresh");
+    if (res.error) {
+      appendLog("Refresh error: " + res.error);
+    } else {
+      appendLog("Cameras refreshed: " + JSON.stringify(res.cameras));
+      // Reload live feeds
+      cam0Img.src = "/video/0?" + Date.now();
+      cam1Img.src = "/video/1?" + Date.now();
+    }
+  } catch (e) {
+    appendLog("Refresh error: " + e);
+  }
+  btnRefreshCams.disabled = false;
 });
 
 // ── Torque ──────────────────────────────────────────────────────────────────

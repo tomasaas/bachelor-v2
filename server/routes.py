@@ -117,6 +117,20 @@ def camera_snapshot(cam_id: int):
     return Response(jpeg.tobytes(), mimetype="image/jpeg")
 
 
+# ── camera refresh ───────────────────────────────────────────────────────────
+
+@bp.route("/camera/refresh", methods=["POST"])
+def camera_refresh():
+    """Close and re-open all cameras (useful after hot-plug)."""
+    if _dual_camera is None:
+        return jsonify({"error": "Cameras not initialised"}), 503
+    _dual_camera.close_all()
+    results = _dual_camera.open_all()
+    status = {str(i): ok for i, ok in enumerate(results)}
+    log.info("Camera refresh: %s", status)
+    return jsonify({"status": "refreshed", "cameras": status})
+
+
 # ── camera detect (uses frozen frames) ───────────────────────────────────────
 
 @bp.route("/camera/detect")

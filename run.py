@@ -76,12 +76,6 @@ def main() -> None:
                 timeout=config.SERIAL_TIMEOUT,
             )
             servo_group = ServoGroup(bus)
-
-            # Quick connectivity check
-            results = servo_group.ping_all()
-            for sid, ok in results.items():
-                log.info("Servo %d: %s", sid, "OK" if ok else "NO RESPONSE")
-
             scheduler = Scheduler(servo_group, check_feedback=True)
         except Exception as exc:
             log.error("Servo init failed: %s (continuing without servos)", exc)
