@@ -41,8 +41,12 @@ let roisUnlocked = false;
 let rois = { 0: [], 1: [] };          // ROI definitions per camera
 let roiColors = { 0: {}, 1: {} };     // detected colors per ROI label
 let detectedCubeString = "";
+let previewColorMap = null;            // editable color map used by cube preview
 let polling = null;
 let dragging = null;                   // { camId, index, offsetX, offsetY }
+
+const FACE_ORDER = ["U", "R", "F", "D", "L", "B"];
+const CYCLE_COLORS = ["W", "Y", "R", "O", "B", "G"];
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
 function appendLog(msg) {
@@ -263,6 +267,7 @@ btnUnfreeze.addEventListener("click", () => {
   detectionPanel.style.display = "none";
   roiColors = { 0: {}, 1: {} };
   detectedCubeString = "";
+  previewColorMap = null;
   drawAllROIs();
   appendLog("Camera feeds unfrozen");
 });
@@ -294,13 +299,15 @@ btnDetect.addEventListener("click", async () => {
 
 function showCubePreview(cubeString, colorMap) {
   detectionPanel.style.display = "block";
-  cubeStringDisp.textContent = cubeString || "";
+  previewColorMap = colorMap ? { ...colorMap } : null;
+
+  detectedCubeString = buildCubeStringFromColorMap(previewColorMap) || cubeString || "";
+  cubeStringDisp.textContent = detectedCubeString;
   cubePreview.innerHTML = "";
 
-  if (!colorMap) return;
+  if (!previewColorMap) return;
 
-  const faces = ["U", "R", "F", "D", "L", "B"];
-  for (const face of faces) {
+  for (const face of FACE_ORDER) {
     const wrap = document.createElement("div");
     const title = document.createElement("div");
     title.className = "face-grid-title";
@@ -313,16 +320,52 @@ function showCubePreview(cubeString, colorMap) {
       for (let c = 0; c < 3; c++) {
         const idx = r * 3 + c + 1;
         const label = `${face}${idx}`;
-        const color = colorMap[label] || "X";
+        const color = previewColorMap[label] || "X";
         const cell = document.createElement("div");
         cell.className = "facelet color-" + color;
         cell.title = `${label}: ${color}`;
+        cell.dataset.label = label;
+        cell.dataset.color = color;
+        cell.addEventListener("click", () => cycleFaceletColor(cell));
         grid.appendChild(cell);
       }
     }
     wrap.appendChild(grid);
     cubePreview.appendChild(wrap);
   }
+}
+
+function buildCubeStringFromColorMap(colorMap) {
+  if (!colorMap) return "";
+  let result = "";
+  for (const face of FACE_ORDER) {
+    for (let idx = 1; idx <= 9; idx++) {
+      const label = `${face}${idx}`;
+      result += colorMap[label] || "X";
+    }
+  }
+  return result;
+}
+
+function getNextColor(color) {
+  const pos = CYCLE_COLORS.indexOf(color);
+  return pos === -1 ? CYCLE_COLORS[0] : CYCLE_COLORS[(pos + 1) % CYCLE_COLORS.length];
+}
+
+function cycleFaceletColor(cell) {
+  const label = cell.dataset.label;
+  if (!label || !previewColorMap) return;
+
+  const current = previewColorMap[label] || cell.dataset.color || "W";
+  const next = getNextColor(current);
+
+  previewColorMap[label] = next;
+  cell.dataset.color = next;
+  cell.className = "facelet color-" + next;
+  cell.title = `${label}: ${next}`;
+
+  detectedCubeString = buildCubeStringFromColorMap(previewColorMap);
+  cubeStringDisp.textContent = detectedCubeString;
 }
 
 // ── ROI Unlock toggle ───────────────────────────────────────────────────────
