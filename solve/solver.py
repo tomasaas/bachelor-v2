@@ -99,8 +99,7 @@ def solve(cube_string: str) -> str:
 
     log.info("Solving cube: %s", cube_string)
     try:
-        # solution = kociemba.solve(cube_string)
-        solution = kociemba.solve('UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB')
+        solution = kociemba.solve(cube_string)
     except Exception as exc:
         raise SolveError(f"Kociemba error: {exc}") from exc
 
