@@ -18,22 +18,40 @@ import sys
 import config
 
 
+class _TerminalNoiseFilter(logging.Filter):
+    """Keep the terminal focused on high-level status and warnings."""
+
+    _NOISY_LOGGER_PREFIXES = (
+        "detect",
+        "motion.sc09",
+        "motion.servo_bus",
+        "serial",
+    )
+
+    def filter(self, record: logging.LogRecord) -> bool:
+        if record.levelno < logging.WARNING and record.name.startswith(self._NOISY_LOGGER_PREFIXES):
+            return False
+
+        if record.name.startswith("werkzeug"):
+            message = record.getMessage()
+            if "GET /servo/positions" in message or "GET /status" in message:
+                return False
+
+        return True
+
+
 def setup_logging() -> None:
+    console_handler = logging.StreamHandler(sys.stdout)
+    console_handler.addFilter(_TerminalNoiseFilter())
+
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
         handlers=[
-            logging.StreamHandler(sys.stdout),
+            console_handler,
             logging.FileHandler("rubiks.log"),
         ],
     )
-
-    class _SuppressPositionsPoll(logging.Filter):
-        def filter(self, record: logging.LogRecord) -> bool:
-            message = record.getMessage()
-            return "GET /servo/positions" not in message and "GET /status" not in message
-
-    logging.getLogger("werkzeug").addFilter(_SuppressPositionsPoll())
 
 
 def main() -> None:

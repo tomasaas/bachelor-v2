@@ -8553,3 +8553,59 @@ IndexError: list index out of range
 2026-03-12 22:08:08,021 [INFO] motion.servo_bus: Servo 6 torque OFF → OK
 2026-03-12 22:08:13,220 [INFO] motion.sc09: SC09Bus closed
 2026-03-12 22:08:13,220 [INFO] motion.servo_bus: Servo shutdown complete
+2026-03-27 19:30:13,325 [INFO] main: === Rubik's Cube Solver starting ===
+2026-03-27 19:30:13,415 [INFO] detect: USB camera detected: /dev/video0 (USB Camera: USB Camera)
+2026-03-27 19:30:13,416 [INFO] detect: USB camera detected: /dev/video2 (Trust QHD Webcam: Trust QHD Web)
+2026-03-27 19:30:13,416 [INFO] vision.camera: Auto-detected camera indices: [0, 2]
+2026-03-27 19:30:13,576 [INFO] vision.camera: Camera 0 opened
+2026-03-27 19:30:13,774 [INFO] vision.camera: Camera 2 opened
+2026-03-27 19:30:13,775 [INFO] main: Camera 0: opened
+2026-03-27 19:30:13,775 [INFO] main: Camera 1: opened
+2026-03-27 19:30:13,786 [INFO] detect: Servo port detected via by-id: usb-Silicon_Labs_CP2102_USB_to_UART_Bridge_Controller_0001-if00-port0 → /dev/ttyUSB0
+2026-03-27 19:30:13,786 [INFO] main: Auto-detected servo port: /dev/ttyUSB0
+2026-03-27 19:30:13,838 [INFO] motion.sc09: SC09Bus opened /dev/ttyUSB0 @ 115200 baud (vendor SDK)
+2026-03-27 19:30:13,868 [INFO] motion.sc09: Ping servo 1: OK (model 1284)
+2026-03-27 19:30:13,898 [INFO] motion.sc09: Ping servo 2: OK (model 1284)
+2026-03-27 19:30:13,928 [INFO] motion.sc09: Ping servo 3: OK (model 1284)
+2026-03-27 19:30:13,958 [INFO] motion.sc09: Ping servo 4: OK (model 1284)
+2026-03-27 19:30:13,988 [INFO] motion.sc09: Ping servo 5: OK (model 1284)
+2026-03-27 19:30:14,018 [INFO] motion.sc09: Ping servo 6: OK (model 1284)
+2026-03-27 19:30:14,018 [INFO] motion.servo_bus: Setting all servos to position mode…
+2026-03-27 19:30:14,100 [INFO] motion.servo_bus: Servo 1 → position mode (angle limits 0-1023): OK
+2026-03-27 19:30:14,180 [INFO] motion.servo_bus: Servo 2 → position mode (angle limits 0-1023): OK
+2026-03-27 19:30:14,260 [INFO] motion.servo_bus: Servo 3 → position mode (angle limits 0-1023): OK
+2026-03-27 19:30:14,340 [INFO] motion.servo_bus: Servo 4 → position mode (angle limits 0-1023): OK
+2026-03-27 19:30:14,420 [INFO] motion.servo_bus: Servo 5 → position mode (angle limits 0-1023): OK
+2026-03-27 19:30:14,500 [INFO] motion.servo_bus: Servo 6 → position mode (angle limits 0-1023): OK
+2026-03-27 19:30:14,500 [INFO] motion.servo_bus: Enabling torque on all servos…
+2026-03-27 19:30:14,515 [INFO] motion.servo_bus: Servo 1 torque ON → OK
+2026-03-27 19:30:14,530 [INFO] motion.servo_bus: Servo 2 torque ON → OK
+2026-03-27 19:30:14,545 [INFO] motion.servo_bus: Servo 3 torque ON → OK
+2026-03-27 19:30:14,559 [INFO] motion.servo_bus: Servo 4 torque ON → OK
+2026-03-27 19:30:14,574 [INFO] motion.servo_bus: Servo 5 torque ON → OK
+2026-03-27 19:30:14,588 [INFO] motion.servo_bus: Servo 6 torque ON → OK
+2026-03-27 19:30:14,588 [INFO] motion.servo_bus: Homing all servos to position 0…
+2026-03-27 19:30:14,608 [INFO] motion.servo_bus: Servo 1 move_to pos=0 speed=1000 time=500ms → OK
+2026-03-27 19:30:14,643 [INFO] motion.servo_bus: Servo 2 move_to pos=0 speed=1000 time=500ms → OK
+2026-03-27 19:30:14,678 [INFO] motion.servo_bus: Servo 3 move_to pos=0 speed=1000 time=500ms → OK
+2026-03-27 19:30:14,714 [INFO] motion.servo_bus: Servo 4 move_to pos=0 speed=1000 time=500ms → OK
+2026-03-27 19:30:14,750 [INFO] motion.servo_bus: Servo 5 move_to pos=0 speed=1000 time=500ms → OK
+2026-03-27 19:30:14,785 [INFO] motion.servo_bus: Servo 6 move_to pos=0 speed=1000 time=500ms → OK
+2026-03-27 19:30:14,801 [INFO] motion.servo_bus: Servo init complete: speed=1000, 6/6 servos alive
+2026-03-27 19:30:14,931 [INFO] server.app: Flask app created
+2026-03-27 19:30:14,932 [INFO] main: Starting Flask on 0.0.0.0:5000
+2026-03-27 19:30:14,935 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.10.130:5000
+2026-03-27 19:30:14,936 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2026-03-27 19:30:33,890 [INFO] main: Shutting down...
+2026-03-27 19:30:33,890 [INFO] motion.servo_bus: Releasing torque on all servos…
+2026-03-27 19:30:33,904 [INFO] motion.servo_bus: Servo 1 torque OFF → OK
+2026-03-27 19:30:33,919 [INFO] motion.servo_bus: Servo 2 torque OFF → OK
+2026-03-27 19:30:33,934 [INFO] motion.servo_bus: Servo 3 torque OFF → OK
+2026-03-27 19:30:33,949 [INFO] motion.servo_bus: Servo 4 torque OFF → OK
+2026-03-27 19:30:33,963 [INFO] motion.servo_bus: Servo 5 torque OFF → OK
+2026-03-27 19:30:33,978 [INFO] motion.servo_bus: Servo 6 torque OFF → OK
+2026-03-27 19:30:39,181 [INFO] motion.sc09: SC09Bus closed
+2026-03-27 19:30:39,181 [INFO] motion.servo_bus: Servo shutdown complete
