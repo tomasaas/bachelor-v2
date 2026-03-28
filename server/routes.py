@@ -15,7 +15,7 @@ import numpy as np
 from flask import Blueprint, Response, jsonify, render_template, request
 
 import config
-from motion.moves import parse_solution, solution_to_actions
+from motion.moves import manual_move_actions, parse_solution, solution_to_actions
 from motion.scheduler import Scheduler, SchedulerState
 
 log = logging.getLogger(__name__)
@@ -55,6 +55,14 @@ _face_telemetry_history = {
     for face in config.FACE_SERVO
 }
 _total_current_history = deque()
+
+
+def _is_scheduler_busy() -> bool:
+    return _scheduler is not None and _scheduler.progress.state == SchedulerState.RUNNING
+
+
+def _is_busy() -> bool:
+    return _progress.get("state") == "RUNNING" or _is_scheduler_busy()
 
 
 def _prune_history(history: deque, window_s: float, now: float) -> None:
@@ -276,7 +284,7 @@ def reset_rois():
 def solve():
     global _solve_thread
 
-    if _progress["state"] == "RUNNING":
+    if _is_busy():
         return jsonify({"error": "Solve already in progress"}), 409
 
     body = request.get_json(silent=True) or {}
@@ -514,7 +522,7 @@ def servo_move():
     """Execute a single Rubik's move (e.g. "R", "U'"). Runs sequentially."""
     if _servo_group is None:
         return jsonify({"error": "Servos not initialised"}), 503
-    if _progress["state"] == "RUNNING":
+    if _is_busy():
         return jsonify({"error": "Busy – wait for current operation"}), 409
 
     body = request.get_json(silent=True) or {}
@@ -522,51 +530,50 @@ def servo_move():
     if not move:
         return jsonify({"error": "Missing 'move'"}), 400
 
-    # Validate move token
-    valid_faces = set(config.FACE_SERVO.keys())
-    face = move[0]
-    if face not in valid_faces:
-        return jsonify({"error": f"Unknown face: {face}"}), 400
-
-    suffix = ""
-    if len(move) == 2:
-        suffix = move[1]
-    elif len(move) > 2:
-        return jsonify({"error": f"Unknown move token: {move}"}), 400
-    if suffix not in ("", "'", "2"):
-        return jsonify({"error": f"Unknown move suffix: {suffix}"}), 400
-
-    if suffix == "":
-        deltas = [config.POS_QUARTER_CW]
-    elif suffix == "'":
-        deltas = [config.POS_QUARTER_CCW]
-    else:  # "2"
-        deltas = [config.POS_QUARTER_CW, config.POS_QUARTER_CW]
-
-    sid = config.FACE_SERVO[face]
+    try:
+        actions = manual_move_actions(move)
+    except ValueError as exc:
+        return jsonify({"error": str(exc)}), 400
 
     def _run_move():
         global _progress
-        _progress["state"] = "RUNNING"
-        _progress["current_move"] = move
-        _progress["total_moves"] = 1
-        _progress["total_actions"] = len(deltas)
-        _progress["completed_moves"] = 0
-        _progress["completed_actions"] = 0
+        _progress = {
+            "state": "RUNNING", "error": "", "solution": "",
+            "total_moves": 1, "completed_moves": 0,
+            "total_actions": len(actions), "completed_actions": 0,
+            "current_move": move,
+        }
         try:
-            for delta in deltas:
-                _servo_group.step_servo(
-                    sid,
-                    delta,
-                    speed=config.MOVE_SPEED,
-                    time_ms=config.MOVE_TIME_MS,
-                    wait=True,
-                )
-                _progress["completed_actions"] += 1
-                if config.MOVE_SETTLE_MS > 0:
-                    time.sleep(config.MOVE_SETTLE_MS / 1000.0)
-            _progress["state"] = "DONE"
-            _progress["completed_moves"] = 1
+            if _scheduler is not None:
+                ok = _scheduler.execute([actions], [move])
+                sched = _scheduler.progress
+                _progress.update({
+                    "state": sched.state.name,
+                    "error": sched.error,
+                    "total_moves": sched.total_moves,
+                    "completed_moves": sched.completed_moves,
+                    "total_actions": sched.total_actions,
+                    "completed_actions": sched.completed_actions,
+                    "current_move": sched.current_move,
+                })
+                if not ok:
+                    return
+            else:
+                for action in actions:
+                    if action.delta_bits is None:
+                        raise RuntimeError("Manual move actions must be relative steps")
+                    _servo_group.step_servo(
+                        action.servo_id,
+                        action.delta_bits,
+                        speed=action.speed,
+                        time_ms=action.time_ms,
+                        wait=True,
+                    )
+                    _progress["completed_actions"] += 1
+                    if action.settle_ms > 0:
+                        time.sleep(action.settle_ms / 1000.0)
+                _progress["state"] = "DONE"
+                _progress["completed_moves"] = 1
         except Exception as exc:
             log.exception("Manual move error: %s", exc)
             _progress["state"] = "ERROR"
@@ -585,7 +592,7 @@ def servo_scramble():
     """Generate a random scramble (20 moves) and execute it sequentially."""
     if _servo_group is None:
         return jsonify({"error": "Servos not initialised"}), 503
-    if _progress["state"] == "RUNNING":
+    if _is_busy():
         return jsonify({"error": "Busy"}), 409
 
     faces = list(config.FACE_SERVO.keys())

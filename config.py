@@ -43,9 +43,9 @@ class Reg:
 # ---------------------------------------------------------------------------
 # Position-mode tuning (units 0-1023)
 # ---------------------------------------------------------------------------
-POS_HOME         = round((0) * (1024 / 300))  # robot home / neutral
-POS_QUARTER_CW   = round(90 * (1024 / 300))          # +90°
-POS_QUARTER_CCW  = -round(90 * (1024 / 300))         # -90°
+POS_HOME         = round(150 * (1024 / 300))  # robot home / neutral (midpoint)
+POS_QUARTER_CW   = -round(90 * (1024 / 300))         # one cube-face CW quarter turn
+POS_QUARTER_CCW  = round(90 * (1024 / 300))          # one cube-face CCW quarter turn
 MOVE_SPEED       = 1000                              # kept for API compat / fallback
 MOVE_TIME_MS     = 500                               # position move duration target
 MOVE_SETTLE_MS   = 500                               # extra settle time after move (ms)
@@ -79,6 +79,18 @@ FACE_SERVO = {
 
 # Reverse lookup: servo ID → face letter
 SERVO_FACE = {v: k for k, v in FACE_SERVO.items()}
+
+# Per-face turn calibration.
+# +1 means a Rubik's "clockwise" token maps directly to +POS_QUARTER_CW bits.
+# -1 flips that face because the servo is mounted in the opposite sense.
+FACE_TURN_SIGN = {
+    "U": 1,
+    "D": 1,
+    "F": 1,
+    "R": 1,
+    "B": 1,
+    "L": 1,
+}
 
 # ---------------------------------------------------------------------------
 # Cube insertion rule

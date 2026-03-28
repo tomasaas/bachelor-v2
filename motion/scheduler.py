@@ -10,7 +10,7 @@ from __future__ import annotations
 import logging
 import threading
 import time
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import Enum, auto
 
 from motion.servo_bus import Servo, ServoGroup
@@ -70,10 +70,11 @@ class Scheduler:
         log.warning("Scheduler abort requested")
         self._abort.set()
 
-    def safe_state(self) -> None:
+    def safe_state(self, state: SchedulerState = SchedulerState.ABORTING) -> None:
         """Emergency: torque off everything immediately."""
         self.group.emergency_stop()
-        self.progress.state = SchedulerState.ABORTING
+        self.progress.state = state
+        self.progress.current_move = ""
 
     def execute(
         self,
@@ -104,7 +105,7 @@ class Scheduler:
                     if self._abort.is_set():
                         log.warning("Abort detected – stopping")
                         self.progress.state = SchedulerState.ABORTING
-                        self.safe_state()
+                        self.safe_state(SchedulerState.ABORTING)
                         return False
 
                     self._execute_action(action)
@@ -112,6 +113,7 @@ class Scheduler:
 
                 self.progress.completed_moves += 1
 
+            self.progress.current_move = ""
             self.progress.state = SchedulerState.DONE
             log.info("Scheduler: all moves complete")
             return True
@@ -120,25 +122,39 @@ class Scheduler:
             log.exception("Scheduler error: %s", exc)
             self.progress.state = SchedulerState.ERROR
             self.progress.error = str(exc)
-            self.safe_state()
+            self.safe_state(SchedulerState.ERROR)
             return False
 
     def _execute_action(self, action: ServoAction) -> None:
         servo: Servo = self.group[action.servo_id]
+        mode = "relative" if action.delta_bits is not None else "absolute"
 
         log.debug(
-            "  Action: servo=%d pos=%d speed=%d time=%dms settle=%dms",
+            "  Action: servo=%d mode=%s pos=%s delta=%s speed=%d time=%dms settle=%dms",
             action.servo_id,
+            mode,
             action.position,
+            action.delta_bits,
             action.speed,
             action.time_ms,
             action.settle_ms,
         )
 
-        servo.move_to(action.position, speed=action.speed, time_ms=action.time_ms)
+        if (action.position is None) == (action.delta_bits is None):
+            raise ValueError("ServoAction must set exactly one of position or delta_bits")
 
-        if self.check_feedback:
-            servo.wait_until_stopped(timeout=2.0)
+        if action.delta_bits is not None:
+            self.group.step_servo(
+                action.servo_id,
+                action.delta_bits,
+                speed=action.speed,
+                time_ms=action.time_ms,
+                wait=self.check_feedback,
+            )
+        else:
+            servo.move_to(action.position, speed=action.speed, time_ms=action.time_ms)
+            if self.check_feedback:
+                servo.wait_until_stopped(timeout=2.0)
 
         if action.settle_ms > 0:
             time.sleep(action.settle_ms / 1000.0)
