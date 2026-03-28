@@ -220,7 +220,7 @@ def get_rois_endpoint():
 
 @bp.route("/rois/update", methods=["POST"])
 def update_rois():
-    """Update ROI positions for a camera after user dragging."""
+    """Update ROI positions and sizes for a camera after UI adjustment."""
     body = request.get_json(silent=True) or {}
     cam_id = body.get("cam_id")
     new_rois = body.get("rois")
@@ -229,11 +229,13 @@ def update_rois():
 
     _ensure_rois()
 
-    # Update positions from the client data (only x, y are movable)
+    # Update positions and size from the client data.
     for i, r in enumerate(new_rois):
         if i < len(_runtime_rois[cam_id]):
             _runtime_rois[cam_id][i]["x"] = int(r.get("x", _runtime_rois[cam_id][i]["x"]))
             _runtime_rois[cam_id][i]["y"] = int(r.get("y", _runtime_rois[cam_id][i]["y"]))
+            _runtime_rois[cam_id][i]["w"] = int(r.get("w", _runtime_rois[cam_id][i]["w"]))
+            _runtime_rois[cam_id][i]["h"] = int(r.get("h", _runtime_rois[cam_id][i]["h"]))
 
     # Persist to disk so positions survive server restarts
     from vision.roi import save_rois

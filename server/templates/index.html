@@ -7,123 +7,190 @@
   <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-
   <div class="layout">
-    <!-- LEFT: Two camera quadrants stacked -->
-    <div class="cameras-column">
-      <div class="cam-quadrant" id="cam0-quadrant">
-        <div class="cam-header">
-          <span class="cam-label">Camera 0 &mdash; U / L / F  (Top camera)</span>
-        </div>
-        <div class="cam-viewport" id="cam0-viewport">
-          <img id="cam0" src="/video/0" alt="Camera 0" draggable="false">
-          <canvas id="cam0-overlay" class="roi-overlay"></canvas>
-        </div>
+    <aside class="cameras-column">
+      <div class="camera-grid">
+        <section class="cam-quadrant" id="cam0-quadrant">
+          <div class="cam-header">
+            <div>
+              <p class="cam-kicker">Top camera</p>
+              <span class="cam-label">Faces U / L / F</span>
+            </div>
+          </div>
+          <div class="cam-viewport" id="cam0-viewport">
+            <img id="cam0" src="/video/0" alt="Camera 0" draggable="false">
+            <canvas id="cam0-overlay" class="roi-overlay"></canvas>
+          </div>
+        </section>
+
+        <section class="cam-quadrant" id="cam1-quadrant">
+          <div class="cam-header">
+            <div>
+              <p class="cam-kicker">Bottom camera</p>
+              <span class="cam-label">Faces R / B / D</span>
+            </div>
+          </div>
+          <div class="cam-viewport" id="cam1-viewport">
+            <img id="cam1" src="/video/1" alt="Camera 1" draggable="false">
+            <canvas id="cam1-overlay" class="roi-overlay"></canvas>
+          </div>
+        </section>
       </div>
-      <div class="cam-quadrant" id="cam1-quadrant">
-        <div class="cam-header">
-          <span class="cam-label">Camera 1 &mdash; R / B / D  (Bottom camera)</span>
-        </div>
-        <div class="cam-viewport" id="cam1-viewport">
-          <img id="cam1" src="/video/1" alt="Camera 1" draggable="false">
-          <canvas id="cam1-overlay" class="roi-overlay"></canvas>
-        </div>
-      </div>
-    </div>
+    </aside>
 
-    <!-- RIGHT: Controls panel -->
-    <div class="controls-column">
-      <h1 class="title">Rubik's Cube Solver</h1>
-      <span id="state-badge" class="badge">IDLE</span>
 
-      <!-- Connection -->
-      <section class="ctrl-section">
-        <h3>Connection</h3>
-        <div class="btn-row">
-          <button id="btn-ping" class="btn">Ping Servos</button>
+    <main class="controls-column">
+      <section class="hero-card">
+        <div class="hero-copy">
+          <h1 class="title">UiA's Rubik's Cube Solver</h1>
         </div>
       </section>
 
-      <!-- Torque -->
-      <section class="ctrl-section">
-        <h3>Torque</h3>
-        <div class="btn-row">
-          <button id="btn-torque-on" class="btn">Torque ON</button>
-          <button id="btn-torque-off" class="btn btn-danger">Torque OFF</button>
-        </div>
-      </section>
-
-      <!-- Manual face rotation -->
-      <section class="ctrl-section">
-        <h3>Manual Face Rotation</h3>
-        <div class="face-controls">
-          <div class="face-card" data-face="U"><div class="face-row"><span class="face-label">U</span><button class="btn btn-sm" data-move="U">CW</button><button class="btn btn-sm" data-move="U'">CCW</button><span class="face-pos" data-face-pos="U">—</span></div><div class="face-metrics"><span data-face-torque="U">Torque 3s max: —</span><span data-face-current="U">Current 3s max: —</span></div></div>
-          <div class="face-card" data-face="D"><div class="face-row"><span class="face-label">D</span><button class="btn btn-sm" data-move="D">CW</button><button class="btn btn-sm" data-move="D'">CCW</button><span class="face-pos" data-face-pos="D">—</span></div><div class="face-metrics"><span data-face-torque="D">Torque 3s max: —</span><span data-face-current="D">Current 3s max: —</span></div></div>
-          <div class="face-card" data-face="R"><div class="face-row"><span class="face-label">R</span><button class="btn btn-sm" data-move="R">CW</button><button class="btn btn-sm" data-move="R'">CCW</button><span class="face-pos" data-face-pos="R">—</span></div><div class="face-metrics"><span data-face-torque="R">Torque 3s max: —</span><span data-face-current="R">Current 3s max: —</span></div></div>
-          <div class="face-card" data-face="L"><div class="face-row"><span class="face-label">L</span><button class="btn btn-sm" data-move="L">CW</button><button class="btn btn-sm" data-move="L'">CCW</button><span class="face-pos" data-face-pos="L">—</span></div><div class="face-metrics"><span data-face-torque="L">Torque 3s max: —</span><span data-face-current="L">Current 3s max: —</span></div></div>
-          <div class="face-card" data-face="F"><div class="face-row"><span class="face-label">F</span><button class="btn btn-sm" data-move="F">CW</button><button class="btn btn-sm" data-move="F'">CCW</button><span class="face-pos" data-face-pos="F">—</span></div><div class="face-metrics"><span data-face-torque="F">Torque 3s max: —</span><span data-face-current="F">Current 3s max: —</span></div></div>
-          <div class="face-card" data-face="B"><div class="face-row"><span class="face-label">B</span><button class="btn btn-sm" data-move="B">CW</button><button class="btn btn-sm" data-move="B'">CCW</button><span class="face-pos" data-face-pos="B">—</span></div><div class="face-metrics"><span data-face-torque="B">Torque 3s max: —</span><span data-face-current="B">Current 3s max: —</span></div></div>
-        </div>
-        <div class="telemetry-summary" id="total-current-display">Total current 3s max: —</div>
-      </section>
-
-      <!-- Scramble -->
-      <section class="ctrl-section">
-        <h3>Scramble</h3>
-        <div class="btn-row">
-          <button id="btn-scramble" class="btn">Scramble Cube</button>
-          <button id="btn-home" class="btn">Home All</button>
-        </div>
-      </section>
-
-      <!-- Camera / Vision -->
-      <section class="ctrl-section">
-        <h3>Camera &amp; Vision</h3>
-        <div class="btn-row">
-          <button id="btn-refresh-cams" class="btn">Refresh Cameras</button>
+      <section class="workflow-card" data-step-card="1" data-state="active">
+        <div class="step-header">
+          <span class="step-index">1</span>
+          <div class="step-copy">
+            <h3>ROI Alignment</h3>
+          </div>
+          <span id="step-state-roi" class="step-state" data-state="optional">Optional</span>
         </div>
         <div class="btn-row">
-          <button id="btn-freeze" class="btn">Freeze Feeds</button>
-          <button id="btn-unfreeze" class="btn" disabled>Unfreeze</button>
-        </div>
-        <div class="btn-row">
-          <button id="btn-detect" class="btn" disabled>Detect Colors</button>
           <button id="btn-roi-unlock" class="btn">Unlock ROIs</button>
           <button id="btn-roi-reset" class="btn btn-danger">Reset ROIs</button>
         </div>
+        <div class="slider-row">
+          <label class="slider-label" for="roi-size-slider">ROI Size</label>
+          <input id="roi-size-slider" class="slider-input" type="range" min="18" max="80" step="1" value="34">
+          <span id="roi-size-value" class="slider-value mono">34 px</span>
+        </div>
       </section>
 
-      <!-- Detected cube state preview -->
-      <section class="ctrl-section" id="detection-panel" style="display:none;">
-        <h3>Detected Cube State</h3>
-        <div id="cube-preview" class="cube-preview"></div>
-        <p id="cube-string-display" class="mono"></p>
-      </section>
-
-      <!-- Solve -->
-      <section class="ctrl-section">
-        <h3>Solve</h3>
+      <section class="workflow-card" data-step-card="2" data-state="pending">
+        <div class="step-header">
+          <span class="step-index">2</span>
+          <div class="step-copy">
+            <h3>Freeze Video</h3>
+          </div>
+          <span id="step-state-freeze" class="step-state" data-state="active">Next</span>
+        </div>
         <div class="btn-row">
-          <button id="btn-solve" class="btn btn-primary" disabled>Start Solve</button>
+          <button id="btn-freeze" class="btn btn-primary">Freeze Video</button>
+          <button id="btn-unfreeze" class="btn" disabled>Resume Live Video</button>
+        </div>
+      </section>
+
+      <section class="workflow-card" data-step-card="3" data-state="pending">
+        <div class="step-header">
+          <span class="step-index">3</span>
+          <div class="step-copy">
+            <h3>Detect Colors</h3>
+          </div>
+          <span id="step-state-detect" class="step-state" data-state="pending">Wait for freeze</span>
+        </div>
+        <div class="btn-row">
+          <button id="btn-detect" class="btn btn-primary" disabled>Detect Colors</button>
+        </div>
+      </section>
+
+      <section class="workflow-card workflow-card-review" id="detection-panel" data-step-card="4" data-state="pending">
+        <div class="step-header">
+          <span class="step-index">4</span>
+          <div class="step-copy">
+            <h3>Review Cube State</h3>
+          </div>
+          <span id="step-state-review" class="step-state" data-state="pending">Waiting</span>
+        </div>
+
+        <div class="review-grid">
+          <div class="review-preview">
+            <div id="cube-preview" class="cube-preview"></div>
+          </div>
+
+          <div class="review-editor">
+            <p id="cube-string-display" class="cube-string mono"></p>
+            <input
+              id="manual-cube-string"
+              class="text-input text-input-subtle mono"
+              placeholder="Format: URFDLB... or WYROBG... "
+              type="text"
+            >
+          </div>
+        </div>
+      </section>
+
+      <section class="workflow-card workflow-card-solve" data-step-card="5" data-state="pending">
+        <div class="step-header">
+          <span class="step-index">5</span>
+          <div class="step-copy">
+            <h3>Solve Cube</h3>
+          </div>
+          <span id="step-state-solve" class="step-state" data-state="pending">Blocked</span>
+        </div>
+
+        <div class="solve-actions">
+          <button id="btn-solve" class="btn btn-primary btn-big" disabled>Solve Cube</button>
           <button id="btn-abort" class="btn btn-danger" disabled>Abort</button>
         </div>
-      </section>
 
-      <!-- Progress -->
-      <section class="ctrl-section">
-        <h3>Progress</h3>
-        <div class="progress-bar-outer">
-          <div id="progress-bar" class="progress-bar-inner" style="width:0%"></div>
+        <div class="progress-block">
+          <div class="progress-bar-outer">
+            <div id="progress-bar" class="progress-bar-inner" style="width:0%"></div>
+          </div>
+          <p id="progress-text">Idle</p>
         </div>
-        <p id="progress-text">Idle</p>
       </section>
 
-      <!-- Log -->
-      <section class="ctrl-section">
-        <h3>Log</h3>
-        <pre id="log-output"></pre>
-      </section>
-    </div>
+      <details class="utility-panel">
+        <summary>Hardware &amp; Utilities</summary>
+        <div class="utility-body">
+          <section class="utility-group">
+            <h4>Connection</h4>
+            <div class="btn-row">
+              <button id="btn-ping" class="btn">Ping Servos</button>
+              <button id="btn-refresh-cams" class="btn">Refresh Cameras</button>
+            </div>
+          </section>
+
+          <section class="utility-group">
+            <h4>Torque</h4>
+            <div class="btn-row">
+              <button id="btn-torque-on" class="btn">Torque ON</button>
+              <button id="btn-torque-off" class="btn btn-danger">Torque OFF</button>
+            </div>
+          </section>
+
+          <section class="utility-group">
+            <h4>Maintenance</h4>
+            <div class="btn-row">
+              <button id="btn-home" class="btn">Home All</button>
+              <button id="btn-scramble" class="btn">Scramble Cube</button>
+            </div>
+          </section>
+        </div>
+      </details>
+
+      <details class="utility-panel">
+        <summary>Manual Face Rotation</summary>
+        <div class="utility-body">
+          <div class="face-controls">
+            <div class="face-card" data-face="U"><div class="face-row"><span class="face-label">U</span><button class="btn btn-sm" data-move="U">CW</button><button class="btn btn-sm" data-move="U'">CCW</button><span class="face-pos" data-face-pos="U">—</span></div><div class="face-metrics"><span data-face-torque="U">Torque 3s max: —</span><span data-face-current="U">Current 3s max: —</span></div></div>
+            <div class="face-card" data-face="D"><div class="face-row"><span class="face-label">D</span><button class="btn btn-sm" data-move="D">CW</button><button class="btn btn-sm" data-move="D'">CCW</button><span class="face-pos" data-face-pos="D">—</span></div><div class="face-metrics"><span data-face-torque="D">Torque 3s max: —</span><span data-face-current="D">Current 3s max: —</span></div></div>
+            <div class="face-card" data-face="R"><div class="face-row"><span class="face-label">R</span><button class="btn btn-sm" data-move="R">CW</button><button class="btn btn-sm" data-move="R'">CCW</button><span class="face-pos" data-face-pos="R">—</span></div><div class="face-metrics"><span data-face-torque="R">Torque 3s max: —</span><span data-face-current="R">Current 3s max: —</span></div></div>
+            <div class="face-card" data-face="L"><div class="face-row"><span class="face-label">L</span><button class="btn btn-sm" data-move="L">CW</button><button class="btn btn-sm" data-move="L'">CCW</button><span class="face-pos" data-face-pos="L">—</span></div><div class="face-metrics"><span data-face-torque="L">Torque 3s max: —</span><span data-face-current="L">Current 3s max: —</span></div></div>
+            <div class="face-card" data-face="F"><div class="face-row"><span class="face-label">F</span><button class="btn btn-sm" data-move="F">CW</button><button class="btn btn-sm" data-move="F'">CCW</button><span class="face-pos" data-face-pos="F">—</span></div><div class="face-metrics"><span data-face-torque="F">Torque 3s max: —</span><span data-face-current="F">Current 3s max: —</span></div></div>
+            <div class="face-card" data-face="B"><div class="face-row"><span class="face-label">B</span><button class="btn btn-sm" data-move="B">CW</button><button class="btn btn-sm" data-move="B'">CCW</button><span class="face-pos" data-face-pos="B">—</span></div><div class="face-metrics"><span data-face-torque="B">Torque 3s max: —</span><span data-face-current="B">Current 3s max: —</span></div></div>
+          </div>
+          <div class="telemetry-summary" id="total-current-display">Total current 3s max: —</div>
+        </div>
+      </details>
+
+      <details class="utility-panel">
+        <summary>Activity Log</summary>
+        <div class="utility-body">
+          <pre id="log-output"></pre>
+        </div>
+      </details>
+    </main>
   </div>
 
   <script src="/static/app.js"></script>

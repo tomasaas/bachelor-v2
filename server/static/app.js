@@ -16,15 +16,27 @@ const btnUnfreeze    = $("#btn-unfreeze");
 const btnDetect    = $("#btn-detect");
 const btnRoiUnlock = $("#btn-roi-unlock");
 const btnRoiReset  = $("#btn-roi-reset");
+const roiSizeSlider = $("#roi-size-slider");
+const roiSizeValue = $("#roi-size-value");
 const btnSolve     = $("#btn-solve");
 const btnAbort     = $("#btn-abort");
 const progressBar  = $("#progress-bar");
 const progressText = $("#progress-text");
 const logOutput    = $("#log-output");
 const stateBadge   = $("#state-badge");
+const workflowSummary = $("#workflow-summary");
 const detectionPanel   = $("#detection-panel");
 const cubePreview      = $("#cube-preview");
 const cubeStringDisp   = $("#cube-string-display");
+const manualCubeStringInput = $("#manual-cube-string");
+const cubeStringSource = $("#cube-string-source");
+const captureStatus = $("#capture-status");
+const roiStatus = $("#roi-status");
+const stepStateRoi = $("#step-state-roi");
+const stepStateFreeze = $("#step-state-freeze");
+const stepStateDetect = $("#step-state-detect");
+const stepStateReview = $("#step-state-review");
+const stepStateSolve = $("#step-state-solve");
 const totalCurrentDisplay = $("#total-current-display");
 
 // Camera elements
@@ -47,12 +59,216 @@ let dragging = null;                   // { camId, index, offsetX, offsetY }
 
 const FACE_ORDER = ["U", "R", "F", "D", "L", "B"];
 const CYCLE_COLORS = ["W", "Y", "R", "O", "B", "G"];
+const VALID_CUBE_CHARS = new Set(["U", "R", "F", "D", "L", "B", "W", "Y", "O", "G"]);
+const STEP_STATES = {
+  1: stepStateRoi,
+  2: stepStateFreeze,
+  3: stepStateDetect,
+  4: stepStateReview,
+  5: stepStateSolve,
+};
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
 function appendLog(msg) {
   const ts = new Date().toLocaleTimeString();
   logOutput.textContent += `[${ts}] ${msg}\n`;
   logOutput.scrollTop = logOutput.scrollHeight;
+}
+
+function clamp(value, min, max) {
+  return Math.min(Math.max(value, min), max);
+}
+
+function getManualCubeString() {
+  return (manualCubeStringInput?.value || "").trim().toUpperCase();
+}
+
+function getSelectedCubeString() {
+  return getManualCubeString() || detectedCubeString;
+}
+
+function validateCubeString(value) {
+  if (!value) {
+    return { valid: false, message: "Enter a manual cube state or detect one from the cameras." };
+  }
+  if (value.length !== 54) {
+    return { valid: false, message: `Cube string must be 54 characters, got ${value.length}.` };
+  }
+  for (const ch of value) {
+    if (!VALID_CUBE_CHARS.has(ch)) {
+      return { valid: false, message: `Unsupported character '${ch}' in cube string.` };
+    }
+  }
+  return { valid: true, message: "" };
+}
+
+function setStateBadge(state) {
+  if (!stateBadge) return;
+  stateBadge.textContent = state;
+  stateBadge.className = state === "IDLE" ? "badge" : `badge ${state.toLowerCase()}`;
+}
+
+function resetSolveFeedback() {
+  if (polling) return;
+  setStateBadge("IDLE");
+  progressBar.style.width = "0%";
+  progressText.textContent = "Idle";
+}
+
+function setCubeStringDisplay(text, placeholder = false) {
+  cubeStringDisp.textContent = text;
+  cubeStringDisp.classList.toggle("is-placeholder", placeholder);
+}
+
+function showCubePreviewPlaceholder(message) {
+  cubePreview.innerHTML = "";
+  const placeholder = document.createElement("div");
+  placeholder.className = "review-placeholder";
+  placeholder.textContent = message;
+  cubePreview.appendChild(placeholder);
+}
+
+function setStepState(stepNumber, text, state) {
+  const stepStateEl = STEP_STATES[stepNumber];
+  if (stepStateEl) {
+    stepStateEl.textContent = text;
+    stepStateEl.dataset.state = state;
+  }
+
+  const card = document.querySelector(`[data-step-card="${stepNumber}"]`);
+  if (card) card.dataset.state = state;
+
+  const overview = document.querySelector(`[data-overview-step="${stepNumber}"]`);
+  if (overview) overview.dataset.state = state;
+}
+
+function updateWorkflowGuide(validation = null) {
+  const manual = getManualCubeString();
+  const selected = manual || detectedCubeString;
+  const currentValidation = validation || validateCubeString(selected);
+  const hasDetectedState = Boolean(detectedCubeString);
+  const hasManualState = Boolean(manual);
+  const solveReady = currentValidation.valid;
+  const currentState = stateBadge ? (stateBadge.textContent || "IDLE") : "IDLE";
+
+  if (captureStatus) {
+    captureStatus.textContent = frozen ? "Frozen capture" : "Live video";
+    captureStatus.dataset.state = frozen ? "done" : "active";
+  }
+
+  if (roiStatus) {
+    roiStatus.textContent = roisUnlocked ? "ROIs unlocked" : "ROIs locked";
+    roiStatus.dataset.state = roisUnlocked
+      ? "active"
+      : (frozen || hasDetectedState || solveReady || currentState === "DONE" ? "done" : "pending");
+  }
+
+  if (workflowSummary) {
+    if (currentState === "DONE") {
+      workflowSummary.textContent = "Solve complete. You can unfreeze for a new cube or keep refining the cube state.";
+    } else if (currentState === "ERROR") {
+      workflowSummary.textContent = "The solve flow hit an error. Review the cube state and try again.";
+    } else if (polling) {
+      workflowSummary.textContent = "Step 5: solving in progress. Follow the progress bar below.";
+    } else if (solveReady) {
+      workflowSummary.textContent = hasManualState
+        ? "Step 5: manual cube state is ready. Start the solve when you are satisfied."
+        : "Step 5: detected cube state is ready. Start the solve when you are satisfied.";
+    } else if (hasDetectedState || hasManualState) {
+      workflowSummary.textContent = "Step 4: review the cube state. Click stickers or edit the text box until it looks right.";
+    } else if (frozen) {
+      workflowSummary.textContent = "Step 3: detect colors from the frozen camera frames.";
+    } else if (roisUnlocked) {
+      workflowSummary.textContent = "Step 1: drag the ROI boxes into place, then lock them and freeze the video.";
+    } else {
+      workflowSummary.textContent = "Step 1: optionally align ROIs, then freeze the video feeds.";
+    }
+  }
+
+  let step1State = "optional";
+  let step1Text = "Optional";
+  if (roisUnlocked) {
+    step1State = "active";
+    step1Text = "Editing";
+  } else if (frozen || hasDetectedState || solveReady || currentState === "DONE") {
+    step1State = "done";
+    step1Text = "Ready";
+  }
+  setStepState(1, step1Text, step1State);
+
+  let step2State = "active";
+  let step2Text = "Next";
+  if (frozen || hasDetectedState || solveReady || currentState === "DONE") {
+    step2State = "done";
+    step2Text = "Frozen";
+  }
+  setStepState(2, step2Text, step2State);
+
+  let step3State = "pending";
+  let step3Text = "Wait for freeze";
+  if (hasDetectedState) {
+    step3State = "done";
+    step3Text = "Detected";
+  } else if (frozen) {
+    step3State = "active";
+    step3Text = "Ready";
+  }
+  setStepState(3, step3Text, step3State);
+
+  let step4State = "pending";
+  let step4Text = "Waiting";
+  if (hasManualState) {
+    step4State = currentValidation.valid ? "done" : "active";
+    step4Text = currentValidation.valid ? "Manual override" : "Needs edit";
+  } else if (hasDetectedState) {
+    step4State = solveReady ? "done" : "active";
+    step4Text = solveReady ? "Reviewed" : "Review";
+  }
+  setStepState(4, step4Text, step4State);
+
+  let step5State = "pending";
+  let step5Text = "Blocked";
+  if (currentState === "DONE") {
+    step5State = "done";
+    step5Text = "Complete";
+  } else if (currentState === "ERROR") {
+    step5State = "error";
+    step5Text = "Error";
+  } else if (polling) {
+    step5State = "active";
+    step5Text = "Solving";
+  } else if (solveReady) {
+    step5State = "active";
+    step5Text = "Ready";
+  }
+  setStepState(5, step5Text, step5State);
+}
+
+function updateSolveControls() {
+  const manual = getManualCubeString();
+  const selected = manual || detectedCubeString;
+  const validation = validateCubeString(selected);
+
+  if (cubeStringSource) {
+    if (manual) {
+      if (validation.valid) {
+        cubeStringSource.textContent = "Using manually entered cube state for solve.";
+        cubeStringSource.classList.remove("error");
+      } else {
+        cubeStringSource.textContent = validation.message;
+        cubeStringSource.classList.add("error");
+      }
+    } else if (detectedCubeString) {
+      cubeStringSource.textContent = "Using detected cube state for solve.";
+      cubeStringSource.classList.remove("error");
+    } else {
+      cubeStringSource.textContent = "Enter a manual cube state or detect one from the cameras.";
+      cubeStringSource.classList.remove("error");
+    }
+  }
+
+  btnSolve.disabled = Boolean(polling) || !validation.valid;
+  updateWorkflowGuide(validation);
 }
 
 async function post(url, body) {
@@ -64,6 +280,56 @@ async function post(url, body) {
   return resp.json();
 }
 
+function getCurrentRoiSize() {
+  const roiList = [...rois[0], ...rois[1]];
+  if (!roiList.length) return Number(roiSizeSlider?.value || 34);
+  const total = roiList.reduce((sum, roi) => sum + Number(roi.w || roi.h || 0), 0);
+  return Math.round(total / roiList.length);
+}
+
+function updateRoiSizeControls() {
+  if (!roiSizeSlider || !roiSizeValue) return;
+  const size = getCurrentRoiSize();
+  roiSizeSlider.value = String(size);
+  roiSizeValue.textContent = `${size} px`;
+}
+
+function getCameraFrameBounds(camId) {
+  const img = getImgForCam(camId);
+  return {
+    width: img.naturalWidth || 640,
+    height: img.naturalHeight || 480,
+  };
+}
+
+function applyRoiSize(size) {
+  const nextSize = Number(size);
+  if (!Number.isFinite(nextSize) || nextSize <= 0) return;
+
+  for (const camId of [0, 1]) {
+    const bounds = getCameraFrameBounds(camId);
+    rois[camId] = rois[camId].map((roi) => {
+      const centerX = roi.x + roi.w / 2;
+      const centerY = roi.y + roi.h / 2;
+      return {
+        ...roi,
+        w: nextSize,
+        h: nextSize,
+        x: clamp(Math.round(centerX - nextSize / 2), 0, bounds.width - nextSize),
+        y: clamp(Math.round(centerY - nextSize / 2), 0, bounds.height - nextSize),
+      };
+    });
+  }
+
+  drawAllROIs();
+  updateRoiSizeControls();
+}
+
+async function saveAllROIs() {
+  await saveROIs(0);
+  await saveROIs(1);
+}
+
 // ── ROI Drawing ─────────────────────────────────────────────────────────────
 function getCanvasForCam(camId) {
   return camId === 0 ? cam0Canvas : cam1Canvas;
@@ -73,6 +339,44 @@ function getViewportForCam(camId) {
 }
 function getImgForCam(camId) {
   return camId === 0 ? cam0Img : cam1Img;
+}
+
+function resetCameraInspect(camId) {
+  const viewport = getViewportForCam(camId);
+  viewport.classList.remove("is-zooming");
+  viewport.style.setProperty("--inspect-x", "50%");
+  viewport.style.setProperty("--inspect-y", "50%");
+}
+
+function updateCameraInspect(camId, event) {
+  if (roisUnlocked) return;
+
+  const viewport = getViewportForCam(camId);
+  const rect = viewport.getBoundingClientRect();
+  if (!rect.width || !rect.height) return;
+
+  const xPct = clamp(((event.clientX - rect.left) / rect.width) * 100, 0, 100);
+  const yPct = clamp(((event.clientY - rect.top) / rect.height) * 100, 0, 100);
+
+  viewport.style.setProperty("--inspect-x", `${xPct}%`);
+  viewport.style.setProperty("--inspect-y", `${yPct}%`);
+  viewport.classList.add("is-zooming");
+}
+
+function setupCameraInspect(camId) {
+  const viewport = getViewportForCam(camId);
+
+  viewport.addEventListener("mouseenter", (event) => {
+    updateCameraInspect(camId, event);
+  });
+
+  viewport.addEventListener("mousemove", (event) => {
+    updateCameraInspect(camId, event);
+  });
+
+  viewport.addEventListener("mouseleave", () => {
+    resetCameraInspect(camId);
+  });
 }
 
 function resizeCanvas(camId) {
@@ -162,6 +466,7 @@ async function loadROIs() {
     const data = await resp.json();
     rois[0] = data.cam0 || [];
     rois[1] = data.cam1 || [];
+    updateRoiSizeControls();
     drawAllROIs();
     appendLog(`Loaded ${rois[0].length + rois[1].length} ROIs`);
   } catch (e) {
@@ -247,6 +552,8 @@ btnFreeze.addEventListener("click", async () => {
       // Switch to frozen snapshot endpoints
       cam0Img.src = "/camera/snapshot/0?" + Date.now();
       cam1Img.src = "/camera/snapshot/1?" + Date.now();
+      resetSolveFeedback();
+      updateSolveControls();
       appendLog("Camera feeds frozen");
     }
   } catch (e) {
@@ -264,10 +571,15 @@ btnUnfreeze.addEventListener("click", () => {
   cam1Img.classList.remove("frozen");
   cam0Img.src = "/video/0";
   cam1Img.src = "/video/1";
-  detectionPanel.style.display = "none";
   roiColors = { 0: {}, 1: {} };
   detectedCubeString = "";
   previewColorMap = null;
+  resetSolveFeedback();
+  showCubePreviewPlaceholder(
+    "Detected colors will appear here after step 3. You can still paste a full cube-state override on the right."
+  );
+  setCubeStringDisplay("Detected cube string will appear here after color detection.", true);
+  updateSolveControls();
   drawAllROIs();
   appendLog("Camera feeds unfrozen");
 });
@@ -286,11 +598,12 @@ btnDetect.addEventListener("click", async () => {
     roiColors[0] = data.cam0_colors || {};
     roiColors[1] = data.cam1_colors || {};
     detectedCubeString = data.cube_string || "";
+    resetSolveFeedback();
     drawAllROIs();
 
     // Show cube preview
     showCubePreview(data.cube_string, data.color_map);
-    btnSolve.disabled = false;
+    updateSolveControls();
     appendLog("Detected cube: " + detectedCubeString);
   } catch (e) {
     appendLog("Detection error: " + e);
@@ -298,14 +611,18 @@ btnDetect.addEventListener("click", async () => {
 });
 
 function showCubePreview(cubeString, colorMap) {
-  detectionPanel.style.display = "block";
   previewColorMap = colorMap ? { ...colorMap } : null;
 
   detectedCubeString = buildCubeStringFromColorMap(previewColorMap) || cubeString || "";
-  cubeStringDisp.textContent = detectedCubeString;
+  resetSolveFeedback();
+  setCubeStringDisplay(detectedCubeString || "Detected cube string will appear here after color detection.");
+  updateSolveControls();
   cubePreview.innerHTML = "";
 
-  if (!previewColorMap) return;
+  if (!previewColorMap) {
+    showCubePreviewPlaceholder("No color preview is available yet. Paste a cube-state override to solve manually.");
+    return;
+  }
 
   for (const face of FACE_ORDER) {
     const wrap = document.createElement("div");
@@ -365,8 +682,25 @@ function cycleFaceletColor(cell) {
   cell.title = `${label}: ${next}`;
 
   detectedCubeString = buildCubeStringFromColorMap(previewColorMap);
-  cubeStringDisp.textContent = detectedCubeString;
+  resetSolveFeedback();
+  setCubeStringDisplay(detectedCubeString);
+  updateSolveControls();
 }
+
+manualCubeStringInput?.addEventListener("input", () => {
+  resetSolveFeedback();
+  updateSolveControls();
+});
+
+roiSizeSlider?.addEventListener("input", () => {
+  applyRoiSize(roiSizeSlider.value);
+});
+
+roiSizeSlider?.addEventListener("change", async () => {
+  applyRoiSize(roiSizeSlider.value);
+  await saveAllROIs();
+  appendLog(`ROI size set to ${roiSizeSlider.value} px`);
+});
 
 // ── ROI Unlock toggle ───────────────────────────────────────────────────────
 btnRoiUnlock.addEventListener("click", () => {
@@ -374,7 +708,12 @@ btnRoiUnlock.addEventListener("click", () => {
   btnRoiUnlock.textContent = roisUnlocked ? "Lock ROIs" : "Unlock ROIs";
   cam0Canvas.classList.toggle("unlocked", roisUnlocked);
   cam1Canvas.classList.toggle("unlocked", roisUnlocked);
+  if (roisUnlocked) {
+    resetCameraInspect(0);
+    resetCameraInspect(1);
+  }
   drawAllROIs();
+  updateSolveControls();
   appendLog(roisUnlocked ? "ROIs unlocked – drag to reposition" : "ROIs locked");
 });
 // ── ROI Reset to defaults ───────────────────────────────────────────────────────
@@ -384,7 +723,9 @@ btnRoiReset.addEventListener("click", async () => {
     const resp = await post("/rois/reset");
     rois[0] = resp.cam0 || [];
     rois[1] = resp.cam1 || [];
+    updateRoiSizeControls();
     drawAllROIs();
+    updateSolveControls();
     appendLog("ROIs reset to default positions");
   } catch (e) {
     appendLog("ROI reset error: " + e);
@@ -466,12 +807,14 @@ btnHome.addEventListener("click", async () => {
 
 // ── Solve ───────────────────────────────────────────────────────────────────
 btnSolve.addEventListener("click", async () => {
-  if (!detectedCubeString) {
-    appendLog("No cube state detected – freeze and detect first");
+  const cubeString = getSelectedCubeString();
+  const validation = validateCubeString(cubeString);
+  if (!validation.valid) {
+    appendLog(validation.message);
     return;
   }
-  appendLog("Starting solve with detected state: " + detectedCubeString);
-  const res = await post("/solve", { cube_string: detectedCubeString });
+  appendLog(`Starting solve with ${getManualCubeString() ? "manual" : "detected"} state: ${cubeString}`);
+  const res = await post("/solve", { cube_string: cubeString });
   appendLog("Server: " + JSON.stringify(res));
   startPolling();
 });
@@ -485,6 +828,10 @@ btnAbort.addEventListener("click", async () => {
 // ── Status polling ──────────────────────────────────────────────────────────
 function startPolling() {
   if (polling) return;
+  updateSolveControls();
+  setStateBadge("RUNNING");
+  progressText.textContent = "RUNNING — waiting for status...";
+  updateWorkflowGuide();
   btnSolve.disabled = true;
   btnAbort.disabled = false;
   polling = setInterval(pollStatus, 500);
@@ -493,8 +840,7 @@ function startPolling() {
 function stopPolling() {
   if (polling) { clearInterval(polling); polling = null; }
   btnAbort.disabled = true;
-  // Re-enable solve only if we still have a cube string
-  if (detectedCubeString) btnSolve.disabled = false;
+  updateSolveControls();
 }
 
 async function pollStatus() {
@@ -509,8 +855,8 @@ async function pollStatus() {
       `${d.state} — Move ${d.completed_moves}/${d.total_moves} ` +
       `(action ${d.completed_actions}/${d.total_actions}) — ${d.current_move}`;
 
-    stateBadge.textContent = d.state;
-    stateBadge.className = "badge " + d.state.toLowerCase();
+    setStateBadge(d.state);
+    updateWorkflowGuide();
 
     if (["DONE", "ERROR", "IDLE"].includes(d.state)) {
       if (d.error) appendLog("Error: " + d.error);
@@ -567,6 +913,14 @@ setInterval(pollServoPositions, 500);
 pollServoPositions();
 
 // ── Init ────────────────────────────────────────────────────────────────────
+setupCameraInspect(0);
+setupCameraInspect(1);
 setupROIDragging(0);
 setupROIDragging(1);
 loadROIs();
+showCubePreviewPlaceholder(
+  "Detected colors will appear here after step 3. You can still paste a full cube-state override on the right."
+);
+setCubeStringDisplay("Detected cube string will appear here after color detection.", true);
+updateRoiSizeControls();
+updateSolveControls();
