@@ -127,26 +127,26 @@ class Scheduler:
 
     def _execute_action(self, action: ServoAction) -> None:
         servo: Servo = self.group[action.servo_id]
-        mode = "relative" if action.delta_bits is not None else "absolute"
+        mode = "relative-deg" if action.move_degrees is not None else "absolute"
 
         log.debug(
-            "  Action: servo=%d mode=%s pos=%s delta=%s speed=%d time=%dms settle=%dms",
+            "  Action: servo=%d mode=%s pos=%s move_deg=%s speed=%d time=%dms settle=%dms",
             action.servo_id,
             mode,
             action.position,
-            action.delta_bits,
+            action.move_degrees,
             action.speed,
             action.time_ms,
             action.settle_ms,
         )
 
-        if (action.position is None) == (action.delta_bits is None):
-            raise ValueError("ServoAction must set exactly one of position or delta_bits")
+        if (action.position is None) == (action.move_degrees is None):
+            raise ValueError("ServoAction must set exactly one of position or move_degrees")
 
-        if action.delta_bits is not None:
+        if action.move_degrees is not None:
             self.group.step_servo(
                 action.servo_id,
-                action.delta_bits,
+                action.move_degrees,
                 speed=action.speed,
                 time_ms=action.time_ms,
                 wait=self.check_feedback,

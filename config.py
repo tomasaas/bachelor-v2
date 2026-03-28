@@ -43,7 +43,7 @@ class Reg:
 # ---------------------------------------------------------------------------
 # Position-mode tuning (units 0-1023)
 # ---------------------------------------------------------------------------
-POS_HOME         = round(150 * (1024 / 300))  # robot home / neutral (midpoint)
+POS_HOME         = round((90) * (1024 / 300))  # robot home / neutral (midpoint)
 POS_QUARTER_CW   = -round(90 * (1024 / 300))         # one cube-face CW quarter turn
 POS_QUARTER_CCW  = round(90 * (1024 / 300))          # one cube-face CCW quarter turn
 MOVE_SPEED       = 1000                              # kept for API compat / fallback

@@ -107,7 +107,12 @@ def main() -> None:
         for i, (tok, actions) in enumerate(zip(tokens, action_groups)):
             print(f"  [{i+1}] {tok}:")
             for a in actions:
-                print(f"      servo={a.servo_id}  pos={a.position}  "
+                target = (
+                    f"move_deg={a.move_degrees}"
+                    if a.move_degrees is not None
+                    else f"pos={a.position}"
+                )
+                print(f"      servo={a.servo_id}  {target}  "
                       f"speed={a.speed}  settle={a.settle_ms}ms")
         print("\n(dry run – no servo commands sent)")
         return

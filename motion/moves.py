@@ -2,7 +2,7 @@
 Rubik's move notation -> servo action sequences.
 
 Each Kociemba move token (R, R', R2, U, U', ...) maps to one or more
-relative servo steps that the scheduler executes sequentially.
+degree-based servo moves that the scheduler executes sequentially.
 
 The key rule is that a Rubik move should leave the cube in the turned
 state. For this direct-drive gripper setup that means we must not
@@ -24,26 +24,24 @@ class ServoAction:
     """One atomic servo command executed by the scheduler."""
     servo_id: int
     position: int | None = None      # absolute target position (0-1023)
-    delta_bits: int | None = None    # relative step from the current position
+    move_degrees: int | None = None  # relative move from the current position
     speed: int = 400                 # position-mode speed
     time_ms: int = 0                 # position-mode running time override
     settle_ms: int = 300             # wait after issuing this action (ms)
 
 
-Q_CW = config.POS_QUARTER_CW
-Q_CCW = config.POS_QUARTER_CCW
 SPEED = config.MOVE_SPEED
 TIME_MS = config.MOVE_TIME_MS
 SETTLE = config.MOVE_SETTLE_MS
 
 
-def _face_actions(face: str, delta_bits: int) -> list[ServoAction]:
-    """Build one relative step for the given face."""
+def _face_actions(face: str, new_move: int) -> list[ServoAction]:
+    """Build one degree-based move for the given face."""
     sid = config.FACE_SERVO[face]
     return [
         ServoAction(
             servo_id=sid,
-            delta_bits=delta_bits,
+            move_degrees=new_move,
             speed=SPEED,
             time_ms=TIME_MS,
             settle_ms=SETTLE,
@@ -51,15 +49,15 @@ def _face_actions(face: str, delta_bits: int) -> list[ServoAction]:
     ]
 
 
-def _quarter_delta(face: str, clockwise: bool) -> int:
+def _quarter_turn_degrees(face: str, clockwise: bool) -> int:
     """
-    Return the relative bit delta for one quarter turn in Rubik notation.
+    Return the relative degree move for one quarter turn in Rubik notation.
 
     FACE_TURN_SIGN lets us calibrate faces whose servo mounting reverses
     the physical interpretation of clockwise vs counter-clockwise.
     """
     sign = config.FACE_TURN_SIGN.get(face, 1)
-    base = Q_CW if clockwise else Q_CCW
+    base = -90 if clockwise else 90
     return sign * base
 
 
@@ -85,15 +83,15 @@ def _parse_token(token: str) -> tuple[str, str]:
     return face, suffix
 
 
-def move_to_deltas(token: str) -> tuple[str, list[int]]:
-    """Convert one move token to relative servo deltas."""
+def move_to_degrees(token: str) -> tuple[str, list[int]]:
+    """Convert one move token to relative servo moves in degrees."""
     face, suffix = _parse_token(token)
 
     if suffix == "":
-        return face, [_quarter_delta(face, clockwise=True)]
+        return face, [_quarter_turn_degrees(face, clockwise=True)]
     if suffix == "'":
-        return face, [_quarter_delta(face, clockwise=False)]
-    return face, [_quarter_delta(face, clockwise=True)] * 2
+        return face, [_quarter_turn_degrees(face, clockwise=False)]
+    return face, [180]
 
 
 def manual_move_actions(token: str) -> list[ServoAction]:
@@ -103,10 +101,10 @@ def manual_move_actions(token: str) -> list[ServoAction]:
     Manual moves and solver moves intentionally use the exact same turn
     semantics so the GUI, scrambler, and Kociemba execution stay aligned.
     """
-    face, deltas = move_to_deltas(token)
+    face, degree_moves = move_to_degrees(token)
     actions: list[ServoAction] = []
-    for delta in deltas:
-        actions.extend(_face_actions(face, delta))
+    for new_move in degree_moves:
+        actions.extend(_face_actions(face, new_move))
     return actions
 
 

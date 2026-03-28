@@ -31,6 +31,36 @@ _PRESENT_CURRENT_L   = 69
 _RUNNING_SPEED_L     = 46
 
 
+def bits_to_degrees(bits: int) -> float:
+    """Convert SC09 position bits to degrees."""
+    return bits / config.STEPS_PER_DEGREE
+
+
+def degrees_to_bits(degrees: float) -> int:
+    """Convert degrees to the nearest SC09 position bit value."""
+    return int(round(degrees * config.STEPS_PER_DEGREE))
+
+
+def round_to_nearest_ten(degrees: float) -> int:
+    """Round a degree measurement to the nearest 10 degrees."""
+    return int(round(degrees / 10.0) * 10)
+
+
+def normalize_turn_target(target_degrees: int) -> int:
+    """Apply the requested wrap rules before sending a position to SC09."""
+    wrap_targets = {
+        360: 0,
+        450: 90,
+        -90: 270,
+        -180: 180,
+    }
+    if target_degrees in wrap_targets:
+        return wrap_targets[target_degrees]
+    if 0 <= target_degrees <= 300:
+        return target_degrees
+    return target_degrees % 360
+
+
 class Servo:
     """Manage a single SC09 servo through the shared bus."""
 
@@ -143,6 +173,12 @@ class Servo:
     def read_position(self) -> int | None:
         return self.bus.read_pos(self.id)
 
+    def read_position_degrees(self) -> float | None:
+        position = self.read_position()
+        if position is None:
+            return None
+        return bits_to_degrees(position)
+
     def read_speed(self) -> int | None:
         return self.bus.read_speed(self.id)
 
@@ -200,8 +236,9 @@ class ServoGroup:
         self.bus = bus
         self.ids = ids or SERVO_IDS
         self.servos: dict[int, Servo] = {sid: Servo(bus, sid) for sid in self.ids}
-        self.commanded_positions: dict[int, int] = {
-            sid: config.POS_HOME for sid in self.ids
+        home_degrees = round_to_nearest_ten(bits_to_degrees(config.POS_HOME))
+        self.commanded_degrees: dict[int, int] = {
+            sid: home_degrees for sid in self.ids
         }
 
     def __getitem__(self, servo_id: int) -> Servo:
@@ -278,52 +315,62 @@ class ServoGroup:
 
     def all_home(self, home: int = config.POS_HOME, speed: int = config.MOVE_SPEED) -> None:
         """Move all servos to home position sequentially (one at a time)."""
+        home_degrees = round_to_nearest_ten(bits_to_degrees(home))
         for s in self.servos.values():
             s.move_to(home, speed, time_ms=config.MOVE_TIME_MS)
             s.wait_until_stopped()
-            self.commanded_positions[s.id] = max(
-                config.HARD_ANGLE_MIN_BITS,
-                min(config.HARD_ANGLE_MAX_BITS, int(home)),
-            )
+            self.commanded_degrees[s.id] = home_degrees
 
     def step_servo(
         self,
         servo_id: int,
-        delta_bits: int,
+        move_degrees: int,
         speed: int | None = None,
         time_ms: int | None = None,
         wait: bool = True,
     ) -> int:
-        """Move one servo by a relative delta and return the clamped target bits."""
+        """Move one servo by a relative degree turn and return the target degrees."""
         servo = self[servo_id]
-        actual = servo.read_position()
-        if actual is not None:
-            base = max(config.HARD_ANGLE_MIN_BITS, min(config.HARD_ANGLE_MAX_BITS, int(actual)))
-            self.commanded_positions[servo_id] = base
+        actual_degrees = servo.read_position_degrees()
+        if actual_degrees is not None:
+            now_pos = round_to_nearest_ten(actual_degrees)
+            self.commanded_degrees[servo_id] = now_pos
         else:
-            base = self.commanded_positions.get(servo_id, config.POS_HOME)
-
-        target = base + int(delta_bits)
-        target = max(config.HARD_ANGLE_MIN_BITS, min(config.HARD_ANGLE_MAX_BITS, target))
-
-        if target == base:
-            log.warning(
-                "Servo %d step clipped at limit (%d bits, delta=%d)",
+            now_pos = self.commanded_degrees.get(
                 servo_id,
-                base,
-                delta_bits,
+                round_to_nearest_ten(bits_to_degrees(config.POS_HOME)),
             )
 
+        new_move = int(move_degrees)
+        target_degrees = normalize_turn_target(now_pos + new_move)
+        if not 0 <= target_degrees <= 300:
+            raise ValueError(
+                f"Servo {servo_id} target {target_degrees} degrees is outside the SC09 range"
+            )
+        target_bits = max(
+            config.HARD_ANGLE_MIN_BITS,
+            min(config.HARD_ANGLE_MAX_BITS, degrees_to_bits(target_degrees)),
+        )
+
+        log.info(
+            "Servo %d now_pos=%ddeg new_move=%ddeg -> target=%ddeg (%d bits)",
+            servo_id,
+            now_pos,
+            new_move,
+            target_degrees,
+            target_bits,
+        )
+
         servo.move_to(
-            target,
+            target_bits,
             speed=speed if speed is not None else config.MOVE_SPEED,
             time_ms=time_ms if time_ms is not None else config.MOVE_TIME_MS,
         )
         if wait:
             servo.wait_until_stopped()
 
-        self.commanded_positions[servo_id] = target
-        return target
+        self.commanded_degrees[servo_id] = target_degrees
+        return target_degrees
 
     def emergency_stop(self) -> None:
         """Immediately disable torque on all servos."""

@@ -560,11 +560,11 @@ def servo_move():
                     return
             else:
                 for action in actions:
-                    if action.delta_bits is None:
-                        raise RuntimeError("Manual move actions must be relative steps")
+                    if action.move_degrees is None:
+                        raise RuntimeError("Manual move actions must be degree-based moves")
                     _servo_group.step_servo(
                         action.servo_id,
-                        action.delta_bits,
+                        action.move_degrees,
                         speed=action.speed,
                         time_ms=action.time_ms,
                         wait=True,
