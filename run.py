@@ -7,10 +7,13 @@ On the RPi5 this is launched automatically on boot (e.g. via systemd).
 
 Usage:
     python run.py
+    python run.py --noservos
+    python run.py --nocameras
 """
 
 from __future__ import annotations
 
+import argparse
 import logging
 import signal
 import sys
@@ -54,7 +57,25 @@ def setup_logging() -> None:
     )
 
 
-def main() -> None:
+def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Start the Rubik's Cube Solver web app.",
+    )
+    parser.add_argument(
+        "--noservos",
+        action="store_true",
+        help="Start without initialising servo hardware.",
+    )
+    parser.add_argument(
+        "--nocameras",
+        action="store_true",
+        help="Start without initialising camera hardware.",
+    )
+    return parser.parse_args(argv)
+
+
+def main(argv: list[str] | None = None) -> None:
+    args = parse_args(argv)
     host = config.FLASK_HOST
     port = config.FLASK_PORT
     serial_port = config.SERIAL_PORT
@@ -65,39 +86,45 @@ def main() -> None:
 
     # ── cameras ──────────────────────────────────────────────────────────
     dual_camera = None
-    from vision.camera import DualCamera
-    dual_camera = DualCamera()
-    results = dual_camera.open_all()
-    for i, ok in enumerate(results):
-        log.info("Camera %d: %s", i, "opened" if ok else "FAILED")
+    if args.nocameras:
+        log.info("Camera initialisation skipped (--nocameras)")
+    else:
+        from vision.camera import DualCamera
+        dual_camera = DualCamera()
+        results = dual_camera.open_all()
+        for i, ok in enumerate(results):
+            log.info("Camera %d: %s", i, "opened" if ok else "FAILED")
 
     # ── servos ───────────────────────────────────────────────────────────
     servo_group = None
     scheduler = None
-    from motion.sc09 import SC09Bus
-    from motion.servo_bus import ServoGroup
-    from motion.scheduler import Scheduler
+    if args.noservos:
+        log.info("Servo initialisation skipped (--noservos)")
+    else:
+        from motion.sc09 import SC09Bus
+        from motion.servo_bus import ServoGroup
+        from motion.scheduler import Scheduler
 
-    if serial_port == "auto":
-        from detect import find_servo_port
-        serial_port = find_servo_port()
+        if serial_port == "auto":
+            from detect import find_servo_port
+            serial_port = find_servo_port()
+            if serial_port:
+                log.info("Auto-detected servo port: %s", serial_port)
+            else:
+                log.error("No servo driver detected (is USB cable plugged in?)")
+
         if serial_port:
-            log.info("Auto-detected servo port: %s", serial_port)
-        else:
-            log.error("No servo driver detected (is USB cable plugged in?)")
-
-    if serial_port:
-        try:
-            bus = SC09Bus(
-                port=serial_port,
-                baudrate=config.SERIAL_BAUD,
-                timeout=config.SERIAL_TIMEOUT,
-            )
-            servo_group = ServoGroup(bus)
-            servo_group.initialize()
-            scheduler = Scheduler(servo_group, check_feedback=True)
-        except Exception as exc:
-            log.error("Servo init failed: %s (continuing without servos)", exc)
+            try:
+                bus = SC09Bus(
+                    port=serial_port,
+                    baudrate=config.SERIAL_BAUD,
+                    timeout=config.SERIAL_TIMEOUT,
+                )
+                servo_group = ServoGroup(bus)
+                servo_group.initialize()
+                scheduler = Scheduler(servo_group, check_feedback=True)
+            except Exception as exc:
+                log.error("Servo init failed: %s (continuing without servos)", exc)
 
     # ── Flask ────────────────────────────────────────────────────────────
     from server.app import create_app
