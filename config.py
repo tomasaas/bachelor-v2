@@ -47,19 +47,48 @@ POS_HOME         = round((90) * (1024 / 300))  # robot home / neutral (midpoint)
 POS_QUARTER_CW   = -round(90 * (1024 / 300))         # one cube-face CW quarter turn
 POS_QUARTER_CCW  = round(90 * (1024 / 300))          # one cube-face CCW quarter turn
 MOVE_SPEED       = 1000                              # kept for API compat / fallback
-MOVE_TIME_MS     = 500                               # position move duration target
+MOVE_TIME_MS     = 1000                               # position move duration target
 MOVE_SETTLE_MS   = 500                               # extra settle time after move (ms)
 
 STEPS_PER_DEGREE = 1024 / 300
 HARD_ANGLE_MIN_BITS = 0
 HARD_ANGLE_MAX_BITS = 1023
 
+
+def _degrees_to_bits(degrees: float) -> int:
+    """Convert degrees to the nearest servo bit value."""
+    return int(round(degrees * STEPS_PER_DEGREE))
+
+
+SERVO_LOGICAL_STATES = (0, 90, 180, 270)
+SERVO_HOME_STATE = 90
+
+
+def _default_servo_state_bits(home_bits: int = POS_HOME) -> dict[int, int]:
+    """Build the four legal quarter-turn targets for one servo."""
+    quarter_bits = _degrees_to_bits(90)
+    home_index = SERVO_LOGICAL_STATES.index(SERVO_HOME_STATE)
+    return {
+        state: home_bits + ((idx - home_index) * quarter_bits)
+        for idx, state in enumerate(SERVO_LOGICAL_STATES)
+    }
+
+
+# Per-servo discrete position calibration.
+# Keys are logical cube-face orientations in degrees.  Tune these values if a
+# servo's "home" or quarter-turn endpoints are mechanically off.  Keep each
+# servo's values strictly increasing and within 0..1023.
+SERVO_STATE_BITS = {
+    sid: _default_servo_state_bits()
+    for sid in SERVO_IDS
+}
+
 SC09_MAX_TORQUE_KGCM = 2.3
 SC09_LOCKED_ROTOR_CURRENT_A = 1.0
 SC09_LOAD_RAW_FULL_SCALE = 1000
 SC09_CURRENT_RAW_TO_A = 0.001
 
-FACE_TELEMETRY_WINDOW_S = 3.0
+FACE_TELEMETRY_WINDOW_S = 5.0
 TOTAL_CURRENT_WINDOW_S = 10.0
  
 # ---------------------------------------------------------------------------

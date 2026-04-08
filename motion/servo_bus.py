@@ -46,19 +46,14 @@ def round_to_nearest_ten(degrees: float) -> int:
     return int(round(degrees / 10.0) * 10)
 
 
-def normalize_turn_target(target_degrees: int) -> int:
-    """Apply the requested wrap rules before sending a position to SC09."""
-    wrap_targets = {
-        360: 0,
-        450: 90,
-        -90: 270,
-        -180: 180,
-    }
-    if target_degrees in wrap_targets:
-        return wrap_targets[target_degrees]
-    if 0 <= target_degrees <= 300:
-        return target_degrees
-    return target_degrees % 360
+def quarter_steps_from_degrees(move_degrees: int) -> int:
+    """Convert a relative move into quarter-turn steps."""
+    move_degrees = int(move_degrees)
+    if move_degrees % 90 != 0:
+        raise ValueError(
+            f"Servo moves must be multiples of 90 degrees, got {move_degrees}"
+        )
+    return move_degrees // 90
 
 
 class Servo:
@@ -236,13 +231,93 @@ class ServoGroup:
         self.bus = bus
         self.ids = ids or SERVO_IDS
         self.servos: dict[int, Servo] = {sid: Servo(bus, sid) for sid in self.ids}
-        home_degrees = round_to_nearest_ten(bits_to_degrees(config.POS_HOME))
-        self.commanded_degrees: dict[int, int] = {
-            sid: home_degrees for sid in self.ids
+        self.logical_states = tuple(config.SERVO_LOGICAL_STATES)
+        if not self.logical_states:
+            raise ValueError("config.SERVO_LOGICAL_STATES must not be empty")
+        self.state_to_index = {
+            state: idx for idx, state in enumerate(self.logical_states)
         }
+        self.home_state = config.SERVO_HOME_STATE
+        if self.home_state not in self.state_to_index:
+            raise ValueError(
+                f"config.SERVO_HOME_STATE={self.home_state} must exist in "
+                f"config.SERVO_LOGICAL_STATES={self.logical_states}"
+            )
+        self.state_bits: dict[int, dict[int, int]] = {
+            sid: self._load_state_bits(sid)
+            for sid in self.ids
+        }
+        self.commanded_states: dict[int, int] = {
+            sid: self.home_state for sid in self.ids
+        }
+        self.commanded_degrees: dict[int, int] = dict(self.commanded_states)
 
     def __getitem__(self, servo_id: int) -> Servo:
         return self.servos[servo_id]
+
+    def _load_state_bits(self, servo_id: int) -> dict[int, int]:
+        raw = config.SERVO_STATE_BITS.get(servo_id)
+        if raw is None:
+            raise ValueError(f"Missing config.SERVO_STATE_BITS entry for servo {servo_id}")
+
+        state_bits: dict[int, int] = {}
+        previous_bits: int | None = None
+        previous_state: int | None = None
+        for state in self.logical_states:
+            if state not in raw:
+                raise ValueError(
+                    f"Servo {servo_id} is missing calibrated bits for logical {state} degrees"
+                )
+            bits = int(raw[state])
+            if not config.HARD_ANGLE_MIN_BITS <= bits <= config.HARD_ANGLE_MAX_BITS:
+                raise ValueError(
+                    f"Servo {servo_id} logical {state} target {bits} is outside "
+                    f"{config.HARD_ANGLE_MIN_BITS}..{config.HARD_ANGLE_MAX_BITS}"
+                )
+            if previous_bits is not None and bits <= previous_bits:
+                raise ValueError(
+                    f"Servo {servo_id} calibrated targets must increase with logical "
+                    f"angle: {previous_state}deg={previous_bits}, {state}deg={bits}"
+                )
+            state_bits[state] = bits
+            previous_bits = bits
+            previous_state = state
+        return state_bits
+
+    def home_targets(self) -> dict[int, int]:
+        """Return each servo's calibrated home target."""
+        return {
+            sid: self.state_bits[sid][self.home_state]
+            for sid in self.ids
+        }
+
+    def logical_state_for_bits(self, servo_id: int, position_bits: int | None) -> int:
+        """Snap raw feedback to the nearest calibrated logical state."""
+        if position_bits is None:
+            return self.commanded_states.get(servo_id, self.home_state)
+        return min(
+            self.logical_states,
+            key=lambda state: abs(position_bits - self.state_bits[servo_id][state]),
+        )
+
+    def current_logical_state(self, servo_id: int) -> int:
+        """Return the current logical quarter-turn state from feedback when available."""
+        position_bits = self[servo_id].read_position()
+        state = self.logical_state_for_bits(servo_id, position_bits)
+        self.commanded_states[servo_id] = state
+        self.commanded_degrees[servo_id] = state
+        return state
+
+    def _state_path(self, current_state: int, target_state: int) -> list[int]:
+        if current_state == target_state:
+            return []
+        current_index = self.state_to_index[current_state]
+        target_index = self.state_to_index[target_state]
+        step = 1 if target_index > current_index else -1
+        return [
+            self.logical_states[idx]
+            for idx in range(current_index + step, target_index + step, step)
+        ]
 
     def initialize(self) -> None:
         """
@@ -278,9 +353,13 @@ class ServoGroup:
         log.info("Enabling torque on all servos…")
         self.all_torque_on()
 
-        # 4. Home all servos so they start at a known centre position
-        log.info("Homing all servos to position %d…", config.POS_HOME)
-        self.all_home(home=config.POS_HOME, speed=config.MOVE_SPEED)
+        # 4. Home all servos so they start at a known calibrated position
+        log.info(
+            "Homing all servos to logical %d° state using calibrated targets %s…",
+            self.home_state,
+            self.home_targets(),
+        )
+        self.all_home(speed=config.MOVE_SPEED)
 
         log.info(
             "Servo init complete: speed=%d, %d/%d servos alive",
@@ -313,13 +392,14 @@ class ServoGroup:
         for s in self.servos.values():
             s.set_motor_mode()
 
-    def all_home(self, home: int = config.POS_HOME, speed: int = config.MOVE_SPEED) -> None:
-        """Move all servos to home position sequentially (one at a time)."""
-        home_degrees = round_to_nearest_ten(bits_to_degrees(home))
+    def all_home(self, home: int | None = None, speed: int = config.MOVE_SPEED) -> None:
+        """Move all servos to their calibrated home position sequentially."""
         for s in self.servos.values():
-            s.move_to(home, speed, time_ms=config.MOVE_TIME_MS)
+            target_bits = int(home) if home is not None else self.state_bits[s.id][self.home_state]
+            s.move_to(target_bits, speed, time_ms=config.MOVE_TIME_MS)
             s.wait_until_stopped()
-            self.commanded_degrees[s.id] = home_degrees
+            self.commanded_states[s.id] = self.home_state
+            self.commanded_degrees[s.id] = self.home_state
 
     def step_servo(
         self,
@@ -329,48 +409,57 @@ class ServoGroup:
         time_ms: int | None = None,
         wait: bool = True,
     ) -> int:
-        """Move one servo by a relative degree turn and return the target degrees."""
+        """Move one servo by a relative logical quarter-turn, using safe hops."""
         servo = self[servo_id]
-        actual_degrees = servo.read_position_degrees()
-        if actual_degrees is not None:
-            now_pos = round_to_nearest_ten(actual_degrees)
-            self.commanded_degrees[servo_id] = now_pos
-        else:
-            now_pos = self.commanded_degrees.get(
+        current_state = self.current_logical_state(servo_id)
+        quarter_steps = quarter_steps_from_degrees(move_degrees)
+        if quarter_steps % len(self.logical_states) == 0:
+            log.info(
+                "Servo %d move=%ddeg is a no-op at logical %ddeg",
                 servo_id,
-                round_to_nearest_ten(bits_to_degrees(config.POS_HOME)),
+                move_degrees,
+                current_state,
             )
+            return current_state
 
-        new_move = int(move_degrees)
-        target_degrees = normalize_turn_target(now_pos + new_move)
-        if not 0 <= target_degrees <= 300:
-            raise ValueError(
-                f"Servo {servo_id} target {target_degrees} degrees is outside the SC09 range"
-            )
-        target_bits = max(
-            config.HARD_ANGLE_MIN_BITS,
-            min(config.HARD_ANGLE_MAX_BITS, degrees_to_bits(target_degrees)),
-        )
+        current_index = self.state_to_index[current_state]
+        target_state = self.logical_states[
+            (current_index + quarter_steps) % len(self.logical_states)
+        ]
+        state_path = self._state_path(current_state, target_state)
+        move_speed = speed if speed is not None else config.MOVE_SPEED
+        move_time_ms = time_ms if time_ms is not None else config.MOVE_TIME_MS
 
         log.info(
-            "Servo %d now_pos=%ddeg new_move=%ddeg -> target=%ddeg (%d bits)",
+            "Servo %d logical=%ddeg move=%ddeg -> target=%ddeg via %s",
             servo_id,
-            now_pos,
-            new_move,
-            target_degrees,
-            target_bits,
+            current_state,
+            move_degrees,
+            target_state,
+            state_path,
         )
 
-        servo.move_to(
-            target_bits,
-            speed=speed if speed is not None else config.MOVE_SPEED,
-            time_ms=time_ms if time_ms is not None else config.MOVE_TIME_MS,
-        )
-        if wait:
-            servo.wait_until_stopped()
+        for hop_index, state in enumerate(state_path, start=1):
+            target_bits = self.state_bits[servo_id][state]
+            log.info(
+                "Servo %d hop %d/%d -> logical %ddeg (%d bits)",
+                servo_id,
+                hop_index,
+                len(state_path),
+                state,
+                target_bits,
+            )
+            servo.move_to(
+                target_bits,
+                speed=move_speed,
+                time_ms=move_time_ms,
+            )
+            if wait or len(state_path) > 1:
+                servo.wait_until_stopped()
+            self.commanded_states[servo_id] = state
+            self.commanded_degrees[servo_id] = state
 
-        self.commanded_degrees[servo_id] = target_degrees
-        return target_degrees
+        return target_state
 
     def emergency_stop(self) -> None:
         """Immediately disable torque on all servos."""

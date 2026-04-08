@@ -905,7 +905,10 @@ async function pollServoPositions() {
       if (info.bits === null || info.bits === undefined) {
         el.textContent = "—";
       } else {
-        el.textContent = `${info.bits} b / ${info.degrees}°`;
+        const logical = info.logical_degrees === null || info.logical_degrees === undefined
+          ? "?"
+          : info.logical_degrees;
+        el.textContent = `${info.bits} b / ${info.degrees}° / L${logical}°`;
       }
       if (torqueEl) {
         torqueEl.textContent = info.torque_pct_max_1s === null || info.torque_pct_max_1s === undefined

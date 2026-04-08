@@ -480,6 +480,7 @@ def servo_positions():
         servo = _servo_group[sid]
         bits = servo.read_position()
         degrees = round(bits / config.STEPS_PER_DEGREE, 1) if bits is not None else None
+        logical_degrees = _servo_group.logical_state_for_bits(sid, bits)
         load_raw = servo.read_load()
         current_raw = servo.read_current()
         torque_pct = servo.load_raw_to_percent(load_raw)
@@ -505,6 +506,7 @@ def servo_positions():
         faces[face] = {
             "bits": bits,
             "degrees": degrees,
+            "logical_degrees": logical_degrees,
             "torque_pct_max_1s": torque_pct_max_1s,
             "current_pct_max_1s": current_pct_max_1s,
             "current_a": current_a,
@@ -528,8 +530,9 @@ def servo_positions():
 def servo_home():
     if _servo_group is None:
         return jsonify({"error": "Servos not initialised"}), 503
-    _servo_group.all_home(home=config.POS_HOME, speed=config.MOVE_SPEED)
-    return jsonify({"status": "homed", "home_bits": config.POS_HOME})
+    home_bits = _servo_group.home_targets()
+    _servo_group.all_home(speed=config.MOVE_SPEED)
+    return jsonify({"status": "homed", "home_bits_by_servo": home_bits})
 
 
 @bp.route("/servo/torque", methods=["POST"])

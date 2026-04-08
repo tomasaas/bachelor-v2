@@ -3,7 +3,7 @@ import unittest
 import config
 from motion.moves import ServoAction, manual_move_actions, move_to_actions
 from motion.scheduler import Scheduler
-from motion.servo_bus import ServoGroup, degrees_to_bits
+from motion.servo_bus import ServoGroup
 
 
 class _FakeServo:
@@ -43,7 +43,11 @@ class _FakeBus:
     def read_pos(self, servo_id):
         return self.position_bits
 
+    def read_moving(self, servo_id):
+        return 0
+
     def write_pos(self, servo_id, position, time=0, speed=400):
+        self.position_bits = position
         self.commands.append((servo_id, position, time, speed))
         return True
 
@@ -88,31 +92,90 @@ class SchedulerRelativeActionTests(unittest.TestCase):
 
 
 class ServoWraparoundTests(unittest.TestCase):
-    def _run_move(self, start_degrees, move_degrees):
-        bus = _FakeBus(degrees_to_bits(start_degrees))
-        group = ServoGroup(bus, ids=[1])
-        target = group.step_servo(1, move_degrees, speed=500, time_ms=250, wait=False)
-        return target, bus.commands
+    def _run_move(self, start_degrees, move_degrees, calibrated_bits=None):
+        original_state_bits = {
+            sid: dict(bits_by_state)
+            for sid, bits_by_state in config.SERVO_STATE_BITS.items()
+        }
+        try:
+            if calibrated_bits is not None:
+                config.SERVO_STATE_BITS = {
+                    **original_state_bits,
+                    1: dict(calibrated_bits),
+                }
+            bus = _FakeBus(config.SERVO_STATE_BITS[1][start_degrees])
+            group = ServoGroup(bus, ids=[1])
+            target = group.step_servo(1, move_degrees, speed=500, time_ms=250, wait=False)
+            return target, bus.commands, group
+        finally:
+            config.SERVO_STATE_BITS = original_state_bits
 
-    def test_360_wraps_to_0(self):
-        target, commands = self._run_move(270, 90)
+    def test_positive_wrap_uses_three_safe_reverse_hops(self):
+        target, commands, _ = self._run_move(270, 90)
+        expected = config.SERVO_STATE_BITS[1]
         self.assertEqual(target, 0)
-        self.assertEqual(commands, [(1, degrees_to_bits(0), 250, 500)])
+        self.assertEqual(
+            commands,
+            [
+                (1, expected[180], 250, 500),
+                (1, expected[90], 250, 500),
+                (1, expected[0], 250, 500),
+            ],
+        )
 
-    def test_450_wraps_to_90(self):
-        target, commands = self._run_move(270, 180)
+    def test_double_turn_uses_safe_monotonic_hops(self):
+        target, commands, _ = self._run_move(270, 180)
+        expected = config.SERVO_STATE_BITS[1]
         self.assertEqual(target, 90)
-        self.assertEqual(commands, [(1, degrees_to_bits(90), 250, 500)])
+        self.assertEqual(
+            commands,
+            [
+                (1, expected[180], 250, 500),
+                (1, expected[90], 250, 500),
+            ],
+        )
 
-    def test_negative_90_wraps_to_270(self):
-        target, commands = self._run_move(0, -90)
+    def test_negative_wrap_uses_three_safe_forward_hops(self):
+        target, commands, _ = self._run_move(0, -90)
+        expected = config.SERVO_STATE_BITS[1]
         self.assertEqual(target, 270)
-        self.assertEqual(commands, [(1, degrees_to_bits(270), 250, 500)])
+        self.assertEqual(
+            commands,
+            [
+                (1, expected[90], 250, 500),
+                (1, expected[180], 250, 500),
+                (1, expected[270], 250, 500),
+            ],
+        )
 
     def test_negative_180_wraps_to_180(self):
-        target, commands = self._run_move(0, -180)
+        target, commands, _ = self._run_move(0, -180)
+        expected = config.SERVO_STATE_BITS[1]
         self.assertEqual(target, 180)
-        self.assertEqual(commands, [(1, degrees_to_bits(180), 250, 500)])
+        self.assertEqual(
+            commands,
+            [
+                (1, expected[90], 250, 500),
+                (1, expected[180], 250, 500),
+            ],
+        )
+
+    def test_home_uses_calibrated_per_servo_target(self):
+        calibrated_bits = {0: 18, 90: 325, 180: 632, 270: 939}
+        _, _, group = self._run_move(90, 0, calibrated_bits=calibrated_bits)
+        group.bus.commands.clear()
+        group.all_home()
+        self.assertEqual(
+            group.bus.commands,
+            [(1, calibrated_bits[90], config.MOVE_TIME_MS, config.MOVE_SPEED)],
+        )
+
+    def test_feedback_snaps_to_nearest_calibrated_state(self):
+        calibrated_bits = {0: 12, 90: 320, 180: 630, 270: 940}
+        target, commands, group = self._run_move(90, -90, calibrated_bits=calibrated_bits)
+        self.assertEqual(target, 0)
+        self.assertEqual(commands, [(1, calibrated_bits[0], 250, 500)])
+        self.assertEqual(group.logical_state_for_bits(1, 318), 90)
 
 
 if __name__ == "__main__":
