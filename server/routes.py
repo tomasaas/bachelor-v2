@@ -17,6 +17,7 @@ from flask import Blueprint, Response, jsonify, render_template, request
 import config
 from motion.moves import manual_move_actions, parse_solution, solution_to_actions
 from motion.scheduler import Scheduler, SchedulerState
+from motion.servo_bus import degrees_to_bits
 
 log = logging.getLogger(__name__)
 bp = Blueprint("main", __name__)
@@ -479,7 +480,9 @@ def servo_positions():
     for face, sid in config.FACE_SERVO.items():
         servo = _servo_group[sid]
         bits = servo.read_position()
-        degrees = round(bits / config.STEPS_PER_DEGREE, 1) if bits is not None else None
+        servo_degrees = round(bits / config.STEPS_PER_DEGREE, 1) if bits is not None else None
+        cube_degrees_raw = _servo_group.cube_degrees_for_bits(sid, bits)
+        cube_degrees = round(cube_degrees_raw, 1) if cube_degrees_raw is not None else None
         logical_degrees = _servo_group.logical_state_for_bits(sid, bits)
         load_raw = servo.read_load()
         current_raw = servo.read_current()
@@ -505,7 +508,9 @@ def servo_positions():
 
         faces[face] = {
             "bits": bits,
-            "degrees": degrees,
+            "degrees": servo_degrees,
+            "servo_degrees": servo_degrees,
+            "cube_degrees": cube_degrees,
             "logical_degrees": logical_degrees,
             "torque_pct_max_1s": torque_pct_max_1s,
             "current_pct_max_1s": current_pct_max_1s,
@@ -554,6 +559,71 @@ def servo_torque():
         servo = _servo_group[int(sid)]
         servo.torque_on() if on else servo.torque_off()
     return jsonify({"status": "ok"})
+
+
+@bp.route("/servo/setpoint", methods=["POST"])
+def servo_setpoint():
+    """Move one face servo to an absolute setpoint in cube or servo degrees."""
+    if _servo_group is None:
+        return jsonify({"error": "Servos not initialised"}), 503
+    if _is_busy():
+        return jsonify({"error": "Busy – wait for current operation"}), 409
+
+    body = request.get_json(silent=True) or {}
+    face = str(body.get("face", "")).upper()
+    if face not in config.FACE_SERVO:
+        return jsonify({"error": "Missing or invalid 'face'"}), 400
+
+    degrees = body.get("degrees")
+    if degrees is None:
+        return jsonify({"error": "Missing 'degrees'"}), 400
+
+    try:
+        target_degrees = float(degrees)
+    except (TypeError, ValueError):
+        return jsonify({"error": "Degrees must be numeric"}), 400
+
+    sid = config.FACE_SERVO[face]
+    reference = str(body.get("reference", "cube")).lower()
+    if reference not in ("cube", "servo"):
+        return jsonify({"error": "Reference must be 'cube' or 'servo'"}), 400
+
+    if reference == "cube":
+        cube_min = config.SERVO_LOGICAL_STATES[0]
+        cube_max = config.SERVO_LOGICAL_STATES[-1]
+        if not cube_min <= target_degrees <= cube_max:
+            return jsonify({"error": f"Cube degrees must be between {cube_min} and {cube_max}"}), 400
+        target_bits = _servo_group.bits_for_cube_degrees(sid, target_degrees)
+    else:
+        if not 0 <= target_degrees <= 300:
+            return jsonify({"error": "Servo degrees must be between 0 and 300"}), 400
+        target_bits = max(
+            config.HARD_ANGLE_MIN_BITS,
+            min(config.HARD_ANGLE_MAX_BITS, degrees_to_bits(target_degrees)),
+        )
+
+    servo = _servo_group[sid]
+    servo.move_to(target_bits, speed=config.MOVE_SPEED, time_ms=config.MOVE_TIME_MS)
+    servo.wait_until_stopped()
+
+    servo_degrees = round(target_bits / config.STEPS_PER_DEGREE, 1)
+    cube_degrees_raw = _servo_group.cube_degrees_for_bits(sid, target_bits)
+    cube_degrees = round(cube_degrees_raw, 1) if cube_degrees_raw is not None else None
+    logical_degrees = _servo_group.logical_state_for_bits(sid, target_bits)
+    _servo_group.commanded_states[sid] = logical_degrees
+    _servo_group.commanded_degrees[sid] = int(round(cube_degrees if cube_degrees is not None else target_degrees))
+
+    return jsonify({
+        "status": "ok",
+        "face": face,
+        "servo_id": sid,
+        "reference": reference,
+        "requested_degrees": round(target_degrees, 1),
+        "bits": target_bits,
+        "servo_degrees": servo_degrees,
+        "cube_degrees": cube_degrees,
+        "logical_degrees": logical_degrees,
+    })
 
 
 # ── single manual move ──────────────────────────────────────────────────────

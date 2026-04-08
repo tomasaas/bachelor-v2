@@ -733,10 +733,28 @@ body {
   border-radius: var(--radius-md);
 }
 
+.utility-group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.55rem;
+}
+
+.utility-group-header h4 {
+  margin: 0;
+}
+
+.angle-reference-toggle {
+  display: inline-flex;
+  gap: 0.4rem;
+}
+
 .face-row {
   display: flex;
   align-items: center;
   gap: 0.35rem;
+  flex-wrap: wrap;
 }
 
 .face-label {
@@ -751,9 +769,11 @@ body {
 }
 
 .face-pos {
-  margin-left: auto;
+  flex: 1 0 100%;
+  margin-top: 0.12rem;
   color: var(--ink-soft);
   font-size: 0.72rem;
+  text-align: right;
 }
 
 .face-metrics {
@@ -764,6 +784,38 @@ body {
   color: var(--ink-faint);
   font-size: 0.7rem;
   line-height: 1.45;
+}
+
+.face-setpoint-row {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 0.55rem;
+}
+
+.face-setpoint-input {
+  min-width: 0;
+  flex: 1 1 auto;
+  padding: 0.45rem 0.55rem;
+  border: 1px solid rgba(103, 77, 84, 0.22);
+  border-radius: 0.7rem;
+  background: rgba(255, 255, 255, 0.78);
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.78rem;
+}
+
+.face-setpoint-input:focus {
+  outline: none;
+  border-color: rgba(200, 16, 46, 0.4);
+  box-shadow: 0 0 0 3px rgba(200, 16, 46, 0.08);
+}
+
+.btn.is-active {
+  background: rgba(200, 16, 46, 0.12);
+  border-color: rgba(200, 16, 46, 0.28);
+  color: var(--uia-red);
+  box-shadow: inset 0 0 0 1px rgba(200, 16, 46, 0.06);
 }
 
 .telemetry-summary {

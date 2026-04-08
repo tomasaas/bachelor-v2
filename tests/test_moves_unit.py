@@ -177,6 +177,38 @@ class ServoWraparoundTests(unittest.TestCase):
         self.assertEqual(commands, [(1, calibrated_bits[0], 250, 500)])
         self.assertEqual(group.logical_state_for_bits(1, 318), 90)
 
+    def test_cube_degrees_for_bits_interpolates_within_calibrated_segment(self):
+        calibrated_bits = {0: 20, 90: 320, 180: 620, 270: 920}
+        original_state_bits = {
+            sid: dict(bits_by_state)
+            for sid, bits_by_state in config.SERVO_STATE_BITS.items()
+        }
+        try:
+            config.SERVO_STATE_BITS = {
+                **original_state_bits,
+                1: dict(calibrated_bits),
+            }
+            group = ServoGroup(_FakeBus(170), ids=[1])
+            self.assertEqual(group.cube_degrees_for_bits(1, 170), 45.0)
+        finally:
+            config.SERVO_STATE_BITS = original_state_bits
+
+    def test_bits_for_cube_degrees_interpolates_within_calibrated_segment(self):
+        calibrated_bits = {0: 20, 90: 320, 180: 620, 270: 920}
+        original_state_bits = {
+            sid: dict(bits_by_state)
+            for sid, bits_by_state in config.SERVO_STATE_BITS.items()
+        }
+        try:
+            config.SERVO_STATE_BITS = {
+                **original_state_bits,
+                1: dict(calibrated_bits),
+            }
+            group = ServoGroup(_FakeBus(calibrated_bits[0]), ids=[1])
+            self.assertEqual(group.bits_for_cube_degrees(1, 45), 170)
+        finally:
+            config.SERVO_STATE_BITS = original_state_bits
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -39,6 +39,8 @@ const stepStateDetect = $("#step-state-detect");
 const stepStateReview = $("#step-state-review");
 const stepStateSolve = $("#step-state-solve");
 const totalCurrentDisplay = $("#total-current-display");
+const btnAngleRefCube = $("#btn-angle-ref-cube");
+const btnAngleRefServo = $("#btn-angle-ref-servo");
 
 // Camera elements
 const cam0Img      = $("#cam0");
@@ -57,10 +59,29 @@ let detectedCubeString = "";
 let previewColorMap = null;            // editable color map used by cube preview
 let polling = null;
 let dragging = null;                   // { camId, index, offsetX, offsetY }
+let faceTelemetry = {};
+let angleReference = "cube";
 
 const FACE_ORDER = ["U", "R", "F", "D", "L", "B"];
 const CYCLE_COLORS = ["W", "Y", "R", "O", "B", "G"];
 const VALID_CUBE_CHARS = new Set(["U", "R", "F", "D", "L", "B", "W", "Y", "O", "G"]);
+const ANGLE_REFERENCE_STORAGE_KEY = "hardware-angle-reference";
+const ANGLE_REFERENCE_CONFIG = {
+  cube: {
+    label: "cube",
+    min: 0,
+    max: 270,
+    placeholder: "0-270° cube",
+    button: btnAngleRefCube,
+  },
+  servo: {
+    label: "servo",
+    min: 0,
+    max: 300,
+    placeholder: "0-300° servo",
+    button: btnAngleRefServo,
+  },
+};
 const STEP_STATES = {
   1: stepStateRoi,
   2: stepStateFreeze,
@@ -78,6 +99,65 @@ function appendLog(msg) {
 
 function clamp(value, min, max) {
   return Math.min(Math.max(value, min), max);
+}
+
+function formatAngle(value) {
+  return value === null || value === undefined ? "—" : `${Number(value).toFixed(1)}°`;
+}
+
+function updateAngleReferenceInputs() {
+  const cfg = ANGLE_REFERENCE_CONFIG[angleReference] || ANGLE_REFERENCE_CONFIG.cube;
+  $$("[data-face-setpoint]").forEach((input) => {
+    input.min = String(cfg.min);
+    input.max = String(cfg.max);
+    input.placeholder = cfg.placeholder;
+    if (!input.value) return;
+    const value = Number(input.value);
+    if (Number.isNaN(value) || value < cfg.min || value > cfg.max) {
+      input.value = "";
+    }
+  });
+}
+
+function renderServoPositions() {
+  for (const [face, info] of Object.entries(faceTelemetry)) {
+    const el = document.querySelector(`[data-face-pos="${face}"]`);
+    const torqueEl = document.querySelector(`[data-face-torque="${face}"]`);
+    const currentEl = document.querySelector(`[data-face-current="${face}"]`);
+    if (!el) continue;
+    if (info.bits === null || info.bits === undefined) {
+      el.textContent = "—";
+      el.title = "";
+    } else if (angleReference === "servo") {
+      el.textContent = `${formatAngle(info.servo_degrees)} servo (${formatAngle(info.cube_degrees)} cube)`;
+      el.title = `${info.bits} bits`;
+    } else {
+      el.textContent = `${formatAngle(info.cube_degrees)} cube (${formatAngle(info.servo_degrees)} servo)`;
+      el.title = `${info.bits} bits`;
+    }
+    if (torqueEl) {
+      torqueEl.textContent = info.torque_pct_max_1s === null || info.torque_pct_max_1s === undefined
+        ? "Torque 3s max: —"
+        : `Torque 3s max: ${info.torque_pct_max_1s}%`;
+    }
+    if (currentEl) {
+      currentEl.textContent = info.current_pct_max_1s === null || info.current_pct_max_1s === undefined
+        ? "Current 3s max: —"
+        : `Current 3s max: ${info.current_pct_max_1s}%`;
+    }
+  }
+}
+
+function setAngleReference(mode, { persist = true } = {}) {
+  angleReference = mode === "servo" ? "servo" : "cube";
+  Object.entries(ANGLE_REFERENCE_CONFIG).forEach(([key, cfg]) => {
+    cfg.button?.classList.toggle("is-active", key === angleReference);
+  });
+  if (persist) {
+    localStorage.setItem(ANGLE_REFERENCE_STORAGE_KEY, angleReference);
+  }
+  updateAngleReferenceInputs();
+  renderServoPositions();
 }
 
 function getManualCubeString() {
@@ -748,6 +828,52 @@ $$("[data-move]").forEach((btn) => {
   });
 });
 
+$$("[data-face-setpoint-btn]").forEach((btn) => {
+  btn.addEventListener("click", async () => {
+    const face = btn.dataset.faceSetpointBtn;
+    const input = document.querySelector(`[data-face-setpoint="${face}"]`);
+    const raw = input?.value?.trim() || "";
+    const degrees = Number(raw);
+    const cfg = ANGLE_REFERENCE_CONFIG[angleReference] || ANGLE_REFERENCE_CONFIG.cube;
+
+    if (!raw || Number.isNaN(degrees)) {
+      appendLog(`Setpoint error (${face}): enter a ${cfg.label} angle from ${cfg.min} to ${cfg.max}`);
+      input?.focus();
+      return;
+    }
+    if (degrees < cfg.min || degrees > cfg.max) {
+      appendLog(`Setpoint error (${face}): ${cfg.label} angle must be between ${cfg.min} and ${cfg.max}`);
+      input?.focus();
+      return;
+    }
+
+    appendLog(`Manual ${cfg.label} setpoint: ${face} -> ${degrees}°`);
+    btn.disabled = true;
+    if (input) input.disabled = true;
+    try {
+      const res = await post("/servo/setpoint", { face, degrees, reference: angleReference });
+      appendLog(`Setpoint result: ${JSON.stringify(res)}`);
+      pollServoPositions();
+    } catch (e) {
+      appendLog(`Setpoint error: ${e}`);
+    }
+    btn.disabled = false;
+    if (input) input.disabled = false;
+  });
+});
+
+btnAngleRefCube?.addEventListener("click", () => setAngleReference("cube"));
+btnAngleRefServo?.addEventListener("click", () => setAngleReference("servo"));
+
+$$("[data-face-setpoint]").forEach((input) => {
+  input.addEventListener("keydown", (event) => {
+    if (event.key !== "Enter") return;
+    event.preventDefault();
+    const face = input.dataset.faceSetpoint;
+    document.querySelector(`[data-face-setpoint-btn="${face}"]`)?.click();
+  });
+});
+
 // ── Scramble ────────────────────────────────────────────────────────────────
 btnScramble.addEventListener("click", async () => {
   appendLog("Scrambling cube (random sequence)...");
@@ -896,31 +1022,8 @@ async function pollServoPositions() {
     if (!resp.ok) return;
     const data = await resp.json();
     if (data.error) return;
-    const faces = data.faces || {};
-    for (const [face, info] of Object.entries(faces)) {
-      const el = document.querySelector(`[data-face-pos="${face}"]`);
-      const torqueEl = document.querySelector(`[data-face-torque="${face}"]`);
-      const currentEl = document.querySelector(`[data-face-current="${face}"]`);
-      if (!el) continue;
-      if (info.bits === null || info.bits === undefined) {
-        el.textContent = "—";
-      } else {
-        const logical = info.logical_degrees === null || info.logical_degrees === undefined
-          ? "?"
-          : info.logical_degrees;
-        el.textContent = `${info.bits} b / ${info.degrees}° / L${logical}°`;
-      }
-      if (torqueEl) {
-        torqueEl.textContent = info.torque_pct_max_1s === null || info.torque_pct_max_1s === undefined
-          ? "Torque 3s max: —"
-          : `Torque 3s max: ${info.torque_pct_max_1s}%`;
-      }
-      if (currentEl) {
-        currentEl.textContent = info.current_pct_max_1s === null || info.current_pct_max_1s === undefined
-          ? "Current 3s max: —"
-          : `Current 3s max: ${info.current_pct_max_1s}%`;
-      }
-    }
+    faceTelemetry = data.faces || {};
+    renderServoPositions();
     if (totalCurrentDisplay) {
       totalCurrentDisplay.textContent = data.total_current_a_max_5s === null || data.total_current_a_max_5s === undefined
         ? "Total current 3s max: —"
@@ -934,6 +1037,7 @@ setInterval(pollServoPositions, 500);
 pollServoPositions();
 
 // ── Init ────────────────────────────────────────────────────────────────────
+setAngleReference(localStorage.getItem(ANGLE_REFERENCE_STORAGE_KEY) || "cube", { persist: false });
 setupCameraInspect(0);
 setupCameraInspect(1);
 setupROIDragging(0);

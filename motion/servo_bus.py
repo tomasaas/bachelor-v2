@@ -291,6 +291,62 @@ class ServoGroup:
             for sid in self.ids
         }
 
+    def cube_degrees_for_bits(self, servo_id: int, position_bits: int | None) -> float | None:
+        """Map raw servo feedback to calibrated cube-angle degrees."""
+        if position_bits is None:
+            return None
+
+        states = self.logical_states
+        state_bits = self.state_bits[servo_id]
+        first_state = states[0]
+        last_state = states[-1]
+        first_bits = state_bits[first_state]
+        last_bits = state_bits[last_state]
+
+        if position_bits <= first_bits:
+            return float(first_state)
+        if position_bits >= last_bits:
+            return float(last_state)
+
+        for low_state, high_state in zip(states, states[1:]):
+            low_bits = state_bits[low_state]
+            high_bits = state_bits[high_state]
+            if low_bits <= position_bits <= high_bits:
+                span_bits = high_bits - low_bits
+                if span_bits <= 0:
+                    return float(low_state)
+                fraction = (position_bits - low_bits) / span_bits
+                return low_state + (fraction * (high_state - low_state))
+
+        return float(self.logical_state_for_bits(servo_id, position_bits))
+
+    def bits_for_cube_degrees(self, servo_id: int, cube_degrees: float) -> int:
+        """Map a calibrated cube-angle setpoint to the underlying servo bits."""
+        target = float(cube_degrees)
+        states = self.logical_states
+        first_state = float(states[0])
+        last_state = float(states[-1])
+        if not first_state <= target <= last_state:
+            raise ValueError(
+                f"Cube degrees must be between {first_state:.0f} and {last_state:.0f}"
+            )
+
+        state_bits = self.state_bits[servo_id]
+        if target == last_state:
+            return state_bits[states[-1]]
+
+        for low_state, high_state in zip(states, states[1:]):
+            if low_state <= target <= high_state:
+                low_bits = state_bits[low_state]
+                high_bits = state_bits[high_state]
+                span_degrees = high_state - low_state
+                if span_degrees <= 0:
+                    return low_bits
+                fraction = (target - low_state) / span_degrees
+                return int(round(low_bits + (fraction * (high_bits - low_bits))))
+
+        return state_bits[states[-1]]
+
     def logical_state_for_bits(self, servo_id: int, position_bits: int | None) -> int:
         """Snap raw feedback to the nearest calibrated logical state."""
         if position_bits is None:
