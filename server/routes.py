@@ -26,6 +26,7 @@ _dual_camera = None   # vision.camera.DualCamera
 _servo_group = None   # motion.servo_bus.ServoGroup
 _scheduler: Scheduler | None = None
 _solve_thread: threading.Thread | None = None
+_stop_requested = threading.Event()
 
 # Frozen snapshots (stored as numpy arrays)
 _frozen_frames: dict[int, np.ndarray | None] = {0: None, 1: None}
@@ -63,6 +64,20 @@ def _is_scheduler_busy() -> bool:
 
 def _is_busy() -> bool:
     return _progress.get("state") == "RUNNING" or _is_scheduler_busy()
+
+
+def _reset_progress(state: str = "IDLE", error: str = "") -> None:
+    global _progress
+    _progress = {
+        "state": state,
+        "error": error,
+        "solution": "",
+        "total_moves": 0,
+        "completed_moves": 0,
+        "total_actions": 0,
+        "completed_actions": 0,
+        "current_move": "",
+    }
 
 
 def _prune_history(history: deque, window_s: float, now: float) -> None:
@@ -287,6 +302,8 @@ def solve():
     if _is_busy():
         return jsonify({"error": "Solve already in progress"}), 409
 
+    _stop_requested.clear()
+
     body = request.get_json(silent=True) or {}
     cube_string = body.get("cube_string", "")
 
@@ -301,6 +318,9 @@ def solve():
         try:
             if not cs:
                 cs = _detect_cube()
+                if _stop_requested.is_set():
+                    _reset_progress()
+                    return
 
             log.info("Cube string: %s", cs)
             _progress["current_move"] = "solving"
@@ -314,6 +334,10 @@ def solve():
                 _progress["error"] = str(exc)
                 return
 
+            if _stop_requested.is_set():
+                _reset_progress()
+                return
+
             _progress["solution"] = solution
             log.info("Solution: %s", solution)
 
@@ -321,6 +345,10 @@ def solve():
             action_groups = solution_to_actions(solution)
             _progress["total_moves"] = len(tokens)
             _progress["total_actions"] = sum(len(g) for g in action_groups)
+
+            if _stop_requested.is_set():
+                _reset_progress()
+                return
 
             if _scheduler:
                 ok = _scheduler.execute(action_groups, tokens)
@@ -411,13 +439,23 @@ def status():
 
 @bp.route("/abort", methods=["POST"])
 def abort():
-    global _progress
+    _stop_requested.set()
     if _scheduler:
         _scheduler.abort()
-    _progress["state"] = "IDLE"
-    _progress["error"] = ""
-    _progress["current_move"] = ""
+    _reset_progress()
     return jsonify({"status": "abort_requested"})
+
+
+@bp.route("/emergency-stop", methods=["POST"])
+def emergency_stop():
+    _stop_requested.set()
+    if _scheduler:
+        _scheduler.abort()
+    if _servo_group is not None:
+        _servo_group.emergency_stop()
+    _reset_progress()
+    log.warning("Emergency stop triggered from GUI")
+    return jsonify({"status": "emergency_stopped"})
 
 
 # ── servo utilities ──────────────────────────────────────────────────────────
@@ -525,6 +563,8 @@ def servo_move():
     if _is_busy():
         return jsonify({"error": "Busy – wait for current operation"}), 409
 
+    _stop_requested.clear()
+
     body = request.get_json(silent=True) or {}
     move = body.get("move", "")
     if not move:
@@ -560,6 +600,9 @@ def servo_move():
                     return
             else:
                 for action in actions:
+                    if _stop_requested.is_set():
+                        _reset_progress()
+                        return
                     if action.move_degrees is None:
                         raise RuntimeError("Manual move actions must be degree-based moves")
                     _servo_group.step_servo(
@@ -595,6 +638,8 @@ def servo_scramble():
     if _is_busy():
         return jsonify({"error": "Busy"}), 409
 
+    _stop_requested.clear()
+
     faces = list(config.FACE_SERVO.keys())
     suffixes = ["", "'", "2"]
     scramble_tokens = []
@@ -619,8 +664,23 @@ def servo_scramble():
         try:
             action_groups = solution_to_actions(scramble_string)
             _progress["total_actions"] = sum(len(g) for g in action_groups)
+            if _stop_requested.is_set():
+                _reset_progress()
+                return
             if _scheduler:
-                _scheduler.execute(action_groups, scramble_tokens)
+                ok = _scheduler.execute(action_groups, scramble_tokens)
+                if not ok:
+                    sched = _scheduler.progress
+                    _progress.update({
+                        "state": sched.state.name,
+                        "error": sched.error,
+                        "total_moves": sched.total_moves,
+                        "completed_moves": sched.completed_moves,
+                        "total_actions": sched.total_actions,
+                        "completed_actions": sched.completed_actions,
+                        "current_move": sched.current_move,
+                    })
+                    return
             _progress["state"] = "DONE"
             _progress["completed_moves"] = len(scramble_tokens)
             _progress["completed_actions"] = _progress["total_actions"]

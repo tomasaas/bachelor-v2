@@ -494,6 +494,19 @@ body {
   border-color: #27191f;
 }
 
+.btn-emergency {
+  background: linear-gradient(135deg, #ef233c, #b10924);
+  border-color: transparent;
+  color: #fff;
+  box-shadow: 0 14px 28px rgba(177, 9, 36, 0.28);
+}
+
+.btn-emergency:hover {
+  color: #fff;
+  background: linear-gradient(135deg, #ff3650, #98081f);
+  border-color: transparent;
+}
+
 .btn-big {
   min-width: 12rem;
   padding: 0.92rem 1.25rem;

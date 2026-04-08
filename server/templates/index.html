@@ -164,23 +164,22 @@
             <div class="btn-row">
               <button id="btn-home" class="btn">Home All</button>
               <button id="btn-scramble" class="btn">Scramble Cube</button>
+              <button id="btn-emergency-stop" class="btn btn-emergency">Emergency Stop</button>
             </div>
           </section>
-        </div>
-      </details>
 
-      <details class="utility-panel">
-        <summary>Manual Face Rotation</summary>
-        <div class="utility-body">
-          <div class="face-controls">
-            <div class="face-card" data-face="U"><div class="face-row"><span class="face-label">U</span><button class="btn btn-sm" data-move="U">CW</button><button class="btn btn-sm" data-move="U'">CCW</button><span class="face-pos" data-face-pos="U">—</span></div><div class="face-metrics"><span data-face-torque="U">Torque 3s max: —</span><span data-face-current="U">Current 3s max: —</span></div></div>
-            <div class="face-card" data-face="D"><div class="face-row"><span class="face-label">D</span><button class="btn btn-sm" data-move="D">CW</button><button class="btn btn-sm" data-move="D'">CCW</button><span class="face-pos" data-face-pos="D">—</span></div><div class="face-metrics"><span data-face-torque="D">Torque 3s max: —</span><span data-face-current="D">Current 3s max: —</span></div></div>
-            <div class="face-card" data-face="R"><div class="face-row"><span class="face-label">R</span><button class="btn btn-sm" data-move="R">CW</button><button class="btn btn-sm" data-move="R'">CCW</button><span class="face-pos" data-face-pos="R">—</span></div><div class="face-metrics"><span data-face-torque="R">Torque 3s max: —</span><span data-face-current="R">Current 3s max: —</span></div></div>
-            <div class="face-card" data-face="L"><div class="face-row"><span class="face-label">L</span><button class="btn btn-sm" data-move="L">CW</button><button class="btn btn-sm" data-move="L'">CCW</button><span class="face-pos" data-face-pos="L">—</span></div><div class="face-metrics"><span data-face-torque="L">Torque 3s max: —</span><span data-face-current="L">Current 3s max: —</span></div></div>
-            <div class="face-card" data-face="F"><div class="face-row"><span class="face-label">F</span><button class="btn btn-sm" data-move="F">CW</button><button class="btn btn-sm" data-move="F'">CCW</button><span class="face-pos" data-face-pos="F">—</span></div><div class="face-metrics"><span data-face-torque="F">Torque 3s max: —</span><span data-face-current="F">Current 3s max: —</span></div></div>
-            <div class="face-card" data-face="B"><div class="face-row"><span class="face-label">B</span><button class="btn btn-sm" data-move="B">CW</button><button class="btn btn-sm" data-move="B'">CCW</button><span class="face-pos" data-face-pos="B">—</span></div><div class="face-metrics"><span data-face-torque="B">Torque 3s max: —</span><span data-face-current="B">Current 3s max: —</span></div></div>
-          </div>
-          <div class="telemetry-summary" id="total-current-display">Total current 3s max: —</div>
+          <section class="utility-group">
+            <h4>Manual Face Rotation</h4>
+            <div class="face-controls">
+              <div class="face-card" data-face="U"><div class="face-row"><span class="face-label">U</span><button class="btn btn-sm" data-move="U">CW</button><button class="btn btn-sm" data-move="U'">CCW</button><span class="face-pos" data-face-pos="U">—</span></div><div class="face-metrics"><span data-face-torque="U">Torque 3s max: —</span><span data-face-current="U">Current 3s max: —</span></div></div>
+              <div class="face-card" data-face="D"><div class="face-row"><span class="face-label">D</span><button class="btn btn-sm" data-move="D">CW</button><button class="btn btn-sm" data-move="D'">CCW</button><span class="face-pos" data-face-pos="D">—</span></div><div class="face-metrics"><span data-face-torque="D">Torque 3s max: —</span><span data-face-current="D">Current 3s max: —</span></div></div>
+              <div class="face-card" data-face="R"><div class="face-row"><span class="face-label">R</span><button class="btn btn-sm" data-move="R">CW</button><button class="btn btn-sm" data-move="R'">CCW</button><span class="face-pos" data-face-pos="R">—</span></div><div class="face-metrics"><span data-face-torque="R">Torque 3s max: —</span><span data-face-current="R">Current 3s max: —</span></div></div>
+              <div class="face-card" data-face="L"><div class="face-row"><span class="face-label">L</span><button class="btn btn-sm" data-move="L">CW</button><button class="btn btn-sm" data-move="L'">CCW</button><span class="face-pos" data-face-pos="L">—</span></div><div class="face-metrics"><span data-face-torque="L">Torque 3s max: —</span><span data-face-current="L">Current 3s max: —</span></div></div>
+              <div class="face-card" data-face="F"><div class="face-row"><span class="face-label">F</span><button class="btn btn-sm" data-move="F">CW</button><button class="btn btn-sm" data-move="F'">CCW</button><span class="face-pos" data-face-pos="F">—</span></div><div class="face-metrics"><span data-face-torque="F">Torque 3s max: —</span><span data-face-current="F">Current 3s max: —</span></div></div>
+              <div class="face-card" data-face="B"><div class="face-row"><span class="face-label">B</span><button class="btn btn-sm" data-move="B">CW</button><button class="btn btn-sm" data-move="B'">CCW</button><span class="face-pos" data-face-pos="B">—</span></div><div class="face-metrics"><span data-face-torque="B">Torque 3s max: —</span><span data-face-current="B">Current 3s max: —</span></div></div>
+            </div>
+            <div class="telemetry-summary" id="total-current-display">Total current 3s max: —</div>
+          </section>
         </div>
       </details>
 

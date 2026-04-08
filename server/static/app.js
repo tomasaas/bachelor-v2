@@ -10,6 +10,7 @@ const btnTorqueOn    = $("#btn-torque-on");
 const btnTorqueOff   = $("#btn-torque-off");
 const btnScramble    = $("#btn-scramble");
 const btnHome        = $("#btn-home");
+const btnEmergencyStop = $("#btn-emergency-stop");
 const btnRefreshCams = $("#btn-refresh-cams");
 const btnFreeze      = $("#btn-freeze");
 const btnUnfreeze    = $("#btn-unfreeze");
@@ -803,6 +804,23 @@ btnHome.addEventListener("click", async () => {
   appendLog("Homing all servos...");
   const res = await post("/servo/home");
   appendLog("Home: " + JSON.stringify(res));
+});
+
+// ── Emergency stop ─────────────────────────────────────────────────────────
+btnEmergencyStop?.addEventListener("click", async () => {
+  appendLog("EMERGENCY STOP requested");
+  btnEmergencyStop.disabled = true;
+  try {
+    const res = await post("/emergency-stop");
+    appendLog("Emergency stop: " + JSON.stringify(res));
+    setStateBadge("IDLE");
+    resetSolveFeedback();
+    stopPolling();
+    updateWorkflowGuide();
+  } catch (e) {
+    appendLog("Emergency stop error: " + e);
+  }
+  btnEmergencyStop.disabled = false;
 });
 
 // ── Solve ───────────────────────────────────────────────────────────────────
