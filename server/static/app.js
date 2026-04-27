@@ -39,6 +39,8 @@ const stepStateSolve = $("#step-state-solve");
 const totalCurrentDisplay = $("#total-current-display");
 const btnAngleRefCube = $("#btn-angle-ref-cube");
 const btnAngleRefServo = $("#btn-angle-ref-servo");
+const tabButtons = $$("[data-tab-button]");
+const tabPanels = $$("[data-tab-panel]");
 
 // Camera elements
 const cam0Img      = $("#cam0");
@@ -130,6 +132,18 @@ function updateAngleReferenceInputs() {
     if (Number.isNaN(value) || value < cfg.min || value > cfg.max) {
       input.value = "";
     }
+  });
+}
+
+function showTab(tabName) {
+  tabButtons.forEach((button) => {
+    const isActive = button.dataset.tabButton === tabName;
+    button.classList.toggle("is-active", isActive);
+    button.setAttribute("aria-selected", String(isActive));
+  });
+
+  tabPanels.forEach((panel) => {
+    panel.hidden = panel.dataset.tabPanel !== tabName;
   });
 }
 
@@ -1068,6 +1082,10 @@ async function pollStatus() {
 // ── Window resize → redraw ──────────────────────────────────────────────────
 window.addEventListener("resize", drawAllROIs);
 
+tabButtons.forEach((button) => {
+  button.addEventListener("click", () => showTab(button.dataset.tabButton));
+});
+
 // ── Servo live telemetry ────────────────────────────────────────────────────
 async function pollServoPositions() {
   try {
@@ -1090,6 +1108,7 @@ setInterval(pollServoPositions, 500);
 pollServoPositions();
 
 // ── Init ────────────────────────────────────────────────────────────────────
+showTab("solver");
 setAngleReference(localStorage.getItem(ANGLE_REFERENCE_STORAGE_KEY) || "cube", { persist: false });
 setupCameraInspect(0);
 setupCameraInspect(1);

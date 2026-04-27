@@ -18,6 +18,10 @@
   --radius-lg: 22px;
   --radius-md: 16px;
   --radius-sm: 12px;
+  --camera-column-width: minmax(420px, 1fr);
+  --controls-column-width: minmax(420px, 1fr);
+  --camera-panel-min-height: 190px;
+  --cube-facelet-size: 19px;
 }
 
 * {
@@ -39,7 +43,7 @@ body {
 .layout {
   height: 100vh;
   display: grid;
-  grid-template-columns: minmax(520px, 58%) minmax(360px, 42%);
+  grid-template-columns: var(--camera-column-width) var(--controls-column-width);
   gap: 0.45rem;
   padding: 0.45rem;
 }
@@ -47,6 +51,7 @@ body {
 .cameras-column,
 .controls-column {
   min-height: 0;
+  min-width: 0;
 }
 
 .cameras-column {
@@ -61,6 +66,45 @@ body {
   height: calc(100vh - 0.9rem);
   overflow-y: auto;
   padding-right: 0.2rem;
+}
+
+.right-tabs {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.35rem;
+  margin-bottom: 0.95rem;
+  padding: 0.35rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: 0 12px 28px rgba(68, 37, 44, 0.1);
+  backdrop-filter: blur(14px);
+}
+
+.right-tab {
+  appearance: none;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--ink-soft);
+  padding: 0.72rem 0.9rem;
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.right-tab.is-active {
+  background: linear-gradient(135deg, var(--uia-red), var(--uia-red-deep));
+  color: #fff;
+  box-shadow: 0 12px 24px rgba(200, 16, 46, 0.18);
+}
+
+.tab-panel[hidden] {
+  display: none;
 }
 
 .stage-card,
@@ -246,7 +290,7 @@ body {
 .cam-viewport {
   position: relative;
   flex: 1;
-  min-height: 260px;
+  min-height: var(--camera-panel-min-height);
   overflow: hidden;
   background:
     radial-gradient(circle at top, rgba(200, 16, 46, 0.12), transparent 30%),
@@ -535,9 +579,9 @@ body {
 .cube-preview {
   min-height: 7rem;
   display: grid;
-  grid-template-columns: repeat(6, max-content);
+  grid-template-columns: repeat(auto-fit, minmax(72px, 1fr));
   gap: 0.5rem;
-  justify-content: space-between;
+  justify-items: center;
   align-items: start;
 }
 
@@ -558,8 +602,8 @@ body {
 
 .face-grid {
   display: grid;
-  grid-template-columns: repeat(3, 19px);
-  grid-template-rows: repeat(3, 19px);
+  grid-template-columns: repeat(3, var(--cube-facelet-size));
+  grid-template-rows: repeat(3, var(--cube-facelet-size));
   gap: 2px;
 }
 
@@ -574,8 +618,8 @@ body {
 }
 
 .facelet {
-  width: 19px;
-  height: 19px;
+  width: var(--cube-facelet-size);
+  height: var(--cube-facelet-size);
   border-radius: 5px;
   border: 1px solid rgba(31, 37, 48, 0.1);
   cursor: pointer;
@@ -859,7 +903,7 @@ body {
   border-radius: 999px;
 }
 
-@media (max-width: 1180px) {
+@media (max-width: 900px) {
   body {
     overflow: auto;
   }
@@ -880,11 +924,12 @@ body {
   }
 
   .camera-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-template-rows: none;
   }
 
   .cam-quadrant {
-    min-height: 22rem;
+    min-height: 18rem;
   }
 }
 
@@ -910,6 +955,14 @@ body {
 
   .hero-meta {
     align-items: stretch;
+  }
+
+  .camera-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cam-quadrant {
+    min-height: 15rem;
   }
 
   .step-state {
