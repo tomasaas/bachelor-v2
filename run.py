@@ -3,7 +3,7 @@
 Rubik's Cube Solver – main entry point.
 
 Starts the Flask web server with camera streams and servo control.
-On the RPi5 this is launched automatically on boot (e.g. via systemd).
+On the RPi5 this will be launched automatically on boot (e.g. via systemd).
 
 Usage:
     python run.py
@@ -22,7 +22,7 @@ import config
 
 
 class _TerminalNoiseFilter(logging.Filter):
-    """Keep the terminal focused on high-level status and warnings."""
+    """Filter out some logging from the terminal."""
 
     _NOISY_LOGGER_PREFIXES = (
         "detect",

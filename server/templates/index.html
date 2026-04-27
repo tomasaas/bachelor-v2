@@ -60,8 +60,8 @@
         </div>
         <div class="slider-row">
           <label class="slider-label" for="roi-size-slider">ROI Size</label>
-          <input id="roi-size-slider" class="slider-input" type="range" min="18" max="80" step="1" value="34">
-          <span id="roi-size-value" class="slider-value mono">34 px</span>
+          <input id="roi-size-slider" class="slider-input" type="range" min="4" max="49" step="1" value="25">
+          <span id="roi-size-value" class="slider-value mono">25 px</span>
         </div>
       </section>
 
@@ -69,32 +69,19 @@
         <div class="step-header">
           <span class="step-index">2</span>
           <div class="step-copy">
-            <h3>Freeze Video</h3>
+            <h3>Detect Colors</h3>
           </div>
-          <span id="step-state-freeze" class="step-state" data-state="active">Next</span>
+          <span id="step-state-detect" class="step-state" data-state="active">Ready</span>
         </div>
         <div class="btn-row">
-          <button id="btn-freeze" class="btn btn-primary">Freeze Video</button>
+          <button id="btn-detect" class="btn btn-primary">Detect Colors</button>
           <button id="btn-unfreeze" class="btn" disabled>Resume Live Video</button>
         </div>
       </section>
 
-      <section class="workflow-card" data-step-card="3" data-state="pending">
+      <section class="workflow-card workflow-card-review" id="detection-panel" data-step-card="3" data-state="pending">
         <div class="step-header">
           <span class="step-index">3</span>
-          <div class="step-copy">
-            <h3>Detect Colors</h3>
-          </div>
-          <span id="step-state-detect" class="step-state" data-state="pending">Wait for freeze</span>
-        </div>
-        <div class="btn-row">
-          <button id="btn-detect" class="btn btn-primary" disabled>Detect Colors</button>
-        </div>
-      </section>
-
-      <section class="workflow-card workflow-card-review" id="detection-panel" data-step-card="4" data-state="pending">
-        <div class="step-header">
-          <span class="step-index">4</span>
           <div class="step-copy">
             <h3>Review Cube State</h3>
           </div>
@@ -118,9 +105,9 @@
         </div>
       </section>
 
-      <section class="workflow-card workflow-card-solve" data-step-card="5" data-state="pending">
+      <section class="workflow-card workflow-card-solve" data-step-card="4" data-state="pending">
         <div class="step-header">
-          <span class="step-index">5</span>
+          <span class="step-index">4</span>
           <div class="step-copy">
             <h3>Solve Cube</h3>
           </div>

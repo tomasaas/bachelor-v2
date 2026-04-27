@@ -1,10 +1,6 @@
 """
 Auto-detect USB devices (servo driver + cameras) regardless of plug order.
-
 The RPi5 has 4 USB-A ports.  Device node numbers (/dev/ttyUSB*, /dev/video*)
-depend on kernel enumeration order, which changes with plug sequence and boot
-timing.  This module identifies devices by *identity* (vendor string, sysfs
-attributes) so the rest of the code never needs a hard-coded index.
 """
 
 from __future__ import annotations

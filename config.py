@@ -78,9 +78,16 @@ def _default_servo_state_bits(home_bits: int = POS_HOME) -> dict[int, int]:
 # Keys are logical cube-face orientations in degrees.  Tune these values if a
 # servo's "home" or quarter-turn endpoints are mechanically off.  Keep each
 # servo's values strictly increasing and within 0..1023.
+#
+# Current values use the measured 0° and 90° positions from the rig and
+# interpolate 180° and 270° by repeating that per-servo 90° delta.
 SERVO_STATE_BITS = {
-    sid: _default_servo_state_bits()
-    for sid in SERVO_IDS
+    1: {0: 25, 90: 319, 180: 613, 270: 907},   # D
+    2: {0: 33, 90: 303, 180: 573, 270: 843},   # F
+    3: {0: 0, 90: 277, 180: 554, 270: 831},    # R
+    4: {0: 0, 90: 253, 180: 506, 270: 759},    # B
+    5: {0: 67, 90: 331, 180: 595, 270: 859},   # L
+    6: {0: 60, 90: 329, 180: 598, 270: 867},   # U
 }
 
 SC09_MAX_TORQUE_KGCM = 2.3
