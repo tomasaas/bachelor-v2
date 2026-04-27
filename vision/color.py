@@ -18,6 +18,8 @@ log = logging.getLogger(__name__)
 # Standard ordering: U=white, R=red, F=green, D=yellow, L=orange, B=blue
 # Adjust if your cube has a different scheme.
 FACE_COLORS = {"U": "W", "R": "R", "F": "G", "D": "Y", "L": "O", "B": "B"}
+HSVRange = tuple[int, int, int, int, int, int]
+ColorRange = HSVRange | list[HSVRange]
 
 
 def _median_hsv(frame: np.ndarray, roi: ROI) -> np.ndarray:
@@ -25,6 +27,34 @@ def _median_hsv(frame: np.ndarray, roi: ROI) -> np.ndarray:
     patch = frame[roi.y : roi.y + roi.h, roi.x : roi.x + roi.w]
     hsv = cv2.cvtColor(patch, cv2.COLOR_BGR2HSV)
     return np.median(hsv.reshape(-1, 3), axis=0).astype(int)
+
+
+def _iter_hsv_ranges(color_range: ColorRange) -> list[HSVRange]:
+    """Return a colour definition as a list of HSV ranges."""
+    if isinstance(color_range, list):
+        return color_range
+    return [color_range]
+
+
+def _hsv_in_range(h: int, s: int, v: int, hsv_range: HSVRange) -> bool:
+    """Check whether an HSV sample falls inside one configured range."""
+    hl, sl, vl, hh, sh, vh = hsv_range
+
+    if hl <= hh:
+        h_in = hl <= h <= hh
+    else:
+        h_in = h >= hl or h <= hh
+
+    return h_in and sl <= s <= sh and vl <= v <= vh
+
+
+def _range_distance(h: int, s: int, v: int, hsv_range: HSVRange) -> float:
+    """Distance to the middle of one range, used as a tie-breaker."""
+    hl, sl, vl, hh, sh, vh = hsv_range
+    hc = (hl + hh) / 2
+    sc = (sl + sh) / 2
+    vc = (vl + vh) / 2
+    return abs(h - hc) + abs(s - sc) * 0.5 + abs(v - vc) * 0.3
 
 
 def classify_color(hsv: np.ndarray) -> str:
@@ -37,22 +67,13 @@ def classify_color(hsv: np.ndarray) -> str:
     best_color = "?"
     best_dist = float("inf")
 
-    for color, (hl, sl, vl, hh, sh, vh) in config.COLOR_RANGES.items():
-        # Handle red hue wrap-around
-        if hl <= hh:
-            h_in = hl <= h <= hh
-        else:
-            h_in = h >= hl or h <= hh
-
-        if h_in and sl <= s <= sh and vl <= v <= vh:
-            # Inside the range – compute centre distance as tiebreaker
-            hc = (hl + hh) / 2
-            sc = (sl + sh) / 2
-            vc = (vl + vh) / 2
-            dist = abs(h - hc) + abs(s - sc) * 0.5 + abs(v - vc) * 0.3
-            if dist < best_dist:
-                best_dist = dist
-                best_color = color
+    for color, color_range in config.COLOR_RANGES.items():
+        for hsv_range in _iter_hsv_ranges(color_range):
+            if _hsv_in_range(h, s, v, hsv_range):
+                dist = _range_distance(h, s, v, hsv_range)
+                if dist < best_dist:
+                    best_dist = dist
+                    best_color = color
 
     return best_color
 

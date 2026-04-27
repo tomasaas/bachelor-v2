@@ -147,8 +147,8 @@ CAMERA_HEIGHT  = 480
 # These are placeholder rectangles – calibrate for your rig.
 ROI_CAM0 = []   # will be auto-generated if empty  (see vision/roi.py)
 ROI_CAM1 = []
+ROI_SIZE = 25   # pixel size of each ROI square
 
-ROI_SIZE = 25  # pixel size of each ROI square
 
 # Faces visible to each camera (for auto-ROI generation)
 # Cam0 (top camera): U top-centre, L bottom-left, F bottom-right
@@ -178,34 +178,30 @@ FACE_ORIENTATION = {
 }
 
 # ---------------------------------------------------------------------------
-# HSV colour classification ranges  {colour: (H_lo, S_lo, V_lo, H_hi, S_hi, V_hi)}
-# Tuned for standard Rubik's cube under indoor lighting.  Adjust as needed.
+# HSV colour thresholds.
+#
+# Each colour can use either:
+#   - one range: (H_low, S_low, V_low, H_high, S_high, V_high)
+#   - multiple ranges: [(...), (...)]
+# This is useful for colours like red that span the HSV hue boundary.
 # ---------------------------------------------------------------------------
 COLOR_RANGES = {
-    "W": (0,   0, 160, 180,  60, 255),   # white  (low sat, high val)
-    "Y": (20,  80, 120,  40, 255, 255),   # yellow
-    "R": (160, 80,  80,  10, 255, 255),   # red  (wraps around 0/180)
-    "O": (10,  80, 100,  25, 255, 255),   # orange
-    "B": (95,  80,  60, 130, 255, 255),   # blue
-    "G": (40,  50,  50,  90, 255, 255),   # green
-}
-
-# ---------------------------------------------------------------------------
-# Flask server
-# ---------------------------------------------------------------------------
-FLASK_HOST = "0.0.0.0"
-FLASK_PORT = 5000
-
-# ROI_SIZE = 20    # width=height of each ROI square (pixels)
-
-# HSV colour thresholds  {color_name: (H_low, S_low, V_low, H_high, S_high, V_high)}
-COLOR_RANGES = {
-    "W": (0,   0,   160, 180, 60,  255),   # white
-    "Y": (20,  100, 100, 35,  255, 255),   # yellow
-    "R": (0,   120, 70,  10,  255, 255),   # red (wraps – handle in code)
-    "O": (10,  120, 70,  20,  255, 255),   # orange
-    "B": (100, 120, 70,  130, 255, 255),   # blue
-    "G": (35,  80,  50,  85,  255, 255),   # green
+    "W": [
+        (0,   0,   155, 180, 35,  255),    # neutral white
+        (90,  36,  150, 130, 95,  255),    # slightly blue white
+    ],
+    "Y": (43,  40,  125, 67,  255, 255),   # pale greenish-yellow to yellow
+    # Red wraps around the HSV hue boundary, so handle it as two ranges
+    "R": [
+        (0,   60,  120, 7,   255, 255),
+        (160, 50,  115, 180, 255, 255),    # pinkish / over-exposed red
+    ],
+    "O": [
+        (8,   90,  60,  25,  255, 255),    # strong orange / red-orange
+        (6,   35,  110, 24,  185, 255),    # pale orange
+    ],
+    "B": (95,  90,  25,  125, 255, 255),   # blue
+    "G": (64,  150, 35,  85,  255, 255),   # green
 }
 
 # ---------------------------------------------------------------------------
