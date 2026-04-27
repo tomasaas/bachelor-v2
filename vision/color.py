@@ -14,12 +14,37 @@ from vision.roi import ROI
 
 log = logging.getLogger(__name__)
 
-# Kociemba face-colour mapping:  center facelets define the face colour.
-# Standard ordering: U=white, R=red, F=green, D=yellow, L=orange, B=blue
-# Adjust if your cube has a different scheme.
+# Kociemba face-colour mapping.
+#
+# The center stickers define each face's permanent colour. In this rig the
+# physical center stickers have been removed for axle holes, so these six
+# facelets are treated as fixed instead of being read from the camera.
+#
+# Standard ordering: U=white, R=red, F=green, D=yellow, L=orange, B=blue.
+# Opposite pairs: U/D = W/Y, R/L = R/O, F/B = G/B.
+# Adjust only if your cube has a different valid scheme.
 FACE_COLORS = {"U": "W", "R": "R", "F": "G", "D": "Y", "L": "O", "B": "B"}
+FIXED_CENTER_COLORS = {f"{face}5": color for face, color in FACE_COLORS.items()}
 HSVRange = tuple[int, int, int, int, int, int]
 ColorRange = HSVRange | list[HSVRange]
+
+
+def apply_fixed_center_colors(
+    colors: dict[str, str],
+    *,
+    include_missing: bool = False,
+) -> dict[str, str]:
+    """
+    Return a copy of *colors* with center facelets set to their fixed colours.
+
+    ``include_missing`` is useful for the full preview/cube-state map where we
+    want all six centers to be known even if a center ROI is unreadable.
+    """
+    fixed = dict(colors)
+    for label, color in FIXED_CENTER_COLORS.items():
+        if include_missing or label in fixed:
+            fixed[label] = color
+    return fixed
 
 
 def _median_hsv(frame: np.ndarray, roi: ROI) -> np.ndarray:
@@ -111,7 +136,7 @@ def build_cube_state(cam0_colors: dict[str, str], cam1_colors: dict[str, str]) -
     # Invert FACE_COLORS: colour → face letter
     color_to_face = {v: k for k, v in FACE_COLORS.items()}
 
-    merged = {**cam0_colors, **cam1_colors}
+    merged = apply_fixed_center_colors({**cam0_colors, **cam1_colors}, include_missing=True)
 
     chars: list[str] = []
     for label in all_facelet_labels():

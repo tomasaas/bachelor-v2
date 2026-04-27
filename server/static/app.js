@@ -63,6 +63,7 @@ let faceTelemetry = {};
 let angleReference = "cube";
 
 const FACE_ORDER = ["U", "R", "F", "D", "L", "B"];
+const FIXED_CENTER_COLORS = { U5: "W", R5: "R", F5: "G", D5: "Y", L5: "O", B5: "B" };
 const CYCLE_COLORS = ["W", "Y", "R", "O", "B", "G"];
 const VALID_CUBE_CHARS = new Set(["U", "R", "F", "D", "L", "B", "W", "Y", "O", "G"]);
 const ANGLE_REFERENCE_STORAGE_KEY = "hardware-angle-reference";
@@ -576,7 +577,7 @@ const COLOR_TEXT = {
   W: "#222", Y: "#222", R: "#fff", O: "#222", B: "#fff", G: "#fff",
 };
 
-function drawDetectedColorLetter(ctx, colorKey, x, y, width, height) {
+function drawDetectedColorLetter(ctx, label, colorKey, x, y, width, height) {
   const boxSize = Math.min(width, height);
   const letterSize = clamp(
     Math.floor(boxSize * ROI_STYLE.letterScale),
@@ -591,8 +592,8 @@ function drawDetectedColorLetter(ctx, colorKey, x, y, width, height) {
   ctx.lineWidth = ROI_STYLE.detectedLineWidth;
   ctx.strokeStyle = COLOR_TEXT[colorKey] === "#fff" ? "rgba(0,0,0,0.75)" : "rgba(255,255,255,0.85)";
   ctx.fillStyle = COLOR_TEXT[colorKey] || "#fff";
-  ctx.strokeText(colorKey, x + width / 2, y + height / 2);
-  ctx.fillText(colorKey, x + width / 2, y + height / 2);
+  ctx.strokeText(label, x + width / 2, y + height / 2);
+  ctx.fillText(label, x + width / 2, y + height / 2);
   ctx.restore();
 }
 
@@ -620,7 +621,7 @@ function drawROIs(camId) {
     ctx.strokeRect(tl.x, tl.y, rw, rh);
 
     if (colorKey && COLOR_MAP[colorKey]) {
-      drawDetectedColorLetter(ctx, colorKey, tl.x, tl.y, rw, rh);
+      drawDetectedColorLetter(ctx, roi.label, colorKey, tl.x, tl.y, rw, rh);
     } else {
       ctx.fillStyle = "#fff";
       ctx.font = ROI_STYLE.labelFont;
@@ -786,13 +787,18 @@ function showCubePreview(cubeString, colorMap) {
       for (let c = 0; c < 3; c++) {
         const idx = r * 3 + c + 1;
         const label = `${face}${idx}`;
-        const color = previewColorMap[label] || "X";
+        const fixedColor = FIXED_CENTER_COLORS[label];
+        const color = fixedColor || previewColorMap[label] || "X";
         const cell = document.createElement("div");
         cell.className = "facelet color-" + color;
-        cell.title = `${label}: ${color}`;
+        cell.title = fixedColor ? `${label}: ${color} (fixed center)` : `${label}: ${color}`;
         cell.dataset.label = label;
         cell.dataset.color = color;
-        cell.addEventListener("click", () => cycleFaceletColor(cell));
+        if (fixedColor) {
+          previewColorMap[label] = fixedColor;
+        } else {
+          cell.addEventListener("click", () => cycleFaceletColor(cell));
+        }
         grid.appendChild(cell);
       }
     }
@@ -807,7 +813,7 @@ function buildCubeStringFromColorMap(colorMap) {
   for (const face of FACE_ORDER) {
     for (let idx = 1; idx <= 9; idx++) {
       const label = `${face}${idx}`;
-      result += colorMap[label] || "X";
+      result += FIXED_CENTER_COLORS[label] || colorMap[label] || "X";
     }
   }
   return result;
@@ -821,6 +827,7 @@ function getNextColor(color) {
 function cycleFaceletColor(cell) {
   const label = cell.dataset.label;
   if (!label || !previewColorMap) return;
+  if (FIXED_CENTER_COLORS[label]) return;
 
   const current = previewColorMap[label] || cell.dataset.color || "W";
   const next = getNextColor(current);

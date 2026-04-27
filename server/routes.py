@@ -187,7 +187,7 @@ def camera_refresh():
 def camera_detect():
     """Run colour classification on the frozen snapshots."""
     from vision.roi import ROI
-    from vision.color import classify_rois, build_cube_state
+    from vision.color import apply_fixed_center_colors, classify_rois, build_cube_state
 
     _ensure_rois()
 
@@ -205,7 +205,7 @@ def camera_detect():
                 x=r["x"], y=r["y"], w=r["w"], h=r["h"])
             for r in roi_dicts
         ]
-        colors = classify_rois(frame, roi_objs)
+        colors = apply_fixed_center_colors(classify_rois(frame, roi_objs))
         if cam_id == 0:
             cam0_colors = colors
         else:
@@ -220,7 +220,7 @@ def camera_detect():
         return jsonify({"error": str(exc)})
 
     # Build a unified colour map for the frontend preview
-    color_map = {**cam0_colors, **cam1_colors}
+    color_map = apply_fixed_center_colors({**cam0_colors, **cam1_colors}, include_missing=True)
 
     return jsonify({
         "cube_string": cube_string,
