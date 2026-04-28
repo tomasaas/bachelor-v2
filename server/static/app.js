@@ -190,14 +190,23 @@ function setAngleReference(mode, { persist = true } = {}) {
 }
 
 function getManualCubeString() {
-  return (manualCubeStringInput?.value || "").trim().toUpperCase();
+  return normalizeCubeString(manualCubeStringInput?.value || "");
 }
 
-function getSelectedCubeString() {
-  return getManualCubeString() || detectedCubeString;
+function normalizeCubeString(value) {
+  return String(value || "").toUpperCase().replace(/\s+/g, "");
+}
+
+function getSolveCandidate() {
+  const manual = getManualCubeString();
+  if (manual) {
+    return { source: "manual", cubeString: manual };
+  }
+  return { source: "detected", cubeString: normalizeCubeString(detectedCubeString) };
 }
 
 function validateCubeString(value) {
+  value = normalizeCubeString(value);
   if (!value) {
     return { valid: false, message: "Enter a manual cube state or detect one from the cameras." };
   }
@@ -298,8 +307,8 @@ function setStepState(stepNumber, text, state) {
 
 function updateWorkflowGuide(validation = null) {
   const manual = getManualCubeString();
-  const selected = manual || detectedCubeString;
-  const currentValidation = validation || validateCubeString(selected);
+  const solveCandidate = getSolveCandidate();
+  const currentValidation = validation || validateCubeString(solveCandidate.cubeString);
   const hasDetectedState = Boolean(detectedCubeString);
   const hasManualState = Boolean(manual);
   const solveReady = currentValidation.valid;
@@ -391,11 +400,11 @@ function updateWorkflowGuide(validation = null) {
 
 function updateSolveControls() {
   const manual = getManualCubeString();
-  const selected = manual || detectedCubeString;
-  const validation = validateCubeString(selected);
+  const solveCandidate = getSolveCandidate();
+  const validation = validateCubeString(solveCandidate.cubeString);
 
   if (cubeStringSource) {
-    if (manual) {
+    if (solveCandidate.source === "manual") {
       if (validation.valid) {
         cubeStringSource.textContent = "Using manually entered cube state for solve.";
         cubeStringSource.classList.remove("error");
@@ -1025,13 +1034,13 @@ btnEmergencyStop?.addEventListener("click", async () => {
 
 // ── Solve ───────────────────────────────────────────────────────────────────
 btnSolve.addEventListener("click", async () => {
-  const cubeString = getSelectedCubeString();
+  const { source, cubeString } = getSolveCandidate();
   const validation = validateCubeString(cubeString);
   if (!validation.valid) {
     appendLog(validation.message);
     return;
   }
-  appendLog(`Starting solve with ${getManualCubeString() ? "manual" : "detected"} state: ${cubeString}`);
+  appendLog(`Starting solve with ${source} state: ${cubeString}`);
   const res = await post("/solve", { cube_string: cubeString });
   appendLog("Server: " + JSON.stringify(res));
   startPolling();

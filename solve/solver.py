@@ -8,6 +8,7 @@ Output: space-separated move string  (e.g. "R U F2 D' L B2")
 from __future__ import annotations
 
 import logging
+import re
 
 import kociemba
 
@@ -26,7 +27,7 @@ def _normalize_cube_string(cube_string: str) -> str:
     For color notation, mapping is derived from center stickers in standard
     face order indices: U=4, R=13, F=22, D=31, L=40, B=49.
     """
-    cube_string = cube_string.strip().upper()
+    cube_string = re.sub(r"\s+", "", str(cube_string or "")).upper()
 
     if len(cube_string) != 54:
         raise SolveError(
