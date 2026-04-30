@@ -15,6 +15,7 @@ import numpy as np
 from flask import Blueprint, Response, jsonify, render_template, request
 
 import config
+from motion.calibration import derive_state_bits_from_home, save_servo_state_bits
 from motion.moves import manual_move_actions, parse_solution, solution_to_actions
 from motion.scheduler import Scheduler, SchedulerState
 from motion.servo_bus import degrees_to_bits
@@ -547,6 +548,10 @@ def servo_torque():
         return jsonify({"error": "Servos not initialised"}), 503
     body = request.get_json(silent=True) or {}
     on = body.get("on", True)
+    if on and not getattr(config, "PERSISTENT_TORQUE_ENABLED", True):
+        return jsonify({
+            "error": "Persistent torque is disabled; moves enable torque only while active.",
+        }), 409
     if body.get("all"):
         if on:
             _servo_group.all_torque_on()
@@ -602,9 +607,13 @@ def servo_setpoint():
             min(config.HARD_ANGLE_MAX_BITS, degrees_to_bits(target_degrees)),
         )
 
-    servo = _servo_group[sid]
-    servo.move_to(target_bits, speed=config.MOVE_SPEED, time_ms=config.MOVE_TIME_MS)
-    servo.wait_until_stopped()
+    _servo_group.move_servo_to_bits(
+        sid,
+        target_bits,
+        speed=config.MOVE_SPEED,
+        time_ms=config.MOVE_TIME_MS,
+        wait=True,
+    )
 
     servo_degrees = round(target_bits / config.STEPS_PER_DEGREE, 1)
     cube_degrees_raw = _servo_group.cube_degrees_for_bits(sid, target_bits)
@@ -623,6 +632,63 @@ def servo_setpoint():
         "servo_degrees": servo_degrees,
         "cube_degrees": cube_degrees,
         "logical_degrees": logical_degrees,
+    })
+
+
+@bp.route("/servo/calibrate-home", methods=["POST"])
+def servo_calibrate_home():
+    """Save the current servo positions as the calibrated logical 90deg home."""
+    if _servo_group is None:
+        return jsonify({"error": "Servos not initialised"}), 503
+    if _is_busy():
+        return jsonify({"error": "Busy – wait for current operation"}), 409
+
+    readings_by_servo: dict[int, int] = {}
+    missing = []
+    for face, sid in config.FACE_SERVO.items():
+        bits = _servo_group[sid].read_position()
+        if bits is None:
+            missing.append({"face": face, "servo_id": sid})
+            continue
+        readings_by_servo[sid] = bits
+
+    if missing:
+        return jsonify({
+            "error": "Could not read all servo positions",
+            "missing": missing,
+        }), 502
+
+    try:
+        state_bits = derive_state_bits_from_home(readings_by_servo)
+    except ValueError as exc:
+        return jsonify({"error": str(exc)}), 400
+
+    try:
+        save_servo_state_bits(state_bits)
+    except (OSError, ValueError) as exc:
+        log.exception("Could not save servo calibration: %s", exc)
+        return jsonify({"error": f"Could not save calibration: {exc}"}), 500
+
+    config.SERVO_STATE_BITS = state_bits
+    _servo_group.reload_calibration()
+
+    faces = {}
+    for face, sid in config.FACE_SERVO.items():
+        bits = readings_by_servo[sid]
+        faces[face] = {
+            "servo_id": sid,
+            "home_state": config.SERVO_HOME_STATE,
+            "home_bits": bits,
+            "home_servo_degrees": round(bits / config.STEPS_PER_DEGREE, 1),
+            "state_bits": state_bits[sid],
+        }
+
+    log.info("Servo logical %ddeg home calibration saved: %s", config.SERVO_HOME_STATE, state_bits)
+    return jsonify({
+        "status": "calibrated",
+        "home_state": config.SERVO_HOME_STATE,
+        "faces": faces,
+        "state_bits_by_servo": state_bits,
     })
 
 

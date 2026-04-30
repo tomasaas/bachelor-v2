@@ -13,7 +13,7 @@ import time
 from dataclasses import dataclass
 from enum import Enum, auto
 
-from motion.servo_bus import Servo, ServoGroup
+from motion.servo_bus import ServoGroup
 from motion.moves import ServoAction
 
 log = logging.getLogger(__name__)
@@ -126,7 +126,6 @@ class Scheduler:
             return False
 
     def _execute_action(self, action: ServoAction) -> None:
-        servo: Servo = self.group[action.servo_id]
         mode = "relative-deg" if action.move_degrees is not None else "absolute"
 
         log.debug(
@@ -152,9 +151,13 @@ class Scheduler:
                 wait=self.check_feedback,
             )
         else:
-            servo.move_to(action.position, speed=action.speed, time_ms=action.time_ms)
-            if self.check_feedback:
-                servo.wait_until_stopped(timeout=2.0)
+            self.group.move_servo_to_bits(
+                action.servo_id,
+                action.position,
+                speed=action.speed,
+                time_ms=action.time_ms,
+                wait=self.check_feedback,
+            )
 
         if action.settle_ms > 0:
             time.sleep(action.settle_ms / 1000.0)

@@ -380,8 +380,7 @@ class ServoGroup:
         Run the full startup sequence:
         1. Ping all servos (warn if serial forwarding appears inactive).
         2. Set servo (position) mode on every servo.
-        3. Enable torque on every servo.
-        4. Home all servos
+        3. Ensure torque is released so servos do not fight each other while idle.
         """
         import config
 
@@ -405,20 +404,12 @@ class ServoGroup:
         log.info("Setting all servos to position mode…")
         self.all_to_position_mode()
 
-        # 3. Torque on
-        log.info("Enabling torque on all servos…")
-        self.all_torque_on()
-
-        # 4. Home all servos so they start at a known calibrated position
-        log.info(
-            "Homing all servos to logical %d° state using calibrated targets %s…",
-            self.home_state,
-            self.home_targets(),
-        )
-        self.all_home(speed=config.MOVE_SPEED)
+        # 3. Leave servos free while idle. Moves enable torque only while active.
+        log.info("Releasing torque on all servos for idle state...")
+        self.all_torque_off()
 
         log.info(
-            "Servo init complete: speed=%d, %d/%d servos alive",
+            "Servo init complete: idle torque released, speed=%d, %d/%d servos alive",
             config.MOVE_SPEED, len(alive), len(self.ids),
         )
 
@@ -433,6 +424,9 @@ class ServoGroup:
         return {sid: self.bus.ping(sid) for sid in self.ids}
 
     def all_torque_on(self) -> None:
+        if not getattr(config, "PERSISTENT_TORQUE_ENABLED", True):
+            log.info("Persistent torque is disabled; skipping all_torque_on")
+            return
         for s in self.servos.values():
             s.torque_on()
 
@@ -452,10 +446,56 @@ class ServoGroup:
         """Move all servos to their calibrated home position sequentially."""
         for s in self.servos.values():
             target_bits = int(home) if home is not None else self.state_bits[s.id][self.home_state]
-            s.move_to(target_bits, speed, time_ms=config.MOVE_TIME_MS)
-            s.wait_until_stopped()
+            self.move_servo_to_bits(
+                s.id,
+                target_bits,
+                speed=speed,
+                time_ms=config.MOVE_TIME_MS,
+                wait=True,
+            )
             self.commanded_states[s.id] = self.home_state
             self.commanded_degrees[s.id] = self.home_state
+
+    def move_servo_to_bits(
+        self,
+        servo_id: int,
+        position_bits: int,
+        *,
+        speed: int | None = None,
+        time_ms: int | None = None,
+        wait: bool = True,
+    ) -> bool:
+        """Move one servo and release torque when the movement is finished."""
+        servo = self[servo_id]
+        move_speed = speed if speed is not None else config.MOVE_SPEED
+        move_time_ms = time_ms if time_ms is not None else config.MOVE_TIME_MS
+        should_release = getattr(config, "RELEASE_TORQUE_AFTER_MOVE", True)
+
+        servo.torque_on()
+        try:
+            ok = servo.move_to(
+                position_bits,
+                speed=move_speed,
+                time_ms=move_time_ms,
+            )
+            if wait or should_release:
+                servo.wait_until_stopped()
+            return ok
+        finally:
+            if should_release:
+                servo.torque_off()
+
+    def reload_calibration(self) -> None:
+        """Reload calibrated state targets from config.SERVO_STATE_BITS."""
+        self.state_bits = {
+            sid: self._load_state_bits(sid)
+            for sid in self.ids
+        }
+        for sid in self.ids:
+            current_bits = self[sid].read_position()
+            state = self.logical_state_for_bits(sid, current_bits)
+            self.commanded_states[sid] = state
+            self.commanded_degrees[sid] = state
 
     def step_servo(
         self,
@@ -466,7 +506,6 @@ class ServoGroup:
         wait: bool = True,
     ) -> int:
         """Move one servo by a relative logical quarter-turn, using safe hops."""
-        servo = self[servo_id]
         current_state = self.current_logical_state(servo_id)
         quarter_steps = quarter_steps_from_degrees(move_degrees)
         if quarter_steps % len(self.logical_states) == 0:
@@ -505,13 +544,13 @@ class ServoGroup:
                 state,
                 target_bits,
             )
-            servo.move_to(
+            self.move_servo_to_bits(
+                servo_id,
                 target_bits,
                 speed=move_speed,
                 time_ms=move_time_ms,
+                wait=wait or len(state_path) > 1,
             )
-            if wait or len(state_path) > 1:
-                servo.wait_until_stopped()
             self.commanded_states[servo_id] = state
             self.commanded_degrees[servo_id] = state
 

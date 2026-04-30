@@ -39,6 +39,7 @@ class _FakeBus:
     def __init__(self, position_bits):
         self.position_bits = position_bits
         self.commands = []
+        self.torque_commands = []
 
     def read_pos(self, servo_id):
         return self.position_bits
@@ -49,6 +50,10 @@ class _FakeBus:
     def write_pos(self, servo_id, position, time=0, speed=400):
         self.position_bits = position
         self.commands.append((servo_id, position, time, speed))
+        return True
+
+    def write_u8(self, servo_id, addr, value):
+        self.torque_commands.append((servo_id, addr, value))
         return True
 
 
@@ -176,6 +181,17 @@ class ServoWraparoundTests(unittest.TestCase):
         self.assertEqual(target, 0)
         self.assertEqual(commands, [(1, calibrated_bits[0], 250, 500)])
         self.assertEqual(group.logical_state_for_bits(1, 318), 90)
+
+    def test_relative_move_releases_torque_after_command(self):
+        target, _, group = self._run_move(90, -90)
+        self.assertEqual(target, 0)
+        self.assertEqual(
+            group.bus.torque_commands,
+            [
+                (1, config.Reg.TORQUE_ENABLE, 1),
+                (1, config.Reg.TORQUE_ENABLE, 0),
+            ],
+        )
 
     def test_cube_degrees_for_bits_interpolates_within_calibrated_segment(self):
         calibrated_bits = {0: 20, 90: 320, 180: 620, 270: 920}

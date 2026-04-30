@@ -12,6 +12,8 @@ SERIAL_TIMEOUT = 0.05              # seconds – read timeout per packet
 
 SERVO_IDS = list(range(1, 7))      # IDs 1–6
 SERVO_RETRY = 2                    # retries on failed packet
+PERSISTENT_TORQUE_ENABLED = False  # keep servos free while idle
+RELEASE_TORQUE_AFTER_MOVE = True   # release each servo after its active move
 
 # ---------------------------------------------------------------------------
 # SC09 register addresses  (SCS-series / Feetech-compatible)
@@ -61,6 +63,7 @@ def _degrees_to_bits(degrees: float) -> int:
 
 
 SERVO_LOGICAL_STATES = (0, 90, 180, 270)
+# The calibration button stores the current horizontal face pose as this state.
 SERVO_HOME_STATE = 90
 
 
@@ -82,12 +85,12 @@ def _default_servo_state_bits(home_bits: int = POS_HOME) -> dict[int, int]:
 # Current values use the measured 0° and 90° positions from the rig and
 # interpolate 180° and 270° by repeating that per-servo 90° delta.
 SERVO_STATE_BITS = {
-    1: {0: 25, 90: 319, 180: 613, 270: 907},   # D
-    2: {0: 33, 90: 303, 180: 573, 270: 843},   # F
-    3: {0: 0, 90: 277, 180: 554, 270: 831},    # R
-    4: {0: 0, 90: 253, 180: 506, 270: 759},    # B
-    5: {0: 67, 90: 331, 180: 595, 270: 859},   # L
-    6: {0: 60, 90: 329, 180: 598, 270: 867},   # U
+    1: {0: 17, 90: 311, 180: 605, 270: 899},   # D
+    2: {0: 40, 90: 310, 180: 580, 270: 850},   # F
+    3: {0: 55, 90: 332, 180: 609, 270: 886},   # R
+    4: {0: 62, 90: 315, 180: 568, 270: 821},   # B
+    5: {0: 58, 90: 322, 180: 586, 270: 850},   # L
+    6: {0: 53, 90: 322, 180: 591, 270: 860},   # U
 }
 
 SC09_MAX_TORQUE_KGCM = 2.3

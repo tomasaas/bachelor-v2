@@ -6,10 +6,9 @@ const $$ = (sel) => document.querySelectorAll(sel);
 
 // ── DOM refs ────────────────────────────────────────────────────────────────
 const btnPing        = $("#btn-ping");
-const btnTorqueOn    = $("#btn-torque-on");
-const btnTorqueOff   = $("#btn-torque-off");
 const btnScramble    = $("#btn-scramble");
 const btnHome        = $("#btn-home");
+const btnCalibrateServos = $("#btn-calibrate-servos");
 const btnEmergencyStop = $("#btn-emergency-stop");
 const btnRefreshCams = $("#btn-refresh-cams");
 const btnUnfreeze    = $("#btn-unfreeze");
@@ -120,6 +119,12 @@ function clamp(value, min, max) {
 
 function formatAngle(value) {
   return value === null || value === undefined ? "—" : `${Number(value).toFixed(1)}°`;
+}
+
+function formatCalibrationFaces(faces) {
+  return Object.entries(faces || {})
+    .map(([face, info]) => `${face}: ${formatAngle(info.home_servo_degrees)}`)
+    .join(", ");
 }
 
 function updateAngleReferenceInputs() {
@@ -998,21 +1003,25 @@ btnRefreshCams.addEventListener("click", async () => {
   btnRefreshCams.disabled = false;
 });
 
-// ── Torque ──────────────────────────────────────────────────────────────────
-btnTorqueOn.addEventListener("click", async () => {
-  await post("/servo/torque", { all: true, on: true });
-  appendLog("Torque ON (all)");
-});
-btnTorqueOff.addEventListener("click", async () => {
-  await post("/servo/torque", { all: true, on: false });
-  appendLog("Torque OFF (all)");
-});
-
 // ── Home ────────────────────────────────────────────────────────────────────
 btnHome.addEventListener("click", async () => {
   appendLog("Homing all servos...");
   const res = await post("/servo/home");
   appendLog("Home: " + JSON.stringify(res));
+});
+
+// ── Servo calibration ───────────────────────────────────────────────────────
+btnCalibrateServos?.addEventListener("click", async () => {
+  appendLog("Saving logical 90° home calibration...");
+  btnCalibrateServos.disabled = true;
+  try {
+    const res = await post("/servo/calibrate-home");
+    appendLog(`90° home saved: ${formatCalibrationFaces(res.faces)}`);
+    pollServoPositions();
+  } catch (e) {
+    appendLog("90° home calibration error: " + e);
+  }
+  btnCalibrateServos.disabled = false;
 });
 
 // ── Emergency stop ─────────────────────────────────────────────────────────
