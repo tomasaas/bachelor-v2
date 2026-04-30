@@ -14,9 +14,26 @@ import kociemba
 
 log = logging.getLogger(__name__)
 
+_CENTER_INDICES = {
+    "U": 4,
+    "R": 13,
+    "F": 22,
+    "D": 31,
+    "L": 40,
+    "B": 49,
+}
+
 
 class SolveError(Exception):
     """Raised when the cube string is invalid or unsolvable."""
+
+
+def _center_colors(cube_string: str) -> dict[str, str]:
+    return {face: cube_string[idx] for face, idx in _CENTER_INDICES.items()}
+
+
+def _format_center_colors(center_colors: dict[str, str]) -> str:
+    return ", ".join(f"{face}={color}" for face, color in center_colors.items())
 
 
 def _normalize_cube_string(cube_string: str) -> str:
@@ -43,19 +60,13 @@ def _normalize_cube_string(cube_string: str) -> str:
         raise SolveError("Cube string contains unknown facelets ('?')")
 
     # Build color->face mapping from centers in URFDLB order.
-    center_indices = {
-        "U": 4,
-        "R": 13,
-        "F": 22,
-        "D": 31,
-        "L": 40,
-        "B": 49,
-    }
-    center_colors = {face: cube_string[idx] for face, idx in center_indices.items()}
+    center_colors = _center_colors(cube_string)
 
     if len(set(center_colors.values())) != 6:
         raise SolveError(
-            "Center stickers are not all unique; cannot derive color-to-face mapping"
+            "Center stickers are not all unique "
+            f"({_format_center_colors(center_colors)}); "
+            "cannot derive color-to-face mapping"
         )
 
     color_to_face = {color: face for face, color in center_colors.items()}
